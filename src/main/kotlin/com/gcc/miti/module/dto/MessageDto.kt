@@ -1,4 +1,4 @@
-package com.gcc.websocketexample.module.dto
+package com.gcc.miti.module.dto
 
 data class MessageDto(
     val message: String,

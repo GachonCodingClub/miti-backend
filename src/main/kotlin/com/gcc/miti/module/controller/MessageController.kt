@@ -1,7 +1,7 @@
-package com.gcc.websocketexample.module.controller
+package com.gcc.miti.module.controller
 
-import com.gcc.websocketexample.module.dto.ChatMessageDto
-import com.gcc.websocketexample.module.repository.ChatMessageRepository
+import com.gcc.miti.module.dto.ChatMessageDto
+import com.gcc.miti.module.repository.ChatMessageRepository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping

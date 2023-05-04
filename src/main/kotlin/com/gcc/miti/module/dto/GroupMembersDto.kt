@@ -1,6 +1,6 @@
-package com.gcc.websocketexample.module.dto
+package com.gcc.miti.module.dto
 
-import com.gcc.websocketexample.module.entity.User
+import com.gcc.miti.module.entity.User
 
 data class GroupMembersDto(
     val userId: String,

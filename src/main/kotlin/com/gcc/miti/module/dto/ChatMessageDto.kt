@@ -1,6 +1,6 @@
-package com.gcc.websocketexample.module.dto
+package com.gcc.miti.module.dto
 
-import com.gcc.websocketexample.module.entity.ChatMessage
+import com.gcc.miti.module.entity.ChatMessage
 
 data class ChatMessageDto(
     val userName: String,

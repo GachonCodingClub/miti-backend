@@ -1,4 +1,4 @@
-package com.gcc.websocketexample.module.entity
+package com.gcc.miti.module.entity
 
 import java.time.LocalDateTime
 import javax.persistence.*

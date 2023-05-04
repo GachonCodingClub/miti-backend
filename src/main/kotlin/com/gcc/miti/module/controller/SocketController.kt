@@ -1,9 +1,9 @@
-package com.gcc.websocketexample.module.controller
+package com.gcc.miti.module.controller
 
-import com.gcc.websocketexample.module.dto.MessageDto
-import com.gcc.websocketexample.module.entity.ChatMessage
-import com.gcc.websocketexample.module.repository.ChatMessageRepository
-import com.gcc.websocketexample.module.repository.UserRepository
+import com.gcc.miti.module.dto.MessageDto
+import com.gcc.miti.module.entity.ChatMessage
+import com.gcc.miti.module.repository.ChatMessageRepository
+import com.gcc.miti.module.repository.UserRepository
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller

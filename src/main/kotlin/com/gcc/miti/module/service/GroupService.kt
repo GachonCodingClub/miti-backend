@@ -1,7 +1,7 @@
-package com.gcc.websocketexample.module.service
+package com.gcc.miti.module.service
 
-import com.gcc.websocketexample.module.dto.GroupMembersDto
-import com.gcc.websocketexample.module.repository.GroupRepository
+import com.gcc.miti.module.dto.GroupMembersDto
+import com.gcc.miti.module.repository.GroupRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 

@@ -1,4 +1,4 @@
-package com.gcc.websocketexample
+package com.gcc.miti
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableJpaRepositories
-class WebsocketExampleApplication
+class MitiApplication
 
 fun main(args: Array<String>) {
-    runApplication<WebsocketExampleApplication>(*args)
+    runApplication<MitiApplication>(*args)
 }

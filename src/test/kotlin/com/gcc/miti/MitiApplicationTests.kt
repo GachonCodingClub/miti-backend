@@ -1,10 +1,10 @@
-package com.gcc.websocketexample
+package com.gcc.miti
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class WebsocketExampleApplicationTests {
+class MitiApplicationTests {
 
     @Test
     fun contextLoads() {

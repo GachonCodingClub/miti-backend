@@ -1,6 +1,6 @@
-package com.gcc.websocketexample.module.entity
+package com.gcc.miti.module.entity
 
-import com.gcc.websocketexample.module.constants.Gender
+import com.gcc.miti.module.constants.Gender
 import javax.persistence.*
 
 @Entity

@@ -1,1 +1,1 @@
-rootProject.name = "websocket-example"
+rootProject.name = "miti-server"

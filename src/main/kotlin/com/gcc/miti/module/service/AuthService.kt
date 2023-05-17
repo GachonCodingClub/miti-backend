@@ -20,12 +20,12 @@ class AuthService(
     private val mailUtils: MailUtils,
 ) {
     fun saveMail(email: String): Verification {
-        val certificationNumber: Int = mailUtils.randomNumber()
+        val certificationNumber: String = mailUtils.randomNumber()
         sendMail(email, certificationNumber)
         return verificationRepository.save(Verification(certificationNumber, email))
     }
 
-    fun getMailMessage(email: String, certificationNumber: Int): MimeMessage {
+    fun getMailMessage(email: String, certificationNumber: String): MimeMessage {
         val message = javaMailSender.createMimeMessage()
         message.addRecipient(Message.RecipientType.TO, InternetAddress(email))
         message.subject = "[hannah-education] 본인 인증 메일"
@@ -34,23 +34,17 @@ class AuthService(
     }
 
     @Async
-    fun sendMail(email: String, randomnum: Int) {
+    fun sendMail(email: String, randomnum: String) {
         val message = getMailMessage(email, randomnum)
         javaMailSender.send(message)
     }
 
     @Transactional
-    fun checkCertification(email:String, certificationNumber: String,flag:Boolean){
-        val verification =  verificationRepository.getByEmail(email)
-        if(certificationNumber == verification.randomNumber)
-        {
-        verification.flag=true
+    fun checkCertification(email: String, certificationNumber: String): Boolean {
+        val verification = verificationRepository.getByEmail(email)
+        if (certificationNumber == verification.randomNumber) {
+            verification.flag = true
         }
-        else{
-            "꺼져"
-        }
-        }
-
-
-
+        return true
+    }
 }

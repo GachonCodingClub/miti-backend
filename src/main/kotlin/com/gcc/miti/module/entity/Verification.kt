@@ -8,8 +8,10 @@ import javax.persistence.Table
 @Table(name = "verification")
 class Verification(
     val randomNumber: String,
-    var flag: Boolean,
 
     @Id
     val email: String,
-)
+
+) {
+    var flag: Boolean = false
+}

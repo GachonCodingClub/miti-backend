@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableJpaRepositories
-@EnableAsync
 class MitiApplication
 
 fun main(args: Array<String>) {

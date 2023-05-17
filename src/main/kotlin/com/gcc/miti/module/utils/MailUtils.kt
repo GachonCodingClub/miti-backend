@@ -5,8 +5,8 @@ import java.security.SecureRandom
 
 @Component
 class MailUtils() {
-    fun randomNumber(): Int {
+    fun randomNumber(): String {
         val secureRandom = SecureRandom()
-        return secureRandom.nextInt(9999)
+        return secureRandom.nextInt(9999).toString()
     }
 }

@@ -25,6 +25,7 @@ dependencies {
     implementation("org.springdoc", "springdoc-openapi-ui", "1.6.6")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.boot:spring-boot-starter-mail:2.6.7")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

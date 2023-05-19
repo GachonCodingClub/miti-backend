@@ -13,7 +13,7 @@ class AuthController(private val authService: AuthService) {
     }
 
     @GetMapping("{email}")
-    fun checkCertification(@PathVariable(name = "email") email: String, @RequestParam certificationNumber: String): Boolean {
+    fun checkCertification(@PathVariable(name = "email") email: String, @RequestParam certificationNumber: String):Boolean {
         return authService.checkCertification(email, certificationNumber)
     }
 }

@@ -12,6 +12,7 @@ class AuthService(
     private val javaMailSender: JavaMailSender,
     private val mailService: MailService,
 ) {
+    @Transactional
     fun saveMail(email: String): Verification {
         val certificationNumber: String = mailService.randomNumber()
         mailService.sendMail(email, certificationNumber)

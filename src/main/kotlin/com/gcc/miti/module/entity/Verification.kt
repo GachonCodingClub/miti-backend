@@ -7,11 +7,10 @@ import javax.persistence.Table
 @Entity
 @Table(name = "verification")
 class Verification(
-    val randomNumber: String,
+    val randomNumber: String? = null,
 
     @Id
-    val email: String,
-
-) {
+    val email: String? = null,
+) : BaseTimeEntity() {
     var flag: Boolean = false
 }

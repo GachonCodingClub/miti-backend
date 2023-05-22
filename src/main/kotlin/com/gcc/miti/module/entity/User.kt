@@ -10,8 +10,8 @@ class User(
     val userName: String,
     val description: String,
     @Enumerated(value = EnumType.STRING)
-    val gender: Gender
-) {
+    val gender: Gender,
+) : BaseTimeEntity() {
     @Id
     val userId: String = ""
 }

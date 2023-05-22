@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface VerificationRepository : JpaRepository<Verification, String> {
-    fun getByEmail(email: String): Verification
+    fun getByEmail(email: String): Verification?
 
 }

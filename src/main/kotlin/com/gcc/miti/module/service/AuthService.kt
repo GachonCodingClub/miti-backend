@@ -32,7 +32,16 @@ class AuthService(
     fun saveMail(email: String): Verification {
         val certificationNumber: String = mailService.randomNumber()
         mailService.sendMail(email, certificationNumber)
-        return verificationRepository.save(Verification(certificationNumber, email))
+        val verification = verificationRepository.getByEmail(email)
+        return if (verification != null) {
+            verificationRepository.save(
+                verification.apply {
+                    this.randomNumber = certificationNumber
+                },
+            )
+        } else {
+            verificationRepository.save(Verification(certificationNumber, email))
+        }
     }
 
     @Transactional
@@ -44,11 +53,11 @@ class AuthService(
     @Transactional
     fun checkCertification(email: String, certificationNumber: String): Boolean {
         val verification = verificationRepository.getByEmail(email)
-        if (certificationNumber == verification.randomNumber) {
+        return if (certificationNumber == verification?.randomNumber) {
             verification.flag = true
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 

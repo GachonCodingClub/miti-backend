@@ -15,7 +15,7 @@ class ChatMessage(
 
     @Column(nullable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
-) {
+) : BaseTimeEntity() {
     @ManyToOne(fetch = FetchType.LAZY)
     val group: Group? = null
 

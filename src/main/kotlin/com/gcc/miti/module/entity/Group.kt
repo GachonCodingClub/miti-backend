@@ -8,9 +8,9 @@ import javax.persistence.*
 class Group(
     val description: String,
 
-    val maxUsers: Short
+    val maxUsers: Short,
 
-) {
+) : BaseTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0

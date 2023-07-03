@@ -40,3 +40,4 @@ logging:
 server:
   port: 8080
 
+JWT-SECRET: ${JWT_SECRET}

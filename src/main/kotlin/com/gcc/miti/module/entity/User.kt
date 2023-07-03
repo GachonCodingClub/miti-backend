@@ -6,12 +6,15 @@ import javax.persistence.*
 @Entity
 @Table(name = "users")
 class User(
+    @Column(nullable = false)
     val password: String,
+    @Column(nullable = false)
     val userName: String,
-    val description: String,
+    @Column(nullable = true)
+    val description: String?,
     @Enumerated(value = EnumType.STRING)
     val gender: Gender,
 ) : BaseTimeEntity() {
     @Id
-    val userId: String = ""
+    var userId: String = ""
 }

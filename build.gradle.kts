@@ -21,6 +21,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-rest")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springdoc", "springdoc-openapi-kotlin", "1.6.6")
     implementation("org.springdoc", "springdoc-openapi-ui", "1.6.6")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -28,6 +29,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail:2.6.7")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("io.jsonwebtoken", "jjwt-api", "0.11.2")
+    runtimeOnly("io.jsonwebtoken", "jjwt-impl", "0.11.2")
+    runtimeOnly("io.jsonwebtoken", "jjwt-jackson", "0.11.2")
 }
 
 tasks.withType<KotlinCompile> {

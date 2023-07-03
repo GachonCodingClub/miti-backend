@@ -1,6 +1,7 @@
 package com.gcc.miti.module.service
 
 import com.gcc.miti.module.dto.authDto.SignInDto
+import com.gcc.miti.module.dto.authDto.SignUpDto
 import com.gcc.miti.module.dto.authDto.TokenDto
 import com.gcc.miti.module.entity.RefreshToken
 import com.gcc.miti.module.entity.Verification
@@ -8,10 +9,12 @@ import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.global.security.JwtTokenProvider
 import com.gcc.miti.module.repository.RefreshTokenRepository
+import com.gcc.miti.module.repository.UserRepository
 import com.gcc.miti.module.repository.VerificationRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -22,12 +25,20 @@ class AuthService(
     private val tokenProvider: JwtTokenProvider,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder,
 ) {
     @Transactional
     fun saveMail(email: String): Verification {
         val certificationNumber: String = mailService.randomNumber()
         mailService.sendMail(email, certificationNumber)
         return verificationRepository.save(Verification(certificationNumber, email))
+    }
+
+    @Transactional
+    fun signUp(signUpDto: SignUpDto): Boolean {
+        userRepository.save(signUpDto.toUser(passwordEncoder))
+        return true
     }
 
     @Transactional

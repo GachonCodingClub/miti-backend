@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 class AuthService(
@@ -53,12 +54,17 @@ class AuthService(
     @Transactional
     fun checkCertification(email: String, certificationNumber: String): Boolean {
         val verification = verificationRepository.getByEmail(email)
-        return if (certificationNumber == verification?.randomNumber) {
-            verification.flag = true
-            true
-        } else {
-            false
+        if (verification != null) {
+            if (verification.modifiedDate!!.plusMinutes(1).isBefore(LocalDateTime.now())) {
+                return if (certificationNumber == verification.randomNumber) {
+                    verification.flag = true
+                    true
+                } else {
+                    false
+                }
+            }
         }
+        return false
     }
 
     fun signIn(signInDto: SignInDto): TokenDto {

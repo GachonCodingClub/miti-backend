@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -21,4 +22,7 @@ class PartyList() :
 
     @ManyToOne(fetch = FetchType.LAZY)
     val party: Party? = null
+
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
+    var partyList: List<User> = listOf()
 }

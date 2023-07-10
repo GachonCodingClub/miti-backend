@@ -1,6 +1,6 @@
 package com.gcc.miti.module.controller
 
-import com.gcc.miti.module.dto.makeGroup.GroupDto
+import com.gcc.miti.module.dto.makeGroupDto.GroupDto
 import com.gcc.miti.module.entity.Group
 import com.gcc.miti.module.global.security.GetIdFromToken
 import com.gcc.miti.module.service.GroupService

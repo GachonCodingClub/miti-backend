@@ -19,6 +19,6 @@ class GroupService(
 //    }
 
     fun makeGroup(groupDto: GroupDto, id: String): Group {
-        return groupRepository.save(GroupDto.toGroup(groupDto, userRepository.findById(id).get()))
+        return groupRepository.save(GroupDto.toGroup(groupDto, userRepository.getReferenceById(id)))
     }
 }

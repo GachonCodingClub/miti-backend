@@ -26,5 +26,5 @@ class User(
     var userId: String = ""
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val partylist: PartyList? = null
+    var partylist: PartyList? = null
 }

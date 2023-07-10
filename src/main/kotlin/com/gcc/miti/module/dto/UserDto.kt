@@ -5,12 +5,25 @@ import com.gcc.miti.module.entity.PartyList
 import com.gcc.miti.module.entity.User
 
 data class UserDto(
+    val password: String,
+    val userName: String,
     val description: String?,
     val gender: Gender,
-    val userName: String,
-    val password: String,
+    val userId: String,
 ) {
     companion object {
+        fun toUser(userDto: UserDto, partyList: PartyList): User {
+            return User(
+                userDto.password,
+                userDto.userName,
+                userDto.description,
+                userDto.gender,
+            ).also {
+                it.userId = userDto.userId
+                it.partylist = partyList
+            }
+        }
+
         fun toPartyList(user: User): PartyList {
             return PartyList().also {
                 it.partyList = listOf(user)

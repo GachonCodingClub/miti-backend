@@ -13,6 +13,10 @@ class PartyService(
 
 ) {
     fun makePartyList(userid: String): PartyList {
-        return partyListRepository.save(UserDto.toPartyList(userRepository.getReferenceById((userid))))
+        return partyListRepository.save(UserDto.toPartyList(userRepository.getReferenceById(userid)))
+    }
+
+    fun showPartyList(id: Long): PartyList {
+        return partyListRepository.getReferenceById(id)
     }
 }

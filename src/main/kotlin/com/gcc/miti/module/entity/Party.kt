@@ -8,8 +8,13 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "partys")
-class Party() : BaseTimeEntity() {
+class Party(
+    val roomTitle: String,
+    val maxUser: Long,
+) : BaseTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var partyId: Long = 0
+
+    var cntUser: Long = 0
 }

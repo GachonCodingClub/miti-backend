@@ -5,24 +5,23 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
 @Table(name = "party_lists")
 class PartyList() :
-// @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
-// val user: List<User>,
-
     BaseTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var partyListId: Long = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val party: Party? = null
+    @JoinColumn(name = "USER_ID")
+    var user: User? = null
 
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
-    var partyList: List<User> = listOf()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PARTY_ID")
+    var party: Party? = null
 }

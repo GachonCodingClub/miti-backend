@@ -8,7 +8,6 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -30,7 +29,4 @@ class Group(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_userId")
     var leader: User? = null
-
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
-    val participants: List<Participants> = listOf()
 }

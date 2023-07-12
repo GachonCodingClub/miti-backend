@@ -1,8 +1,6 @@
 package com.gcc.miti.module.dto
 
 import com.gcc.miti.module.constants.Gender
-import com.gcc.miti.module.entity.PartyList
-import com.gcc.miti.module.entity.User
 
 data class UserDto(
     val password: String,
@@ -10,24 +8,21 @@ data class UserDto(
     val description: String?,
     val gender: Gender,
     val userId: String,
-) {
-    companion object {
-        fun toUser(userDto: UserDto, partyList: PartyList): User {
-            return User(
-                userDto.password,
-                userDto.userName,
-                userDto.description,
-                userDto.gender,
-            ).also {
-                it.userId = userDto.userId
-                it.partylist = partyList
-            }
-        }
+)
+//    companion object {
+//        fun toUser(userDto: UserDto, partyList: PartyList): User {
+//            return User(
+//                userDto.password,
+//                userDto.userName,
+//                userDto.description,
+//                userDto.gender,
+//            ).also {
+//                it.userId = userDto.userId
+//                it.partylist = partyList
+//            }
+//        }
 
-        fun toPartyList(user: User): PartyList {
-            return PartyList().also {
-                it.partyList = listOf(user)
-            }
-        }
-    }
-}
+//        fun toPartyList(user: User): PartyList {
+//            return PartyList().also {
+//                it.users = listOf(user)
+//            }

@@ -20,7 +20,7 @@ class GroupController(
 //    }
 
     @PostMapping("")
-    fun makeGroup(@RequestBody groupDto: GroupDto, @GetIdFromToken id: String): Group? {
-        return groupService.makeGroup(groupDto, id)
+    fun makeGroup(@RequestBody groupDto: GroupDto, @GetIdFromToken userId: String): Group? {
+        return groupService.makeGroup(groupDto, userId)
     }
 }

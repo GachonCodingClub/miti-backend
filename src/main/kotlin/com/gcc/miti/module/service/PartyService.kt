@@ -2,7 +2,6 @@ package com.gcc.miti.module.service
 
 import com.gcc.miti.module.dto.partyDto.PartyListDto
 import com.gcc.miti.module.entity.Party
-import com.gcc.miti.module.entity.PartyList
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.PartyListRepository
 import com.gcc.miti.module.repository.PartyRepository
@@ -38,16 +37,17 @@ class PartyService(
 //    }
 
     @Transactional
-    fun makePartyList(userId: String, partyId: Long): PartyList? {
+    fun makePartyList(userId: String, partyId: Long): Boolean {
         val repoParty = partyRepository.findById(partyId)
             .orElseThrow { throw EntityNotFoundException("Party not found") }
         val repoUser = userRepository.getReferenceById(userId)
-        return partyListRepository.save(
+        partyListRepository.save(
             PartyListDto.toPartyList(
                 repoUser,
                 repoParty,
             ),
         )
+        return true
     }
 
     fun makeParty(party: Party): Party {

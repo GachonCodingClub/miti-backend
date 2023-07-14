@@ -1,7 +1,6 @@
 package com.gcc.miti.module.service
 
 import com.gcc.miti.module.dto.makeGroupDto.GroupDto
-import com.gcc.miti.module.entity.Group
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -20,7 +19,8 @@ class GroupService(
 //    }
 
     @Transactional
-    fun makeGroup(groupDto: GroupDto, userId: String): Group {
-        return groupRepository.save(GroupDto.toGroup(groupDto, userRepository.getReferenceById(userId)))
+    fun makeGroup(groupDto: GroupDto, userId: String): Boolean {
+        groupRepository.save(GroupDto.toGroup(groupDto, userRepository.getReferenceById(userId)))
+        return true
     }
 }

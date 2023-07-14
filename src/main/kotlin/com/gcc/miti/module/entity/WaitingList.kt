@@ -10,12 +10,12 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "watinglist")
-class Watinglist() : BaseTimeEntity() {
+@Table(name = "waiting_list")
+class WaitingList() : BaseTimeEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val watingListId: Long = 0
+    val id: Long = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")

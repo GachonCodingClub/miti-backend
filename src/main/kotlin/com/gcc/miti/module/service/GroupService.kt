@@ -5,6 +5,7 @@ import com.gcc.miti.module.entity.Group
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class GroupService(
@@ -18,6 +19,7 @@ class GroupService(
 //        }
 //    }
 
+    @Transactional
     fun makeGroup(groupDto: GroupDto, userId: String): Group {
         return groupRepository.save(GroupDto.toGroup(groupDto, userRepository.getReferenceById(userId)))
     }

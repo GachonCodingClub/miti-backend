@@ -31,6 +31,11 @@ class Group(
     @JoinColumn(name = "user_user_id")
     var leader: User? = null
 
-    @Formula("(SELECT COUNT(*) FROM party_lists WHERE group_id = group.id)")
+    @Formula(
+        "(SELECT COUNT(*) \n" +
+            "FROM waiting_list wl, party_lists pl \n" +
+            "WHERE wl.group_id = id \n" +
+            "  AND wl.party_id = pl.party_id) ",
+    )
     var userCount: Long = 0
 }

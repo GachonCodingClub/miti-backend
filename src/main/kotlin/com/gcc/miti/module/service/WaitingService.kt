@@ -26,4 +26,10 @@ class WaitingService(
         )
         return true
     }
+
+    fun admitRequest(waitingList: Long): Boolean {
+        val repoWaitingList = waitingListRepository.getReferenceById(waitingList)
+        repoWaitingList.flag = true
+        return true
+    }
 }

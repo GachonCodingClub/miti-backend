@@ -18,6 +18,8 @@ import javax.persistence.Table
 @Inheritance(strategy = InheritanceType.JOINED)
 class WaitingList() : BaseTimeEntity() {
 
+    var flag: Boolean = false
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0

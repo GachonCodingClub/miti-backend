@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface WaitingListRepository : JpaRepository<WaitingList, Long> {
-    fun findByGroupId(partyId: Long): Long
+    fun findByPartyId(partyId: Long)
 }

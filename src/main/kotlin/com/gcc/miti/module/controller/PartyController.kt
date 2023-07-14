@@ -25,10 +25,4 @@ class PartyController(
     fun makePartyList(@GetIdFromToken userId: String, @PathVariable("partyId") partyId: Long): PartyList? {
         return partyService.makePartyList(userId, partyId)
     }
-
-//
-//    @GetMapping(path = ["/{id}"])
-//    fun findPartyList(@PathVariable id: Long): PartyList {
-//        return partyService.showPartyList(id)
-//    }
 }

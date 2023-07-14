@@ -18,10 +18,10 @@ class PartyList() :
     var partyListId: Long = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "user_id")
     var user: User? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARTY_ID")
+    @JoinColumn(name = "party_id")
     var party: Party? = null
 }

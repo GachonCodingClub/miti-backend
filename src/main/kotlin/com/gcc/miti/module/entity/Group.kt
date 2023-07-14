@@ -1,5 +1,6 @@
 package com.gcc.miti.module.entity
 
+import org.hibernate.annotations.Formula
 import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -15,7 +16,7 @@ import javax.persistence.Table
 class Group(
     val description: String,
     val title: String,
-    val maxUsers: Short,
+    val maxUsers: Long,
 
 ) : BaseTimeEntity() {
     @Id
@@ -27,6 +28,9 @@ class Group(
     var meetPlace: String? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_userId")
+    @JoinColumn(name = "user_user_id")
     var leader: User? = null
+
+    @Formula("(SELECT COUNT(*) FROM party_lists WHERE group_id = group.id)")
+    var userCount: Long = 0
 }

@@ -5,20 +5,23 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "participants")
-class Participants() : BaseTimeEntity() {
+@Table(name = "watinglist")
+class Watinglist() : BaseTimeEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val participantsId: Long = 0
+    val watingListId: Long = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val group: Group? = null
+    @JoinColumn(name = "group_id")
+    var group: Group? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val party: Party? = null
+    @JoinColumn(name = "party_id")
+    var party: Party? = null
 }

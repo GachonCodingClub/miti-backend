@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class GroupDto(
     val description: String,
     val title: String,
-    val maxUsers: Short,
+    val maxUsers: Long,
     val meetDate: LocalDateTime?,
     val meetPlace: String?,
 ) {

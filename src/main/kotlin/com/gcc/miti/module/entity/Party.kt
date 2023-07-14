@@ -7,7 +7,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "partys")
+@Table(name = "party")
 class Party(
     val roomTitle: String,
 ) : BaseTimeEntity() {

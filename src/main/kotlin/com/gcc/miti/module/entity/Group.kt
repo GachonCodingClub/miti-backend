@@ -31,11 +31,17 @@ class Group(
     @JoinColumn(name = "user_user_id")
     var leader: User? = null
 
+    //    @Formula(
+//        "(SELECT COUNT(*) \n" +
+//            "FROM waiting_list wl, party_lists pl \n" +
+//            "WHERE wl.group_id = id \n" +
+//            "  AND wl.party_id = pl.party_id) ",
+//    )
     @Formula(
         "(SELECT COUNT(*) \n" +
-            "FROM waiting_list wl, party_lists pl \n" +
-            "WHERE wl.group_id = id \n" +
-            "  AND wl.party_id = pl.party_id) ",
+            "FROM party pt, party_lists pl \n" +
+            "WHERE pl.party_id = id \n" +
+            "  AND pl.party_id = pt.party_id) ",
     )
     var userCount: Long = 0
 }

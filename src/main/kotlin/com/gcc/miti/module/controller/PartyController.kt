@@ -1,9 +1,10 @@
 package com.gcc.miti.module.controller
 
 import com.gcc.miti.module.entity.Party
-import com.gcc.miti.module.entity.PartyList
 import com.gcc.miti.module.global.security.GetIdFromToken
 import com.gcc.miti.module.service.PartyService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -22,7 +23,7 @@ class PartyController(
     }
 
     @PostMapping(path = ["/{partyId}"])
-    fun makePartyList(@GetIdFromToken userId: String, @PathVariable("partyId") partyId: Long): PartyList? {
-        return partyService.makePartyList(userId, partyId)
+    fun makePartyList(@GetIdFromToken userId: String, @PathVariable("partyId") partyId: Long): ResponseEntity<Boolean> {
+        return ResponseEntity.status(HttpStatus.CREATED).body(partyService.makePartyList(userId, partyId))
     }
 }

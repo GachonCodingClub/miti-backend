@@ -6,6 +6,7 @@ import com.gcc.miti.module.repository.PartyRepository
 import com.gcc.miti.module.repository.UserRepository
 import com.gcc.miti.module.repository.WaitingListRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class WaitingService(
@@ -15,7 +16,8 @@ class WaitingService(
     val userRepository: UserRepository,
 
 ) {
-    fun makeWatingList(groupId: Long, partyId: Long): Boolean {
+    @Transactional
+    fun makeWaitingList(groupId: Long, partyId: Long): Boolean {
         val repoGroup = groupRepository.getReferenceById(groupId)
         val repoParty = partyRepository.getReferenceById(partyId)
         waitingListRepository.save(
@@ -27,9 +29,17 @@ class WaitingService(
         return true
     }
 
-    fun admitRequest(waitingList: Long): Boolean {
-        val repoWaitingList = waitingListRepository.getReferenceById(waitingList)
+    @Transactional
+    fun admitRequest(waitingListId: Long): Boolean {
+        val repoWaitingList = waitingListRepository.getReferenceById(waitingListId)
         repoWaitingList.flag = true
+        return true
+    }
+
+    @Transactional
+    fun rejectRequest(waitingListId: Long): Boolean {
+        val repoWaitingList = waitingListRepository.getReferenceById(waitingListId)
+        repoWaitingList.flag = false
         return true
     }
 }

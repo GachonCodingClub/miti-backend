@@ -1,6 +1,5 @@
 package com.gcc.miti.module.entity
 
-import javax.persistence.DiscriminatorColumn
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -14,7 +13,6 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "waiting_list")
-@DiscriminatorColumn(name = "DTYPE")
 @Inheritance(strategy = InheritanceType.JOINED)
 class WaitingList() : BaseTimeEntity() {
 
@@ -22,7 +20,7 @@ class WaitingList() : BaseTimeEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    val waitingListId: Long = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")

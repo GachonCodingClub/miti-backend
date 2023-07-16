@@ -18,6 +18,16 @@ class WaitingController(
         @PathVariable("groupId") groupId: Long,
         @PathVariable("partyId") partyId: Long,
     ): ResponseEntity<Boolean>? {
-        return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.makeWatingList(groupId, partyId))
+        return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.makeWaitingList(groupId, partyId))
+    }
+
+    @PostMapping("/reject/{waitingListId}")
+    fun rejectWaitingList(@PathVariable waitingListId: Long): ResponseEntity<Boolean>? {
+        return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.rejectRequest(waitingListId))
+    }
+
+    @PostMapping("/admit/{waitingListId}")
+    fun admitWaitingList(@PathVariable waitingListId: Long): ResponseEntity<Boolean>? {
+        return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.admitRequest(waitingListId))
     }
 }

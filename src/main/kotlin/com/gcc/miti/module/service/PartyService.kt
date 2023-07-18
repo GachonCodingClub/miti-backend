@@ -54,6 +54,14 @@ class PartyService(
         return partyRepository.save(party)
     }
 
+    @Transactional
+    fun addUser(partyId: Long, userId: String): Boolean {
+        val repoUser = userRepository.getReferenceById(userId)
+        val repoParty = partyRepository.getReferenceById(partyId)
+        repoParty.participants = repoParty.participants?.plus(repoUser.userName)
+        return true
+    }
+
 //
 //    fun showPartyList(partyListId: Long): PartyList {
 //        return partyListRepository.getReferenceById(partyListId)

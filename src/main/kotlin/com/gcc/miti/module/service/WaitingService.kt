@@ -1,6 +1,8 @@
 package com.gcc.miti.module.service
 
 import com.gcc.miti.module.dto.waitingListDto.WaitingListDto
+import com.gcc.miti.module.global.exception.BaseException
+import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.PartyRepository
 import com.gcc.miti.module.repository.UserRepository
@@ -30,16 +32,24 @@ class WaitingService(
     }
 
     @Transactional
-    fun admitRequest(waitingListId: Long): Boolean {
+    fun admitRequest(waitingListId: Long, userId: String): Boolean {
         val repoWaitingList = waitingListRepository.getReferenceById(waitingListId)
-        repoWaitingList.flag = true
+        val leaderId = repoWaitingList.group?.leader?.userId
+        if (userId != leaderId) {
+            throw BaseException(BaseExceptionCode.FORBIDDEN)
+        }
+        repoWaitingList.isCertified = true
         return true
     }
 
     @Transactional
-    fun rejectRequest(waitingListId: Long): Boolean {
+    fun rejectRequest(waitingListId: Long, userId: String): Boolean {
         val repoWaitingList = waitingListRepository.getReferenceById(waitingListId)
-        repoWaitingList.flag = false
+        val leaderId = repoWaitingList.group?.leader?.userId
+        if (userId != leaderId) {
+            throw BaseException(BaseExceptionCode.FORBIDDEN)
+        }
+        repoWaitingList.isCertified = false
         return true
     }
 }

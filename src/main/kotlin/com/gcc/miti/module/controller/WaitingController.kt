@@ -1,5 +1,7 @@
 package com.gcc.miti.module.controller
 
+import com.gcc.miti.module.global.security.GetIdFromToken
+import com.gcc.miti.module.repository.WaitingListRepository
 import com.gcc.miti.module.service.WaitingService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/waiting")
 class WaitingController(
     private val waitingService: WaitingService,
+    private val waitingListRepository: WaitingListRepository,
 ) {
     @PostMapping(path = ["/{groupId}/{partyId}"]) // 그룹이랑 파티필요
     fun makeWaitingList(
@@ -22,12 +25,12 @@ class WaitingController(
     }
 
     @PostMapping("/reject/{waitingListId}")
-    fun rejectWaitingList(@PathVariable waitingListId: Long): ResponseEntity<Boolean>? {
-        return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.rejectRequest(waitingListId))
+    fun rejectWaitingList(@PathVariable waitingListId: Long, @GetIdFromToken userId: String): ResponseEntity<Boolean> {
+        return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.rejectRequest(waitingListId, userId))
     }
 
     @PostMapping("/admit/{waitingListId}")
-    fun admitWaitingList(@PathVariable waitingListId: Long): ResponseEntity<Boolean>? {
-        return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.admitRequest(waitingListId))
+    fun admitWaitingList(@PathVariable waitingListId: Long, @GetIdFromToken userId: String): ResponseEntity<Boolean> {
+        return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.admitRequest(waitingListId, userId))
     }
 }

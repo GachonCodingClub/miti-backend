@@ -16,7 +16,7 @@ import javax.persistence.Table
 @Inheritance(strategy = InheritanceType.JOINED)
 class WaitingList() : BaseTimeEntity() {
 
-    var flag: Boolean = false
+    var isCertified: Boolean = false
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

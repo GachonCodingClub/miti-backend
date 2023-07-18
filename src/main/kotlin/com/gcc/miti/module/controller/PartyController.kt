@@ -26,4 +26,9 @@ class PartyController(
     fun makePartyList(@GetIdFromToken userId: String, @PathVariable("partyId") partyId: Long): ResponseEntity<Boolean> {
         return ResponseEntity.status(HttpStatus.CREATED).body(partyService.makePartyList(userId, partyId))
     }
+
+    @PostMapping(path = ["/{partyId}/{userId}"])
+    fun addUserToParty(@PathVariable partyId: Long, @PathVariable userId: String): ResponseEntity<Boolean> {
+        return ResponseEntity.status(HttpStatus.CREATED).body(partyService.addUser(partyId, userId))
+    }
 }

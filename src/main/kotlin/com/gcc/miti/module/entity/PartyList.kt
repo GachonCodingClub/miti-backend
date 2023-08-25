@@ -24,4 +24,6 @@ class PartyList() :
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")
     var party: Party? = null
+
+    var nickname: String? = null
 }

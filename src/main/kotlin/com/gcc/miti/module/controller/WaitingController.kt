@@ -16,7 +16,7 @@ class WaitingController(
     private val waitingService: WaitingService,
     private val waitingListRepository: WaitingListRepository,
 ) {
-    @PostMapping(path = ["/{groupId}/{partyId}"]) // 그룹이랑 파티필요
+    @PostMapping(path = ["{groupId}/{partyId}"]) // 그룹이랑 파티필요
     fun makeWaitingList(
         @PathVariable("groupId") groupId: Long,
         @PathVariable("partyId") partyId: Long,
@@ -24,7 +24,7 @@ class WaitingController(
         return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.makeWaitingList(groupId, partyId))
     }
 
-    @PostMapping("/reject/{waitingListId}")
+    @PostMapping("{waitingListId}")
     fun rejectWaitingList(@PathVariable waitingListId: Long, @GetIdFromToken userId: String): ResponseEntity<Boolean> {
         return ResponseEntity.status(HttpStatus.CREATED).body(waitingService.rejectRequest(waitingListId, userId))
     }

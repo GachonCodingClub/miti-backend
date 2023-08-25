@@ -1,10 +1,12 @@
 package com.gcc.miti.module.entity
 
-import javax.persistence.ElementCollection
+import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -17,6 +19,6 @@ class Party(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var partyId: Long = 0
 
-    @ElementCollection
-    var participants: List<String>? = null
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "party", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val partyList: MutableList<PartyList> = mutableListOf()
 }

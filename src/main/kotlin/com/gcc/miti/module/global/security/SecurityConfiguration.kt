@@ -30,7 +30,7 @@ class SecurityConfiguration(private val jwtTokenProvider: JwtTokenProvider) : We
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers("/auth/**").permitAll()
+            .antMatchers("/auth/**", "swagger-ui/**", "/v3/api-docs/").permitAll()
             .and()
             .addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),

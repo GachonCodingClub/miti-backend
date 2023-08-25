@@ -20,7 +20,7 @@ class GroupController(
 //        return groupService.test()
 //    }
 
-    @PostMapping("")
+    @PostMapping("/makeGroup")
     fun makeGroup(@RequestBody groupDto: GroupDto, @GetIdFromToken userId: String): ResponseEntity<Boolean> {
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.makeGroup(groupDto, userId))
     }

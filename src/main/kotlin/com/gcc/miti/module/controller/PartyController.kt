@@ -17,7 +17,7 @@ class PartyController(
     private val partyService: PartyService,
 ) {
 
-    @PostMapping("")
+    @PostMapping("/makeParty")
     fun makeParty(@RequestBody party: Party): Party? {
         return partyService.makeParty(party)
     }
@@ -27,8 +27,13 @@ class PartyController(
         return ResponseEntity.status(HttpStatus.CREATED).body(partyService.makePartyList(userId, partyId))
     }
 
-    @PostMapping(path = ["/{partyId}/{userId}"])
-    fun addUserToParty(@PathVariable partyId: Long, @PathVariable userId: String): ResponseEntity<Boolean> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(partyService.addUser(partyId, userId))
-    }
+//    @PostMapping(path = ["/{partyId}"])
+//    fun addUserToParty(@PathVariable partyId: Long, @RequestBody partyDto: PartyDto): ResponseEntity<Boolean> {
+//        return ResponseEntity.status(HttpStatus.CREATED).body(partyService.addUserToParty(partyId, partyDto,))
+//    }
+
+//    @GetMapping("/test")
+//    fun test() { // print all party members
+//        return partyService.test()
+//    }
 }

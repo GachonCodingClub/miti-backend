@@ -15,9 +15,9 @@ import javax.transaction.Transactional
 class SocketController(
     private val simpMessagingTemplate: SimpMessagingTemplate,
     private val chatMessageRepository: ChatMessageRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
-    @MessageMapping("/send")
+    @MessageMapping("")
     @Transactional
     fun send(message: MessageDto) {
         chatMessageRepository.save(ChatMessage(userRepository.getReferenceById("test"), message.message))

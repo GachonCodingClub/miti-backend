@@ -1,6 +1,5 @@
 package com.gcc.miti.module.entity
 
-import org.hibernate.annotations.Formula
 import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -9,6 +8,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -28,20 +28,19 @@ class Group(
     var meetPlace: String? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_user_id")
+    @JoinColumn(name = "leader_user_id")
     var leader: User? = null
 
-    //        @Formula(
-//        "(SELECT COUNT(*) \n" +
-//            "FROM party pt, party_lists pl \n" +
-//            "WHERE pl.party_id = id \n" +
-//            "  AND pl.party_id = pt.party_id) ",
-//    )
-    @Formula(
-        "(SELECT COUNT(*) \n" +
-            "FROM waiting_list wl, party_lists pl \n" +
-            "WHERE wl.group_id = id \n" +
-            "  AND wl.party_id = pl.party_id) ",
-    )
-    var userCount: Long = 0
+    @OneToMany(fetch = FetchType.LAZY)
+    val parties: List<Party> = listOf()
+
+    val acceptedParties: List<Party>
+        get() {
+            return parties.filter { it.isAccepted }
+        }
+
+    val waitingParties: List<Party>
+        get() {
+            return parties.filter { !it.isAccepted }
+        }
 }

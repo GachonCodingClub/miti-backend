@@ -1,8 +1,8 @@
 package com.gcc.miti.module.service
 
-import com.gcc.miti.module.dto.authDto.SignInDto
-import com.gcc.miti.module.dto.authDto.SignUpDto
-import com.gcc.miti.module.dto.authDto.TokenDto
+import com.gcc.miti.module.dto.authdto.SignInDto
+import com.gcc.miti.module.dto.authdto.SignUpDto
+import com.gcc.miti.module.dto.authdto.TokenDto
 import com.gcc.miti.module.entity.RefreshToken
 import com.gcc.miti.module.entity.Verification
 import com.gcc.miti.module.global.exception.BaseException

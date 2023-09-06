@@ -1,4 +1,4 @@
-package com.gcc.miti.module.dto.authDto
+package com.gcc.miti.module.dto.authdto
 
 import com.gcc.miti.module.constants.Gender
 import com.gcc.miti.module.entity.User

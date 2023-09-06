@@ -1,6 +1,6 @@
 package com.gcc.miti.module.global.security
 
-import com.gcc.miti.module.dto.authDto.TokenDto
+import com.gcc.miti.module.dto.authdto.TokenDto
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders

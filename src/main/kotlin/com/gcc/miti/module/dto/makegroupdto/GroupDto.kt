@@ -1,4 +1,4 @@
-package com.gcc.miti.module.dto.makeGroupDto
+package com.gcc.miti.module.dto.makegroupdto
 
 import com.gcc.miti.module.entity.Group
 import com.gcc.miti.module.entity.User

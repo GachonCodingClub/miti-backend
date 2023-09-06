@@ -1,6 +1,6 @@
 package com.gcc.miti.module.service
 
-import com.gcc.miti.module.dto.partyDto.PartyListDto
+import com.gcc.miti.module.dto.partydto.PartyListDto
 import com.gcc.miti.module.entity.Party
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.PartyListRepository
@@ -18,33 +18,15 @@ class PartyService(
     private val groupRepository: GroupRepository,
 
 ) {
-//    @Transactional
-//    fun makePartyList(userId: String, partyId: Long): PartyList? {
-//        val repoParty = partyRepository.findById(partyId)
-//            .orElseThrow { throw EntityNotFoundException("Party not found") }
-//        val repoUser = userRepository.getReferenceById(userId)
-//        val repoGroup = groupRepository.findByLeader(repoUser) // 리더의 그룹찾기
-//        if (repoGroup.maxUsers - 1 > repoGroup.userCount) {
-//            return partyListRepository.save(
-//                PartyListDto.toPartyList(
-//                    repoUser,
-//                    repoParty,
-//                ),
-//            )
-//        } else {
-//            throw BaseException(BaseExceptionCode.MAX_USER_ERROR)
-//        }
-//    }
-
     @Transactional
     fun makePartyList(userId: String, partyId: Long): Boolean {
-        val repoParty = partyRepository.findById(partyId)
+        val party = partyRepository.findById(partyId)
             .orElseThrow { throw EntityNotFoundException("Party not found") }
-        val repoUser = userRepository.getReferenceById(userId)
+        val user = userRepository.getReferenceById(userId)
         partyListRepository.save(
             PartyListDto.toPartyList(
-                repoUser,
-                repoParty,
+                user,
+                party,
             ),
         )
         return true
@@ -53,17 +35,4 @@ class PartyService(
     fun makeParty(party: Party): Party {
         return partyRepository.save(party)
     }
-
-    @Transactional
-    fun addUser(partyId: Long, userId: String): Boolean {
-        val repoUser = userRepository.getReferenceById(userId)
-        val repoParty = partyRepository.getReferenceById(partyId)
-        repoParty.participants = repoParty.participants?.plus(repoUser.userName)
-        return true
-    }
-
-//
-//    fun showPartyList(partyListId: Long): PartyList {
-//        return partyListRepository.getReferenceById(partyListId)
-//    }
 }

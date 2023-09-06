@@ -1,6 +1,6 @@
 package com.gcc.miti.module.controller
 
-import com.gcc.miti.module.dto.makeGroupDto.GroupDto
+import com.gcc.miti.module.dto.makegroupdto.GroupDto
 import com.gcc.miti.module.global.security.GetIdFromToken
 import com.gcc.miti.module.service.GroupService
 import org.springframework.http.HttpStatus

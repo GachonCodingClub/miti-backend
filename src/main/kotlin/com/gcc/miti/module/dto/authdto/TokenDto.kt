@@ -1,4 +1,4 @@
-package com.gcc.miti.module.dto.authDto
+package com.gcc.miti.module.dto.authdto
 
 data class TokenDto(
     val accessToken: String,

@@ -12,7 +12,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "party")
 class Party(
-    val isAccepted: Boolean,
+    var isAccepted: Boolean,
 
 ) : BaseTimeEntity() {
     @Id

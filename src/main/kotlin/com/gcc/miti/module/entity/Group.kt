@@ -43,4 +43,16 @@ class Group(
         get() {
             return parties.filter { !it.isAccepted }
         }
+
+    fun acceptParty(partyId: Long) {
+        val party = parties.find { it.id == partyId }!!
+        val memberCount = party.partyMember.count()
+        var sum = 1
+        acceptedParties.forEach {
+            sum += it.partyMember.count()
+        }
+        if (maxUsers - sum - memberCount >= 0) {
+            party.isAccepted = true
+        }
+    }
 }

@@ -27,6 +27,8 @@ spring:
     properties:
       hibernate:
         format-sql: true
+  profiles:
+    active: ${PROFILE}
 
 logging:
   level:

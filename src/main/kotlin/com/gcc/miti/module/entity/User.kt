@@ -19,7 +19,16 @@ class User(
     val description: String?,
     @Enumerated(value = EnumType.STRING)
     val gender: Gender,
+
+    @Column(unique = true)
+    val nickname: String,
 ) : BaseTimeEntity() {
     @Id
     var userId: String = ""
+    fun toPartyMember(party: Party): PartyMember {
+        return PartyMember().also {
+            it.user = this
+            it.party = party
+        }
+    }
 }

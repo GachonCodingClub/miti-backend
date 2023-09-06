@@ -1,5 +1,6 @@
 package com.gcc.miti.module.entity
 
+import com.gcc.miti.module.constants.PartyStatus
 import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -36,12 +37,12 @@ class Group(
 
     val acceptedParties: List<Party>
         get() {
-            return parties.filter { it.isAccepted }
+            return parties.filter { it.partyStatus == PartyStatus.ACCEPTED }
         }
 
     val waitingParties: List<Party>
         get() {
-            return parties.filter { !it.isAccepted }
+            return parties.filter { it.partyStatus == PartyStatus.WAITING }
         }
 
     fun acceptParty(partyId: Long) {
@@ -52,7 +53,12 @@ class Group(
             sum += it.partyMember.count()
         }
         if (maxUsers - sum - memberCount >= 0) {
-            party.isAccepted = true
+            party.partyStatus = PartyStatus.ACCEPTED
         }
+    }
+
+    fun rejectParty(partyId: Long) {
+        val party = parties.find { it.id == partyId }!!
+        party.partyStatus = PartyStatus.REJECTED
     }
 }

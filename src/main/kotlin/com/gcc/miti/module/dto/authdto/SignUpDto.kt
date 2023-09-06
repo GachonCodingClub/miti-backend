@@ -10,6 +10,7 @@ data class SignUpDto(
     val description: String?,
     val gender: Gender,
     val userName: String,
+    val nickname: String,
 ) {
     fun toUser(passwordEncoder: PasswordEncoder): User {
         return User(
@@ -17,6 +18,7 @@ data class SignUpDto(
             userName,
             description,
             gender,
+            nickname,
         ).also {
             it.userId = userId
         }

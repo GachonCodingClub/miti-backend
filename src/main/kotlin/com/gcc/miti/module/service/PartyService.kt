@@ -1,7 +1,10 @@
 package com.gcc.miti.module.service
 
+import com.gcc.miti.module.dto.partydto.PartyDto
 import com.gcc.miti.module.dto.partydto.PartyListDto
 import com.gcc.miti.module.entity.Party
+import com.gcc.miti.module.global.exception.BaseException
+import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.PartyListRepository
 import com.gcc.miti.module.repository.PartyRepository
@@ -32,7 +35,18 @@ class PartyService(
         return true
     }
 
-    fun makeParty(party: Party): Party {
-        return partyRepository.save(party)
+    @Transactional
+    fun makeParty(partyDto: PartyDto, userId: String, groupId: Long): Boolean {
+        val group = groupRepository.getReferenceById(groupId)
+        if (group.leader!!.userId == userId) {
+            throw BaseException(BaseExceptionCode.BAD_REQUEST)
+        }
+        val users = userRepository.findAllByNicknameIn(partyDto.nicknames).toMutableList()
+        val party = partyRepository.save(Party().also { it.group = group })
+        users.add(userRepository.getReferenceById(userId))
+        party.partyMember = users.map {
+            it.toPartyMember(party)
+        }.toMutableList()
+        return true
     }
 }

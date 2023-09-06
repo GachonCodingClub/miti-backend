@@ -1,6 +1,6 @@
 package com.gcc.miti.module.service
 
-import com.gcc.miti.module.dto.waitingListDto.WaitingListDto
+import com.gcc.miti.module.dto.waitinglistdto.WaitingListDto
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.repository.GroupRepository

@@ -1,6 +1,6 @@
 package com.gcc.miti.module.service
 
-import com.gcc.miti.module.dto.makeGroupDto.GroupDto
+import com.gcc.miti.module.dto.makegroupdto.GroupDto
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.stereotype.Service

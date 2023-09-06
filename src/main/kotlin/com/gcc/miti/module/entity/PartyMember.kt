@@ -10,12 +10,12 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "party_lists")
-class PartyList() :
+@Table(name = "party_member")
+class PartyMember :
     BaseTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var partyListId: Long = 0
+    var id: Long = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -24,6 +24,4 @@ class PartyList() :
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id")
     var party: Party? = null
-
-    var nickname: String? = null
 }

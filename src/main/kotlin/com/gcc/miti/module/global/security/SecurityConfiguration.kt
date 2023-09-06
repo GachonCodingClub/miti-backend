@@ -9,6 +9,9 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @EnableWebSecurity
 class SecurityConfiguration(private val jwtTokenProvider: JwtTokenProvider) : WebSecurityConfigurerAdapter() {
@@ -29,6 +32,8 @@ class SecurityConfiguration(private val jwtTokenProvider: JwtTokenProvider) : We
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+            .cors().configurationSource(corsConfigurationSource())
+            .and()
             .authorizeRequests()
             .antMatchers("/auth/**", "swagger-ui/**", "/v3/api-docs/").permitAll()
             .and()
@@ -36,5 +41,17 @@ class SecurityConfiguration(private val jwtTokenProvider: JwtTokenProvider) : We
                 JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter::class.java,
             )
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+        configuration.addAllowedOrigin("*")
+        configuration.addAllowedHeader("*")
+        configuration.addAllowedMethod("*")
+        configuration.allowCredentials = true
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 }

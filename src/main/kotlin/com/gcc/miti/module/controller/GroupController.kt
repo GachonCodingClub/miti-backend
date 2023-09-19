@@ -3,6 +3,7 @@ package com.gcc.miti.module.controller
 import com.gcc.miti.module.dto.makegroupdto.GroupDto
 import com.gcc.miti.module.global.security.GetIdFromToken
 import com.gcc.miti.module.service.GroupService
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,6 +18,7 @@ class GroupController(
 ) {
 
     @PostMapping("")
+    @Operation(summary = "미팅방 만들기")
     fun makeGroup(@RequestBody groupDto: GroupDto, @GetIdFromToken userId: String): ResponseEntity<Boolean> {
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.makeGroup(groupDto, userId))
     }

@@ -22,7 +22,10 @@ class AuthController(private val authService: AuthService) {
     }
 
     @PostMapping("/sign-up")
-    @Operation(summary = "회원가입")
+    @Operation(
+        summary = "회원가입",
+        description = "가입하기 전에 /auth/certification, /auth/certification/confirm을 통해서 인증을 완료한 상태에서만 가입이 가능 ",
+    )
     fun signUp(@RequestBody signUpDto: SignUpDto): ResponseEntity<Boolean> {
         return ResponseEntity.ok().body(authService.signUp(signUpDto))
     }

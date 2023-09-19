@@ -8,6 +8,10 @@ enum class BaseExceptionCode(val httpStatusCode: Int, val message: String) {
     BAD_REQUEST(HttpStatus.BAD_REQUEST.value(), "잘못된 요청입니다."),
     REFRESH_TOKEN_MISMATCH(HttpStatus.BAD_REQUEST.value(), "리프레쉬 토큰이 일치하지 않습니다."),
     AUTHORIZATION_HEADER_NULL(HttpStatus.BAD_REQUEST.value(), "인증 헤더가 null입니다."),
+    NOT_UNIVERSITY_EMAIL(HttpStatus.BAD_REQUEST.value(), "지원하는 대학교 이메일이 아닙니다."),
+
+    // 401 UNAUTHORIZIED
+    NOT_CERTIFIED(HttpStatus.UNAUTHORIZED.value(), "미인증 상태입니다."),
 
     // 403 FORBIDDEN
     FORBIDDEN(HttpStatus.FORBIDDEN.value(), "권한이 없습니다."),

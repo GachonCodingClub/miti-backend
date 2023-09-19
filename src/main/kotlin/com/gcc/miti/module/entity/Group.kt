@@ -5,16 +5,7 @@ import com.gcc.miti.module.constants.PartyStatus
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "my_group")
@@ -23,8 +14,8 @@ class Group(
     val title: String,
     val maxUsers: Int,
 
-    @Enumerated
-    val groupStatus: GroupStatus,
+    @Enumerated(EnumType.STRING)
+    var groupStatus: GroupStatus,
 
 ) : BaseTimeEntity() {
     @Id
@@ -53,6 +44,9 @@ class Group(
         }
 
     fun acceptParty(partyId: Long) {
+        if (groupStatus == GroupStatus.CLOSE) {
+            throw BaseException(BaseExceptionCode.BAD_REQUEST)
+        }
         val party = parties.find { it.id == partyId } ?: throw BaseException(
             BaseExceptionCode.NOT_FOUND,
         )
@@ -61,8 +55,11 @@ class Group(
         acceptedParties.forEach {
             acceptedPartyMemberCount += it.partyMember.count()
         }
-        if (maxUsers - acceptedPartyMemberCount - newMemberCount >= 0) {
+        if (maxUsers - acceptedPartyMemberCount - newMemberCount > 0) {
             party.partyStatus = PartyStatus.ACCEPTED
+        } else if (maxUsers - acceptedPartyMemberCount - newMemberCount == 0) { // 인원 모집 종료
+            party.partyStatus = PartyStatus.ACCEPTED
+            groupStatus = GroupStatus.CLOSE
         } else {
             throw BaseException(BaseExceptionCode.MAX_USER_ERROR)
         }

@@ -32,7 +32,7 @@ class Group(
     @JoinColumn(name = "leader_user_id")
     var leader: User? = null
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
     val parties: List<Party> = listOf()
 
     val acceptedParties: List<Party>

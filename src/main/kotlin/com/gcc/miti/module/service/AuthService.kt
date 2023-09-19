@@ -3,14 +3,14 @@ package com.gcc.miti.module.service
 import com.gcc.miti.module.dto.authdto.SignInDto
 import com.gcc.miti.module.dto.authdto.SignUpDto
 import com.gcc.miti.module.dto.authdto.TokenDto
+import com.gcc.miti.module.entity.Certification
 import com.gcc.miti.module.entity.RefreshToken
-import com.gcc.miti.module.entity.Verification
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.global.security.JwtTokenProvider
+import com.gcc.miti.module.repository.CertificationRepository
 import com.gcc.miti.module.repository.RefreshTokenRepository
 import com.gcc.miti.module.repository.UserRepository
-import com.gcc.miti.module.repository.VerificationRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 
 @Service
 class AuthService(
-    private val verificationRepository: VerificationRepository,
+    private val certificationRepository: CertificationRepository,
     private val mailService: MailService,
     private val tokenProvider: JwtTokenProvider,
     private val refreshTokenRepository: RefreshTokenRepository,
@@ -30,30 +30,35 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
 ) {
     @Transactional
-    fun saveMail(email: String): Verification {
+    fun saveMail(email: String): Boolean {
         val certificationNumber: String = mailService.randomNumber()
         mailService.sendMail(email, certificationNumber)
-        val verification = verificationRepository.getByEmail(email)
+        val verification = certificationRepository.getByEmail(email)
         return if (verification != null) {
-            verificationRepository.save(
+            certificationRepository.save(
                 verification.apply {
                     this.randomNumber = certificationNumber
                 },
             )
+            true
         } else {
-            verificationRepository.save(Verification(certificationNumber, email))
+            certificationRepository.save(Certification(certificationNumber, email))
+            true
         }
     }
 
     @Transactional
     fun signUp(signUpDto: SignUpDto): Boolean {
+        val certification =
+            certificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.BAD_REQUEST)
+        if (!certification.flag) throw BaseException(BaseExceptionCode.BAD_REQUEST)
         userRepository.save(signUpDto.toUser(passwordEncoder))
         return true
     }
 
     @Transactional
     fun checkCertification(email: String, certificationNumber: String): Boolean {
-        val verification = verificationRepository.getByEmail(email)
+        val verification = certificationRepository.getByEmail(email)
         if (verification != null) {
             if (verification.modifiedDate!!.plusMinutes(1).isBefore(LocalDateTime.now())) {
                 return if (certificationNumber == verification.randomNumber) {

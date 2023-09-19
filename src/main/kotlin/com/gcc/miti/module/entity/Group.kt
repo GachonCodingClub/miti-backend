@@ -2,6 +2,8 @@ package com.gcc.miti.module.entity
 
 import com.gcc.miti.module.constants.GroupStatus
 import com.gcc.miti.module.constants.PartyStatus
+import com.gcc.miti.module.global.exception.BaseException
+import com.gcc.miti.module.global.exception.BaseExceptionCode
 import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.Enumerated
@@ -51,14 +53,18 @@ class Group(
         }
 
     fun acceptParty(partyId: Long) {
-        val party = parties.find { it.id == partyId }!!
-        val memberCount = party.partyMember.count()
-        var sum = 1
+        val party = parties.find { it.id == partyId } ?: throw BaseException(
+            BaseExceptionCode.NOT_FOUND,
+        )
+        val newMemberCount = party.partyMember.count()
+        var acceptedPartyMemberCount = 1 // Count Leader
         acceptedParties.forEach {
-            sum += it.partyMember.count()
+            acceptedPartyMemberCount += it.partyMember.count()
         }
-        if (maxUsers - sum - memberCount >= 0) {
+        if (maxUsers - acceptedPartyMemberCount - newMemberCount >= 0) {
             party.partyStatus = PartyStatus.ACCEPTED
+        } else {
+            throw BaseException(BaseExceptionCode.MAX_USER_ERROR)
         }
     }
 

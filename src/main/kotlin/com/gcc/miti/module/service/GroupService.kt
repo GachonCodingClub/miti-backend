@@ -1,13 +1,15 @@
 package com.gcc.miti.module.service
 
+import com.gcc.miti.module.dto.GroupListDto
 import com.gcc.miti.module.dto.GroupPartiesDto
 import com.gcc.miti.module.dto.PartyMembersDto
 import com.gcc.miti.module.dto.makegroupdto.GroupDto
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.repository.GroupRepository
-import com.gcc.miti.module.repository.PartyRepository
 import com.gcc.miti.module.repository.UserRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional
 class GroupService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
-    private val partyRepository: PartyRepository,
 ) {
 
     @Transactional
@@ -38,5 +39,12 @@ class GroupService(
                 PartyMembersDto.partyToPartyMembersDto(it)
             },
         )
+    }
+
+    @Transactional
+    fun getGroups(pageable: Pageable): Page<GroupListDto> {
+        return groupRepository.findAll(pageable).map {
+            GroupListDto.toDto(it)
+        }
     }
 }

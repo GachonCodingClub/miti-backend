@@ -19,7 +19,7 @@ import javax.persistence.Table
 class Group(
     val description: String,
     val title: String,
-    val maxUsers: Long,
+    val maxUsers: Int,
 
     @Enumerated
     val groupStatus: GroupStatus,

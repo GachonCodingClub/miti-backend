@@ -1,5 +1,6 @@
 package com.gcc.miti.module.dto.makegroupdto
 
+import com.gcc.miti.module.constants.GroupStatus
 import com.gcc.miti.module.entity.Group
 import com.gcc.miti.module.entity.User
 import java.time.LocalDateTime
@@ -17,6 +18,7 @@ data class GroupDto(
                 groupDto.description,
                 groupDto.title,
                 groupDto.maxUsers,
+                GroupStatus.OPEN,
             ).also {
                 it.meetDate = groupDto.meetDate
                 it.meetPlace = groupDto.meetPlace

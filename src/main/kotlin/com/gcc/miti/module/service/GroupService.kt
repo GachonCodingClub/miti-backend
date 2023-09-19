@@ -3,6 +3,8 @@ package com.gcc.miti.module.service
 import com.gcc.miti.module.dto.GroupPartiesDto
 import com.gcc.miti.module.dto.PartyMembersDto
 import com.gcc.miti.module.dto.makegroupdto.GroupDto
+import com.gcc.miti.module.global.exception.BaseException
+import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.PartyRepository
 import com.gcc.miti.module.repository.UserRepository
@@ -24,7 +26,10 @@ class GroupService(
 
     @Transactional(readOnly = true)
     fun getRequestedParties(groupId: Long, userId: String): GroupPartiesDto {
-        val group = groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId)
+        val group =
+            groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
+                BaseExceptionCode.NOT_FOUND,
+            )
         return GroupPartiesDto(
             group.waitingParties.map {
                 PartyMembersDto.partyToPartyMembersDto(it)

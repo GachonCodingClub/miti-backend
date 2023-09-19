@@ -16,7 +16,7 @@ class PartyController(
     private val partyService: PartyService,
 ) {
 
-    @Operation(summary = "{groupId}에 여러명이 파티 신청하기")
+    @Operation(summary = "{groupId}(미팅방)에 1~N명 파티(참가) 신청하기")
     @PostMapping("/{groupId}")
     fun makeParty(
         @PathVariable(name = "groupId") groupId: Long,

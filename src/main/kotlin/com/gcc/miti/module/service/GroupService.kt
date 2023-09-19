@@ -11,12 +11,6 @@ class GroupService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
 ) {
-//    @Transactional
-//    fun test(): List<GroupMembersDto> {
-//        return groupRepository.findById(1).get().groupMembers.map {
-//            GroupMembersDto.userToGroupMembersDto(it)
-//        }
-//    }
 
     @Transactional
     fun makeGroup(groupDto: GroupDto, userId: String): Boolean {

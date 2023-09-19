@@ -8,6 +8,7 @@ import com.gcc.miti.module.entity.RefreshToken
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.global.security.JwtTokenProvider
+import com.gcc.miti.module.helper.AuthHelper
 import com.gcc.miti.module.repository.CertificationRepository
 import com.gcc.miti.module.repository.RefreshTokenRepository
 import com.gcc.miti.module.repository.UserRepository
@@ -28,15 +29,17 @@ class AuthService(
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val authHelper: AuthHelper,
 ) {
     @Transactional
     fun saveMail(email: String): Boolean {
+        authHelper.isUniversityEmail(email)
         val certificationNumber: String = mailService.randomNumber()
         mailService.sendMail(email, certificationNumber)
-        val verification = certificationRepository.getByEmail(email)
-        return if (verification != null) {
+        val certification = certificationRepository.getByEmail(email)
+        return if (certification != null) {
             certificationRepository.save(
-                verification.apply {
+                certification.apply {
                     this.randomNumber = certificationNumber
                 },
             )
@@ -50,19 +53,19 @@ class AuthService(
     @Transactional
     fun signUp(signUpDto: SignUpDto): Boolean {
         val certification =
-            certificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.BAD_REQUEST)
-        if (!certification.flag) throw BaseException(BaseExceptionCode.BAD_REQUEST)
+            certificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
+        if (!certification.flag) throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
         userRepository.save(signUpDto.toUser(passwordEncoder))
         return true
     }
 
     @Transactional
     fun checkCertification(email: String, certificationNumber: String): Boolean {
-        val verification = certificationRepository.getByEmail(email)
-        if (verification != null) {
-            if (verification.modifiedDate!!.plusMinutes(1).isBefore(LocalDateTime.now())) {
-                return if (certificationNumber == verification.randomNumber) {
-                    verification.flag = true
+        val certification = certificationRepository.getByEmail(email)
+        if (certification != null) {
+            if (certification.modifiedDate!!.plusMinutes(1).isBefore(LocalDateTime.now())) {
+                return if (certificationNumber == certification.randomNumber) {
+                    certification.flag = true
                     true
                 } else {
                     false

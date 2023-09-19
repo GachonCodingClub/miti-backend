@@ -48,4 +48,14 @@ class GroupController(
     ): GroupPartiesDto {
         return groupService.getRequestedParties(groupId, userId)
     }
+
+    @Operation(summary = "파티 수락하기")
+    @GetMapping("/{groupId}/parties/{partyId}/accept")
+    fun acceptParty(
+        @PathVariable groupId: Long,
+        @PathVariable partyId: Long,
+        @Parameter(hidden = true) @GetIdFromToken userId: String,
+    ): Boolean {
+        return groupService.acceptParty(groupId, partyId, userId)
+    }
 }

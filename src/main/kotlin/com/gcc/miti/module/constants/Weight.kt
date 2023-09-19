@@ -1,3 +1,6 @@
 package com.gcc.miti.module.constants
 
-enum class Weight
+enum class Weight {
+    A,
+    B,
+}

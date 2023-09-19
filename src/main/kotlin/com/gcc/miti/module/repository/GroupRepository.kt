@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface GroupRepository : JpaRepository<Group, Long> {
-    fun findByLeader(leader: User): Group
+    fun getByLeaderAndId(leader: User, id: Long): Group
 }

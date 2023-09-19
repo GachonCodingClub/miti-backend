@@ -6,6 +6,7 @@ import com.gcc.miti.module.dto.authdto.TokenDto
 import com.gcc.miti.module.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -46,7 +47,7 @@ class AuthController(private val authService: AuthService) {
     }
 
     @PostMapping("/refresh")
-    fun refresh(@RequestBody tokenDto: TokenDto): TokenDto {
+    fun refresh(@RequestBody tokenDto: TokenDto, authentication: Authentication): TokenDto {
         return authService.refresh(tokenDto)
     }
 }

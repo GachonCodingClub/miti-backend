@@ -1,3 +1,6 @@
 package com.gcc.miti.module.constants
 
-enum class Height
+enum class Height {
+    A,
+    B,
+}

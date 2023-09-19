@@ -1,6 +1,9 @@
 package com.gcc.miti.module.entity
 
 import com.gcc.miti.module.constants.Gender
+import com.gcc.miti.module.constants.Height
+import com.gcc.miti.module.constants.Weight
+import java.time.LocalDate
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -19,9 +22,16 @@ class User(
     val description: String?,
     @Enumerated(value = EnumType.STRING)
     val gender: Gender,
+    @Enumerated(value = EnumType.STRING)
+    val height: Height,
+    @Enumerated(value = EnumType.STRING)
+    val weight: Weight,
 
     @Column(unique = true)
     val nickname: String,
+
+    val birthDate: LocalDate,
+
 ) : BaseTimeEntity() {
     @Id
     var userId: String = ""

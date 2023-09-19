@@ -3,6 +3,7 @@ package com.gcc.miti.module.controller
 import com.gcc.miti.module.dto.partydto.PartyDto
 import com.gcc.miti.module.global.security.GetIdFromToken
 import com.gcc.miti.module.service.PartyService
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -15,6 +16,7 @@ class PartyController(
     private val partyService: PartyService,
 ) {
 
+    @Operation(summary = "{groupId}에 여러명이 파티 신청하기")
     @PostMapping("/{groupId}")
     fun makeParty(
         @PathVariable(name = "groupId") groupId: Long,

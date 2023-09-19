@@ -15,12 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 class GroupController(
     private val groupService: GroupService,
 ) {
-//    @GetMapping("/test")
-//    fun test(): List<GroupMembersDto> {
-//        return groupService.test()
-//    }
 
-    @PostMapping("/makeGroup")
+    @PostMapping("")
     fun makeGroup(@RequestBody groupDto: GroupDto, @GetIdFromToken userId: String): ResponseEntity<Boolean> {
         return ResponseEntity.status(HttpStatus.CREATED).body(groupService.makeGroup(groupDto, userId))
     }

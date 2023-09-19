@@ -5,8 +5,8 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "verification")
-class Verification(
+@Table(name = "certification")
+class Certification(
     var randomNumber: String? = null,
 
     @Id

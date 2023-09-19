@@ -18,6 +18,7 @@ enum class BaseExceptionCode(val httpStatusCode: Int, val message: String) {
 
     // 404 NOT FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "아이디가 존재하지 않습니다."),
+    NOT_FOUND(HttpStatus.NOT_FOUND.value(), "존재하지 않습니다."),
 
     // 409 CONFLICT
     USER_ID_CONFLICT(HttpStatus.CONFLICT.value(), "아이디가 중복입니다."),

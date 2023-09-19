@@ -1,8 +1,10 @@
 package com.gcc.miti.module.entity
 
+import com.gcc.miti.module.constants.GroupStatus
 import com.gcc.miti.module.constants.PartyStatus
 import java.time.LocalDateTime
 import javax.persistence.Entity
+import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -18,6 +20,9 @@ class Group(
     val description: String,
     val title: String,
     val maxUsers: Long,
+
+    @Enumerated
+    val groupStatus: GroupStatus,
 
 ) : BaseTimeEntity() {
     @Id
@@ -61,4 +66,13 @@ class Group(
         val party = parties.find { it.id == partyId }!!
         party.partyStatus = PartyStatus.REJECTED
     }
+
+    val countMembers: Int
+        get() {
+            var count = 0
+            acceptedParties.forEach {
+                count += it.partyMember.count()
+            }
+            return count + 1 // Plus Leader
+        }
 }

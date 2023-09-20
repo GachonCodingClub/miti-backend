@@ -40,10 +40,10 @@ class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
             "develop" -> tokenExpireTimeDev
             else -> accessTokenExpireTime
         }
-        val refreshTokenRefreshTime = when (activeProfile) {
-            "develop" -> tokenExpireTimeDev
-            else -> refreshTokenExpireTime
-        }
+//        val refreshTokenRefreshTime = when (activeProfile) {
+//            "develop" -> tokenExpireTimeDev
+//            else -> refreshTokenExpireTime
+//        }
         val now = Date()
         val accessToken = Jwts.builder()
             .setHeaderParam("typ", "JWT")
@@ -53,13 +53,13 @@ class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
             .setExpiration(Date(now.time + accessTokenRefreshTime))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
-        val refreshToken = Jwts.builder()
-            .setHeaderParam("typ", "JWT")
-            .setIssuedAt(now)
-            .setExpiration(Date(now.time + refreshTokenRefreshTime))
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact()
-        return TokenDto(accessToken, refreshToken)
+//        val refreshToken = Jwts.builder()
+//            .setHeaderParam("typ", "JWT")
+//            .setIssuedAt(now)
+//            .setExpiration(Date(now.time + refreshTokenRefreshTime))
+//            .signWith(key, SignatureAlgorithm.HS256)
+//            .compact()
+        return TokenDto(accessToken)
     }
 
     fun getAuthentication(token: String): Authentication {

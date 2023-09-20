@@ -58,4 +58,14 @@ class GroupController(
     ): Boolean {
         return groupService.acceptParty(groupId, partyId, userId)
     }
+
+    @Operation(summary = "파티 거절하기")
+    @GetMapping("/{groupId}/parties/{partyId}/reject")
+    fun rejectParty(
+        @PathVariable groupId: Long,
+        @PathVariable partyId: Long,
+        @Parameter(hidden = true) @GetIdFromToken userId: String,
+    ): Boolean {
+        return groupService.rejectParty(groupId, partyId, userId)
+    }
 }

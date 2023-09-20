@@ -57,4 +57,14 @@ class GroupService(
         group.acceptParty(partyId)
         return true
     }
+
+    @Transactional
+    fun rejectParty(groupId: Long, partyId: Long, userId: String): Boolean {
+        val group =
+            groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
+                BaseExceptionCode.NOT_FOUND,
+            )
+        group.rejectParty(partyId)
+        return true
+    }
 }

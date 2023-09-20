@@ -13,9 +13,9 @@ class MessageController(
     private val chatMessageRepository: ChatMessageRepository,
 ) {
 
-    @GetMapping("getAllMessages/{groupId}")
+    @GetMapping("/{groupId}")
     fun getAllMessages(@PathVariable(name = "groupId") groupId: Long): List<ChatMessageDto> {
-        return chatMessageRepository.findAllByGroup_Id(groupId).map {
+        return chatMessageRepository.findAllByGroup_IdOrderByCreatedAt(groupId).map {
             ChatMessageDto.chatMessageToDto(it)
         }
     }

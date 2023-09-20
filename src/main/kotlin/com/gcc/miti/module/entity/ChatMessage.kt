@@ -24,7 +24,7 @@ class ChatMessage(
     var createdAt: LocalDateTime = LocalDateTime.now(),
 ) : BaseTimeEntity() {
     @ManyToOne(fetch = FetchType.LAZY)
-    val group: Group? = null
+    var group: Group? = null
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

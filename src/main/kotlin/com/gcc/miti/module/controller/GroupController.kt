@@ -40,6 +40,15 @@ class GroupController(
         return groupService.getGroups(pageable)
     }
 
+    @GetMapping("/my")
+    @Operation(summary = "내 미팅방 확인하기 (페이지네이션)")
+    fun getMyGroups(
+        @PageableDefault pageable: Pageable,
+        @Parameter(hidden = true) @GetIdFromToken userId: String,
+    ): Page<GroupListDto> {
+        return groupService.getMyGroups(pageable, userId)
+    }
+
     @Operation(summary = "신청한 파티 목록 조회")
     @GetMapping("/{groupId}/parties")
     fun getRequestedParties(

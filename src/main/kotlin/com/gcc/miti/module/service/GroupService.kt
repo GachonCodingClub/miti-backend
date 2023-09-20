@@ -41,9 +41,16 @@ class GroupService(
         )
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     fun getGroups(pageable: Pageable): Page<GroupListDto> {
         return groupRepository.findAll(pageable).map {
+            GroupListDto.toDto(it)
+        }
+    }
+
+    @Transactional(readOnly = true)
+    fun getMyGroups(pageable: Pageable, userId: String): Page<GroupListDto> {
+        return groupRepository.findMyGroups(userId, pageable).map {
             GroupListDto.toDto(it)
         }
     }

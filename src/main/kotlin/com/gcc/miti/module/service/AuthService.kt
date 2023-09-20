@@ -4,15 +4,12 @@ import com.gcc.miti.module.dto.authdto.SignInDto
 import com.gcc.miti.module.dto.authdto.SignUpDto
 import com.gcc.miti.module.dto.authdto.TokenDto
 import com.gcc.miti.module.entity.Certification
-import com.gcc.miti.module.entity.RefreshToken
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.global.security.JwtTokenProvider
 import com.gcc.miti.module.helper.AuthHelper
 import com.gcc.miti.module.repository.CertificationRepository
-import com.gcc.miti.module.repository.RefreshTokenRepository
 import com.gcc.miti.module.repository.UserRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -25,7 +22,7 @@ class AuthService(
     private val certificationRepository: CertificationRepository,
     private val mailService: MailService,
     private val tokenProvider: JwtTokenProvider,
-    private val refreshTokenRepository: RefreshTokenRepository,
+//    private val refreshTokenRepository: RefreshTokenRepository,
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -80,22 +77,22 @@ class AuthService(
             val credential = UsernamePasswordAuthenticationToken(userId, password)
             val authentication = authenticationManagerBuilder.`object`.authenticate(credential)
             val token = tokenProvider.createToken(authentication)
-            refreshTokenRepository.save(RefreshToken(userId, token.refreshToken))
+//            refreshTokenRepository.save(RefreshToken(userId, token.refreshToken))
             return token
         }
     }
 
-    fun refresh(tokenDto: TokenDto): TokenDto {
-        val userId = tokenProvider.getUserPk(tokenDto.accessToken)
-        val savedRefreshToken = refreshTokenRepository.findByIdOrNull(userId)
-        if (tokenDto.refreshToken == savedRefreshToken?.refreshToken) {
-            val authentication = tokenProvider.getAuthentication(tokenDto.accessToken)
-            val token = tokenProvider.createToken(authentication)
-            return TokenDto(token.accessToken, token.refreshToken).also {
-                refreshTokenRepository.save(RefreshToken(userId, token.refreshToken))
-            }
-        } else {
-            throw BaseException(BaseExceptionCode.REFRESH_TOKEN_MISMATCH)
-        }
-    }
+//    fun refresh(tokenDto: TokenDto): TokenDto {
+//        val userId = tokenProvider.getUserPk(tokenDto.accessToken)
+//        val savedRefreshToken = refreshTokenRepository.findByIdOrNull(userId)
+//        if (tokenDto.refreshToken == savedRefreshToken?.refreshToken) {
+//            val authentication = tokenProvider.getAuthentication(tokenDto.accessToken)
+//            val token = tokenProvider.createToken(authentication)
+//            return TokenDto(token.accessToken, token.refreshToken).also {
+//                refreshTokenRepository.save(RefreshToken(userId, token.refreshToken))
+//            }
+//        } else {
+//            throw BaseException(BaseExceptionCode.REFRESH_TOKEN_MISMATCH)
+//        }
+//    }
 }

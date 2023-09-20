@@ -4,8 +4,6 @@ import com.gcc.miti.module.dto.authdto.SignInDto
 import com.gcc.miti.module.dto.authdto.SignUpDto
 import com.gcc.miti.module.dto.authdto.TokenDto
 import com.gcc.miti.module.entity.Certification
-import com.gcc.miti.module.global.exception.BaseException
-import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.global.security.JwtTokenProvider
 import com.gcc.miti.module.helper.AuthHelper
 import com.gcc.miti.module.repository.CertificationRepository
@@ -49,9 +47,9 @@ class AuthService(
 
     @Transactional
     fun signUp(signUpDto: SignUpDto): Boolean {
-        val certification =
-            certificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
-        if (!certification.flag) throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
+//        val certification =
+//            certificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
+//        if (!certification.flag) throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
         userRepository.save(signUpDto.toUser(passwordEncoder))
         return true
     }

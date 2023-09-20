@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ChatMessageRepository : JpaRepository<ChatMessage, Long> {
-    fun findAllByGroup_Id(groupId: Long): List<ChatMessage>
+    fun findAllByGroup_IdOrderByCreatedAt(groupId: Long): List<ChatMessage>
 }

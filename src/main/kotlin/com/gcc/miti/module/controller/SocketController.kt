@@ -3,6 +3,7 @@ package com.gcc.miti.module.controller
 import com.gcc.miti.module.dto.MessageDto
 import com.gcc.miti.module.entity.ChatMessage
 import com.gcc.miti.module.repository.ChatMessageRepository
+import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
@@ -16,11 +17,16 @@ class SocketController(
     private val simpMessagingTemplate: SimpMessagingTemplate,
     private val chatMessageRepository: ChatMessageRepository,
     private val userRepository: UserRepository,
+    private val groupRepository: GroupRepository,
 ) {
     @MessageMapping("")
     @Transactional
     fun send(message: MessageDto) {
-        chatMessageRepository.save(ChatMessage(userRepository.getReferenceById("test"), message.message))
+        chatMessageRepository.save(
+            ChatMessage(userRepository.getReferenceById(message.sender), message.message).also {
+                it.group = groupRepository.getReferenceById(message.roomId.toLong())
+            },
+        )
         simpMessagingTemplate.convertAndSend("/topic/${message.roomId}", message.toDto())
     }
 }

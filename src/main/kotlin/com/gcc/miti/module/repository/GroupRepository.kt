@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository
 interface GroupRepository : JpaRepository<Group, Long> {
     fun getByLeaderAndId(leader: User, id: Long): Group?
 
-    @Query(value = "select distinct g from Group g join Party p on g.id = p.group.id join PartyMember pm on p.id = pm.party.id where g.leader.userId = :userId or pm.user.userId = :userId ")
+    @Query(value = "select distinct g from Group g left join Party p on g.id = p.group.id left join PartyMember pm on p.id = pm.party.id where g.leader.userId = :userId or pm.user.userId = :userId ")
     fun findMyGroups(@Param("userId") userId: String, pageable: Pageable): Page<Group>
 }

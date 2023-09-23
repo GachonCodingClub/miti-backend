@@ -35,7 +35,7 @@ class SecurityConfiguration(private val jwtTokenProvider: JwtTokenProvider) : We
             .cors().configurationSource(corsConfigurationSource())
             .and()
             .authorizeRequests()
-            .antMatchers("/auth/**", "swagger-ui/**", "/v3/api-docs/").permitAll()
+            .antMatchers("/auth/**", "swagger-ui/**", "/v3/api-docs/", "/health").permitAll()
             .and()
             .addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),
@@ -46,9 +46,9 @@ class SecurityConfiguration(private val jwtTokenProvider: JwtTokenProvider) : We
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.addAllowedOrigin("*")
-        configuration.addAllowedHeader("*")
-        configuration.addAllowedMethod("*")
+
+        configuration.allowedOriginPatterns = listOf("*")
+        configuration.allowedMethods = listOf("*")
         configuration.allowCredentials = true
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)

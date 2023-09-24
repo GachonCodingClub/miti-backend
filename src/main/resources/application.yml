@@ -4,7 +4,10 @@ spring:
     url: ${DB_URL}
     username: postgres
     password: ${DB_PASSWORD}
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  
   mail:
     host: smtp.gmail.com
     port: 587
@@ -27,6 +30,8 @@ spring:
     properties:
       hibernate:
         format-sql: true
+  profiles:
+    active: ${PROFILE}
 
 logging:
   level:
@@ -37,7 +42,9 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
 server:
   port: 8080
 
 JWT-SECRET: ${JWT_SECRET}
+

@@ -5,9 +5,9 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "verification")
-class Verification(
-    val randomNumber: String? = null,
+@Table(name = "certification")
+class Certification(
+    var randomNumber: String? = null,
 
     @Id
     val email: String? = null,

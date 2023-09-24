@@ -58,7 +58,7 @@ class AuthService(
     fun checkCertification(email: String, certificationNumber: String): Boolean {
         val certification = certificationRepository.getByEmail(email)
         if (certification != null) {
-            if (certification.modifiedDate!!.plusMinutes(3).isBefore(LocalDateTime.now())) {
+            if (certification.modifiedDate!!.plusMinutes(3).isAfter(LocalDateTime.now())) {
                 return if (certificationNumber == certification.randomNumber) {
                     certification.flag = true
                     true

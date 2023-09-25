@@ -51,8 +51,8 @@ class AuthService(
     fun signUp(signUpDto: SignUpDto): Boolean {
         val certification =
             certificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
-        if (!certification.flag || certification.modifiedDate!!.isAfter(
-                LocalDateTime.now().plusHours(1),
+        if (!certification.flag || certification.modifiedDate!!.plusHours(1).isBefore(
+                LocalDateTime.now(),
             )
         ) {
             throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
@@ -61,6 +61,7 @@ class AuthService(
             throw BaseException(BaseExceptionCode.USER_ID_CONFLICT)
         }
         userRepository.save(signUpDto.toUser(passwordEncoder))
+        certification.flag = false
         return true
     }
 

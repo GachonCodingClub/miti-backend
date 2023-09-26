@@ -1,17 +1,44 @@
 package com.gcc.miti.module.entity
 
 import com.gcc.miti.module.constants.Gender
-import javax.persistence.*
+import com.gcc.miti.module.constants.Height
+import com.gcc.miti.module.constants.Weight
+import java.time.LocalDate
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import javax.persistence.Id
+import javax.persistence.Table
 
 @Entity
 @Table(name = "users")
 class User(
+    @Column(nullable = false)
     val password: String,
+    @Column(nullable = false)
     val userName: String,
-    val description: String,
+    @Column(nullable = true)
+    val description: String?,
     @Enumerated(value = EnumType.STRING)
-    val gender: Gender
-) {
+    val gender: Gender,
+    @Enumerated(value = EnumType.STRING)
+    val height: Height,
+    @Enumerated(value = EnumType.STRING)
+    val weight: Weight,
+
+    @Column(unique = true)
+    val nickname: String,
+
+    val birthDate: LocalDate,
+
+) : BaseTimeEntity() {
     @Id
-    val userId: String = ""
+    var userId: String = ""
+    fun toPartyMember(party: Party): PartyMember {
+        return PartyMember().also {
+            it.user = this
+            it.party = party
+        }
+    }
 }

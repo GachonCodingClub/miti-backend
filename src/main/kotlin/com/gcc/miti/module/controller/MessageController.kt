@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/message")
 class MessageController(
-    private val chatMessageRepository: ChatMessageRepository
+    private val chatMessageRepository: ChatMessageRepository,
 ) {
+
     @GetMapping("/{groupId}")
     fun getAllMessages(@PathVariable(name = "groupId") groupId: Long): List<ChatMessageDto> {
-        return chatMessageRepository.findAllByGroup_Id(groupId).map {
+        return chatMessageRepository.findAllByGroup_IdOrderByCreatedAt(groupId).map {
             ChatMessageDto.chatMessageToDto(it)
         }
     }

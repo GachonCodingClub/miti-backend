@@ -45,6 +45,7 @@ logging:
 
 server:
   port: 8080
+  error:
+    include-message: always
 
 JWT-SECRET: ${JWT_SECRET}
-

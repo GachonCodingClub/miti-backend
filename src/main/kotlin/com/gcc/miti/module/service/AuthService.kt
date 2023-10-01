@@ -49,6 +49,9 @@ class AuthService(
 
     @Transactional
     fun signUp(signUpDto: SignUpDto): Boolean {
+        if (userRepository.existsById(signUpDto.userId)) {
+            throw BaseException(BaseExceptionCode.USER_ID_CONFLICT)
+        }
         val certification =
             certificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
         if (!certification.flag || certification.modifiedDate!!.plusHours(1).isBefore(
@@ -56,9 +59,6 @@ class AuthService(
             )
         ) {
             throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
-        }
-        if (userRepository.existsById(signUpDto.userId)) {
-            throw BaseException(BaseExceptionCode.USER_ID_CONFLICT)
         }
         userRepository.save(signUpDto.toUser(passwordEncoder))
         certification.flag = false

@@ -30,6 +30,9 @@ class AuthService(
 ) {
     @Transactional
     fun saveMail(email: String): Boolean {
+        if(userRepository.existsById(email)){
+            throw BaseException(BaseExceptionCode.ALREADY_REGISTERED)
+        }
         authHelper.isUniversityEmail(email)
         val certificationNumber: String = mailService.randomNumber()
         mailService.sendMail(email, certificationNumber)

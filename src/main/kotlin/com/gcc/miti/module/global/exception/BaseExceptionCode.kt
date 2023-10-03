@@ -23,5 +23,6 @@ enum class BaseExceptionCode(val httpStatusCode: Int, val message: String) {
     // 409 CONFLICT
     ALREADY_REGISTERED(HttpStatus.CONFLICT.value(), "이미 가입되었습니다."),
     USER_ID_CONFLICT(HttpStatus.CONFLICT.value(), "아이디가 중복입니다."),
+    NICKNAME_CONFLICT(HttpStatus.CONFLICT.value(), "닉네임 중복입니다."),
     MAX_USER_ERROR(HttpStatus.CONFLICT.value(), "정원이 초과하였습니다."),
 }

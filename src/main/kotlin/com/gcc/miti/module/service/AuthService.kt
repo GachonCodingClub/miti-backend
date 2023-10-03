@@ -84,6 +84,14 @@ class AuthService(
         return false
     }
 
+    fun checkNicknameExists(nickname:String): Boolean {
+        if(userRepository.existsByNickname(nickname)){
+            throw BaseException(BaseExceptionCode.NICKNAME_CONFLICT)
+        }else{
+            return false
+        }
+    }
+
     fun signIn(signInDto: SignInDto): TokenDto {
         signInDto.apply {
             val credential = UsernamePasswordAuthenticationToken(userId, password)
@@ -93,6 +101,7 @@ class AuthService(
             return token
         }
     }
+
 
 //    fun refresh(tokenDto: TokenDto): TokenDto {
 //        val userId = tokenProvider.getUserPk(tokenDto.accessToken)

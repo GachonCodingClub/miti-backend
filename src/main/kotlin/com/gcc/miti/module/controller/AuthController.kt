@@ -47,6 +47,7 @@ class AuthController(private val authService: AuthService) {
         return authService.signIn(signInDto)
     }
 
+    @Operation(summary = "닉네임 중복 검사")
     @GetMapping("/check/nickname")
     fun checkNickname(@RequestParam nickname: String): ResponseDto<Boolean> {
         return ResponseDto(authService.checkNicknameExists(nickname))

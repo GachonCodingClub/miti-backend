@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 data class SignUpDto(
     val userId: String,
-    val password: String,
+    var password: String,
     val description: String?,
     val gender: Gender,
     val userName: String,

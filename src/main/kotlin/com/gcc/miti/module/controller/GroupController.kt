@@ -77,4 +77,10 @@ class GroupController(
     ): Boolean {
         return groupService.rejectParty(groupId, partyId, userId)
     }
+
+    @Operation(summary = "그룹 Id로 하나의 그룹 조회하기")
+    @GetMapping("{groupId}")
+    fun getParty(@PathVariable groupId: Long): GroupDto {
+        return groupService.getGroup(groupId)
+    }
 }

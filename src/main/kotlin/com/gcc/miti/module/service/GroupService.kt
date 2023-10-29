@@ -4,7 +4,6 @@ import com.gcc.miti.module.dto.GroupListDto
 import com.gcc.miti.module.dto.GroupPartiesDto
 import com.gcc.miti.module.dto.PartyMembersDto
 import com.gcc.miti.module.dto.makegroupdto.GroupDto
-import com.gcc.miti.module.entity.Group
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.repository.GroupRepository
@@ -55,7 +54,7 @@ class GroupService(
             GroupListDto.toDto(it)
         }
     }
-ㅋ
+
     @Transactional
     fun acceptParty(groupId: Long, partyId: Long, userId: String): Boolean {
         val group =
@@ -84,7 +83,7 @@ class GroupService(
             title = group.title,
             maxUsers = group.maxUsers,
             meetDate = group.meetDate,
-            meetPlace = group.meetPlace
+            meetPlace = group.meetPlace,
         ).also {
             group.acceptedParties
         }

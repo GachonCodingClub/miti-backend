@@ -79,7 +79,7 @@ class GroupController(
     }
 
     @Operation(summary = "그룹 Id로 하나의 그룹 조회하기")
-    @GetMapping("{groupId}")
+    @GetMapping("/{groupId}")
     fun getParty(@PathVariable groupId: Long): GroupDto {
         return groupService.getGroup(groupId)
     }

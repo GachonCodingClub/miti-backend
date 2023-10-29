@@ -10,6 +10,7 @@ class GroupListDto(
     val nowUsers: Int,
     val title: String,
     val description: String,
+    val id: Long,
 ) {
     companion object {
         fun toDto(group: Group): GroupListDto {
@@ -21,6 +22,7 @@ class GroupListDto(
                     countMembers,
                     title,
                     description,
+                    id,
                 )
             }
         }

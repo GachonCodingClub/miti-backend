@@ -107,7 +107,7 @@ class DummyDataIInserter(
     }
 
     private fun addGroups() {
-        groupService.makeGroup(
+        groupService.createGroup(
             CreateGroupReq(
                 "첫 그룹입니다.",
                 "첫 그룹 제목입니다.",
@@ -119,7 +119,7 @@ class DummyDataIInserter(
             userId = userId1,
         )
 
-        groupService.makeGroup(
+        groupService.createGroup(
             CreateGroupReq(
                 "두번째 그룹입니다.",
                 "두번째 그룹 제목입니다.",

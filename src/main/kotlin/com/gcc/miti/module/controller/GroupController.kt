@@ -4,6 +4,7 @@ import com.gcc.miti.module.dto.GroupListDto
 import com.gcc.miti.module.dto.GroupPartiesDto
 import com.gcc.miti.module.dto.GroupRes
 import com.gcc.miti.module.dto.group.dto.CreateGroupReq
+import com.gcc.miti.module.dto.group.dto.UpdateGroupReq
 import com.gcc.miti.module.global.security.GetIdFromToken
 import com.gcc.miti.module.service.GroupService
 import io.swagger.v3.oas.annotations.Operation
@@ -14,6 +15,7 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,11 +30,21 @@ class GroupController(
 
     @PostMapping("")
     @Operation(summary = "미팅방 만들기")
-    fun makeGroup(
+    fun createGroup(
         @RequestBody createGroupReq: CreateGroupReq,
         @Parameter(hidden = true) @GetIdFromToken userId: String,
     ): ResponseEntity<Boolean> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.makeGroup(createGroupReq, userId))
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(createGroupReq, userId))
+    }
+
+    @PatchMapping("/{groupId}")
+    @Operation(summary = "미팅방 수정하기")
+    fun updateGroup(
+        @RequestBody updateGroupReq: UpdateGroupReq,
+        @Parameter(hidden = true) @GetIdFromToken userId: String,
+        @PathVariable groupId: Long,
+    ): Boolean {
+       return groupService.updateGroup(updateGroupReq, userId, groupId)
     }
 
     @GetMapping("")

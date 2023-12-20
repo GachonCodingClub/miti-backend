@@ -8,7 +8,6 @@ import com.gcc.miti.module.repository.UserRepository
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestMapping
 import javax.transaction.Transactional
 
 @Controller
@@ -21,12 +20,12 @@ class SocketController(
     @MessageMapping("/send")
     @Transactional
     fun send(message: MessageDto) {
-        println("tes")
+        val user = userRepository.getReferenceById(message.sender)
         chatMessageRepository.save(
             ChatMessage(userRepository.getReferenceById(message.sender), message.message).also {
                 it.group = groupRepository.getReferenceById(message.groupId.toLong())
             },
         )
-        simpMessagingTemplate.convertAndSend("/sub/${message.groupId}", message.toDto())
+        simpMessagingTemplate.convertAndSend("/sub/${message.groupId}", message.toDto(user))
     }
 }

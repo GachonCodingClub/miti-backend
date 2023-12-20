@@ -12,7 +12,6 @@ data class CreateGroupReq(
     val meetDate: LocalDateTime?,
     val meetPlace: String?,
     val nicknames: List<String>
-
 ) {
     companion object {
         fun toGroup(createGroupReq: CreateGroupReq, user: User): Group {

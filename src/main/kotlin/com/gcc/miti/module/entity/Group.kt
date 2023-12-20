@@ -10,14 +10,14 @@ import javax.persistence.*
 @Entity
 @Table(name = "my_group")
 class Group(
-    val description: String,
-    val title: String,
+    var description: String,
+    var title: String,
     val maxUsers: Int,
 
     @Enumerated(EnumType.STRING)
     var groupStatus: GroupStatus,
 
-) : BaseTimeEntity() {
+    ) : BaseTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0

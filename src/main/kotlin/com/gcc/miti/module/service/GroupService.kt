@@ -6,6 +6,7 @@ import com.gcc.miti.module.dto.GroupPartiesDto
 import com.gcc.miti.module.dto.GroupRes
 import com.gcc.miti.module.dto.PartyMembersDto
 import com.gcc.miti.module.dto.group.dto.CreateGroupReq
+import com.gcc.miti.module.dto.group.dto.UpdateGroupReq
 import com.gcc.miti.module.entity.Party
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
@@ -24,13 +25,30 @@ class GroupService(
 ) {
 
     @Transactional
-    fun makeGroup(createGroupReq: CreateGroupReq, userId: String): Boolean {
+    fun createGroup(createGroupReq: CreateGroupReq, userId: String): Boolean {
         val group = groupRepository.save(CreateGroupReq.toGroup(createGroupReq, userRepository.getReferenceById(userId)))
         val users = userRepository.findAllByNicknameIn(createGroupReq.nicknames)
         val party = partyRepository.save(Party(PartyStatus.ACCEPTED).also { it.group = group })
         party.partyMember = users.map {
             it.toPartyMember(party)
         }.toMutableList()
+        return true
+    }
+
+    @Transactional
+    fun updateGroup(updateGroupReq: UpdateGroupReq, userId: String, groupId: Long): Boolean {
+        val group = groupRepository.getReferenceById(groupId)
+        if (group.leader.userId != userId) {
+            throw BaseException(BaseExceptionCode.BAD_REQUEST)
+        }
+        group.title = updateGroupReq.title
+        group.description = updateGroupReq.description
+        updateGroupReq.meetDate?.let {
+            group.meetDate = it
+        }
+        updateGroupReq.meetPlace?.let {
+            group.meetPlace = it
+        }
         return true
     }
 

@@ -41,4 +41,7 @@ class User(
             it.party = party
         }
     }
+
+    val age
+        get() = birthDate.year - LocalDate.now().year
 }

@@ -12,21 +12,21 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.transaction.Transactional
 
 @Controller
-@RequestMapping("/message")
 class SocketController(
     private val simpMessagingTemplate: SimpMessagingTemplate,
     private val chatMessageRepository: ChatMessageRepository,
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
 ) {
-    @MessageMapping("")
+    @MessageMapping("/send")
     @Transactional
     fun send(message: MessageDto) {
+        println("tes")
         chatMessageRepository.save(
             ChatMessage(userRepository.getReferenceById(message.sender), message.message).also {
-                it.group = groupRepository.getReferenceById(message.roomId.toLong())
+                it.group = groupRepository.getReferenceById(message.groupId.toLong())
             },
         )
-        simpMessagingTemplate.convertAndSend("/topic/${message.roomId}", message.toDto())
+        simpMessagingTemplate.convertAndSend("/sub/${message.groupId}", message.toDto())
     }
 }

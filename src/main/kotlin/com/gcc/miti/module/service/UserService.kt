@@ -1,6 +1,7 @@
 package com.gcc.miti.module.service
 
 import com.gcc.miti.module.dto.user.dto.ProfileRes
+import com.gcc.miti.module.dto.user.dto.UpdateProfileReq
 import com.gcc.miti.module.global.security.SecurityUtils
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -13,5 +14,15 @@ class UserService(private val userRepository: UserRepository) {
         val userId = SecurityUtils.getUserIdFromJwt()
         val user = userRepository.getReferenceById(userId)
         return ProfileRes.userToProfileRes(user)
+    }
+
+    @Transactional
+    fun updateProfile(updateProfileReq: UpdateProfileReq){
+        val userId = SecurityUtils.getUserIdFromJwt()
+        val user = userRepository.getReferenceById(userId)
+        user.description = updateProfileReq.description
+        user.nickname = updateProfileReq.nickname
+        user.height = updateProfileReq.height
+        user.weight = updateProfileReq.weight
     }
 }

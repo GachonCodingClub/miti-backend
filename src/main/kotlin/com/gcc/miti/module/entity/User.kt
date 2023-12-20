@@ -19,16 +19,16 @@ class User(
     @Column(nullable = false)
     val userName: String,
     @Column(nullable = true)
-    val description: String?,
+    var description: String?,
     @Enumerated(value = EnumType.STRING)
     val gender: Gender,
     @Enumerated(value = EnumType.STRING)
-    val height: Height,
+    var height: Height,
     @Enumerated(value = EnumType.STRING)
-    val weight: Weight,
+    var weight: Weight,
 
     @Column(unique = true)
-    val nickname: String,
+    var nickname: String,
 
     val birthDate: LocalDate,
 

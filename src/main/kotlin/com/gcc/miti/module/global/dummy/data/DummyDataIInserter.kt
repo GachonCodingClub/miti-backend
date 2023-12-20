@@ -4,9 +4,8 @@ import com.gcc.miti.module.constants.Gender
 import com.gcc.miti.module.constants.Height
 import com.gcc.miti.module.constants.Weight
 import com.gcc.miti.module.dto.authdto.SignUpDto
-import com.gcc.miti.module.dto.makegroupdto.GroupDto
+import com.gcc.miti.module.dto.group.dto.CreateGroupReq
 import com.gcc.miti.module.repository.UserRepository
-import com.gcc.miti.module.service.AuthService
 import com.gcc.miti.module.service.GroupService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -21,7 +20,6 @@ import java.time.LocalDateTime
 @Component
 class DummyDataIInserter(
     private val jdbcTemplate: JdbcTemplate,
-    private val authService: AuthService,
     private val groupService: GroupService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -110,23 +108,25 @@ class DummyDataIInserter(
 
     private fun addGroups() {
         groupService.makeGroup(
-            GroupDto(
+            CreateGroupReq(
                 "첫 그룹입니다.",
                 "첫 그룹 제목입니다.",
                 4,
                 LocalDateTime.now().plusDays(3),
                 "만날 장소",
+                emptyList()
             ),
             userId = userId1,
         )
 
         groupService.makeGroup(
-            GroupDto(
+            CreateGroupReq(
                 "두번째 그룹입니다.",
                 "두번째 그룹 제목입니다.",
                 4,
                 LocalDateTime.now().plusDays(3),
                 "만날 장소",
+                emptyList()
             ),
             userId = userId2,
         )

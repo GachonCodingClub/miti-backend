@@ -2,7 +2,8 @@ package com.gcc.miti.module.controller
 
 import com.gcc.miti.module.dto.GroupListDto
 import com.gcc.miti.module.dto.GroupPartiesDto
-import com.gcc.miti.module.dto.makegroupdto.GroupDto
+import com.gcc.miti.module.dto.GroupRes
+import com.gcc.miti.module.dto.group.dto.CreateGroupReq
 import com.gcc.miti.module.global.security.GetIdFromToken
 import com.gcc.miti.module.service.GroupService
 import io.swagger.v3.oas.annotations.Operation
@@ -28,10 +29,10 @@ class GroupController(
     @PostMapping("")
     @Operation(summary = "미팅방 만들기")
     fun makeGroup(
-        @RequestBody groupDto: GroupDto,
+        @RequestBody createGroupReq: CreateGroupReq,
         @Parameter(hidden = true) @GetIdFromToken userId: String,
     ): ResponseEntity<Boolean> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.makeGroup(groupDto, userId))
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.makeGroup(createGroupReq, userId))
     }
 
     @GetMapping("")
@@ -80,7 +81,7 @@ class GroupController(
 
     @Operation(summary = "그룹 Id로 하나의 그룹 조회하기")
     @GetMapping("/{groupId}")
-    fun getParty(@PathVariable groupId: Long): GroupDto {
+    fun getParty(@PathVariable groupId: Long): GroupRes {
         return groupService.getGroup(groupId)
     }
 }

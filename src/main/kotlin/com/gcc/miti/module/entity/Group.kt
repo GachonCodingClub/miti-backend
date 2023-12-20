@@ -28,10 +28,10 @@ class Group(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leader_user_id")
-    var leader: User? = null
+    lateinit var leader: User
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
-    val parties: List<Party> = listOf()
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", cascade = [CascadeType.ALL])
+    var parties: MutableList<Party> = mutableListOf()
 
     val acceptedParties: List<Party>
         get() {

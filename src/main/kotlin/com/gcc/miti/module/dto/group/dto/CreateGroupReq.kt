@@ -1,27 +1,29 @@
-package com.gcc.miti.module.dto.makegroupdto
+package com.gcc.miti.module.dto.group.dto
 
 import com.gcc.miti.module.constants.GroupStatus
 import com.gcc.miti.module.entity.Group
 import com.gcc.miti.module.entity.User
 import java.time.LocalDateTime
 
-data class GroupDto(
+data class CreateGroupReq(
     val description: String,
     val title: String,
     val maxUsers: Int,
     val meetDate: LocalDateTime?,
     val meetPlace: String?,
+    val nicknames: List<String>
+
 ) {
     companion object {
-        fun toGroup(groupDto: GroupDto, user: User): Group {
+        fun toGroup(createGroupReq: CreateGroupReq, user: User): Group {
             return Group(
-                groupDto.description,
-                groupDto.title,
-                groupDto.maxUsers,
+                createGroupReq.description,
+                createGroupReq.title,
+                createGroupReq.maxUsers,
                 GroupStatus.OPEN,
             ).also {
-                it.meetDate = groupDto.meetDate
-                it.meetPlace = groupDto.meetPlace
+                it.meetDate = createGroupReq.meetDate
+                it.meetPlace = createGroupReq.meetPlace
                 it.leader = user // 이부분 다시볼것
             }
         }

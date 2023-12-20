@@ -1,12 +1,16 @@
 package com.gcc.miti.module.service
 
+import com.gcc.miti.module.constants.PartyStatus
 import com.gcc.miti.module.dto.GroupListDto
 import com.gcc.miti.module.dto.GroupPartiesDto
+import com.gcc.miti.module.dto.GroupRes
 import com.gcc.miti.module.dto.PartyMembersDto
-import com.gcc.miti.module.dto.makegroupdto.GroupDto
+import com.gcc.miti.module.dto.group.dto.CreateGroupReq
+import com.gcc.miti.module.entity.Party
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.repository.GroupRepository
+import com.gcc.miti.module.repository.PartyRepository
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -16,12 +20,17 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class GroupService(
     private val groupRepository: GroupRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepository, private val partyRepository: PartyRepository,
 ) {
 
     @Transactional
-    fun makeGroup(groupDto: GroupDto, userId: String): Boolean {
-        groupRepository.save(GroupDto.toGroup(groupDto, userRepository.getReferenceById(userId)))
+    fun makeGroup(createGroupReq: CreateGroupReq, userId: String): Boolean {
+        val group = groupRepository.save(CreateGroupReq.toGroup(createGroupReq, userRepository.getReferenceById(userId)))
+        val users = userRepository.findAllByNicknameIn(createGroupReq.nicknames)
+        val party = partyRepository.save(Party(PartyStatus.ACCEPTED).also { it.group = group })
+        party.partyMember = users.map {
+            it.toPartyMember(party)
+        }.toMutableList()
         return true
     }
 
@@ -76,9 +85,9 @@ class GroupService(
     }
 
     @Transactional
-    fun getGroup(groupId: Long): GroupDto {
+    fun getGroup(groupId: Long): GroupRes {
         val group = groupRepository.getReferenceById(groupId)
-        return GroupDto(
+        return GroupRes(
             description = group.description,
             title = group.title,
             maxUsers = group.maxUsers,

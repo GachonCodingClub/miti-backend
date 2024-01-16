@@ -72,7 +72,7 @@ class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
     }
 
     fun resolveToken(request: HttpServletRequest): String? {
-        return request.getHeader("Authorization")
+        return request.getHeader("Authorization").substring(6)
     }
 
     fun validateToken(jwtToken: String): Boolean {

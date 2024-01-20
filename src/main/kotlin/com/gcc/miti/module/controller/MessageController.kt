@@ -28,7 +28,7 @@ class MessageController(
     fun getAllMessagesPageable(@PathVariable(name = "groupId") groupId: Long,
     @PageableDefault(page = 0, size = 10) pageable: Pageable
     ): List<ChatMessageDto> {
-        return chatMessageRepository.findAllByGroup_IdOOrderByCreatedAtDesc(groupId, pageable).map {
+        return chatMessageRepository.findAllByGroup_IdOrderByCreatedAtDesc(groupId, pageable).map {
             ChatMessageDto.chatMessageToDto(it)
         }
     }

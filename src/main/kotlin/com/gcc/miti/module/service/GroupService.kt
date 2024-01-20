@@ -7,9 +7,11 @@ import com.gcc.miti.module.dto.GroupRes
 import com.gcc.miti.module.dto.PartyMembersDto
 import com.gcc.miti.module.dto.group.dto.CreateGroupReq
 import com.gcc.miti.module.dto.group.dto.UpdateGroupReq
+import com.gcc.miti.module.entity.ChatMessage
 import com.gcc.miti.module.entity.Party
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
+import com.gcc.miti.module.repository.ChatMessageRepository
 import com.gcc.miti.module.repository.GroupRepository
 import com.gcc.miti.module.repository.PartyRepository
 import com.gcc.miti.module.repository.UserRepository
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional
 class GroupService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository, private val partyRepository: PartyRepository,
+    private val chatMessageRepository: ChatMessageRepository,
 ) {
 
     @Transactional
@@ -89,6 +92,10 @@ class GroupService(
                 BaseExceptionCode.NOT_FOUND,
             )
         group.acceptParty(partyId)
+        val party = group.parties.find { it.id == partyId }?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        party.partyMember.forEach {
+            chatMessageRepository.save(ChatMessage(it.user!!, "[MITI]${it.user!!.nickname}님이 미팅에 참가하셨습니다."))
+        }
         return true
     }
 

@@ -1,6 +1,7 @@
 package com.gcc.miti.module.dto
 
 import com.gcc.miti.module.entity.User
+import java.time.LocalDateTime
 
 data class MessageDto(
     val message: String,
@@ -12,6 +13,7 @@ data class MessageDto(
             user.userId,
             user.nickname,
             message,
+            LocalDateTime.now(),
         )
     }
 }

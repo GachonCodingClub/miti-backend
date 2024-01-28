@@ -25,6 +25,7 @@ class MessageController(
     }
 
     @GetMapping("/{groupId}/page")
+    @Transactional(readOnly = true)
     fun getAllMessagesPageable(@PathVariable(name = "groupId") groupId: Long,
     @PageableDefault(page = 0, size = 10) pageable: Pageable
     ): List<ChatMessageDto> {

@@ -18,13 +18,16 @@ class PartyService(
     private val partyRepository: PartyRepository,
     private val groupRepository: GroupRepository,
 
-    ) {
+) {
     @Transactional
     fun makeParty(partyDto: PartyDto, userId: String, groupId: Long): Boolean {
         val group = groupRepository.getReferenceById(groupId)
-        if (group.leader!!.userId == userId) {
+        val user = userRepository.getReferenceById(userId)
+        if (group.leader.userId == userId) {
             throw BaseException(BaseExceptionCode.BAD_REQUEST)
         }
+        if (partyDto.nicknames.find { it == user.nickname } != null) throw BaseException(BaseExceptionCode.BAD_REQUEST)
+        if(group.parties.map { it.partyMember }.flatten().find { it.user?.userId == user.nickname } != null) throw BaseException(BaseExceptionCode.BAD_REQUEST)
         val users = userRepository.findAllByNicknameIn(partyDto.nicknames).toMutableList()
         val party = partyRepository.save(Party().also { it.group = group })
         users.add(userRepository.getReferenceById(userId))

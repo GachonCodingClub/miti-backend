@@ -23,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class GroupService(
     private val groupRepository: GroupRepository,
-    private val userRepository: UserRepository, private val partyRepository: PartyRepository,
+    private val userRepository: UserRepository,
+    private val partyRepository: PartyRepository,
     private val chatMessageRepository: ChatMessageRepository,
 ) {
 
@@ -92,9 +93,9 @@ class GroupService(
                 BaseExceptionCode.NOT_FOUND,
             )
         group.acceptParty(partyId)
-        val party = group.parties.find { it.id == partyId }?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        val party = group.parties.find { it.id == partyId } ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         party.partyMember.forEach {
-            chatMessageRepository.save(ChatMessage(it.user!!, "[MITI]${it.user!!.nickname}님이 미팅에 참가하셨습니다."))
+            chatMessageRepository.save(ChatMessage(it.user!!, "[MITI]${it.user!!.nickname}님이 미팅에 참가하셨습니다.").also { it.group = group })
         }
         return true
     }

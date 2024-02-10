@@ -119,8 +119,8 @@ class GroupService(
             maxUsers = group.maxUsers,
             meetDate = group.meetDate,
             meetPlace = group.meetPlace,
-        ).also {
-            group.acceptedParties
-        }
+            leaderUserId = group.leader.userId,
+            groupStatus = group.groupStatus,
+        )
     }
 }

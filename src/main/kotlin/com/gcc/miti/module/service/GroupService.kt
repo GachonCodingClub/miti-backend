@@ -123,4 +123,13 @@ class GroupService(
             groupStatus = group.groupStatus,
         )
     }
+
+    @Transactional
+    fun deleteGroup(groupId: Long, userId: String) {
+        val group = groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
+            BaseExceptionCode.NOT_FOUND,
+        )
+
+        groupRepository.delete(group)
+    }
 }

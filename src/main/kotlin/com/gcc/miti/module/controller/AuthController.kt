@@ -1,6 +1,7 @@
 package com.gcc.miti.module.controller
 
 import com.gcc.miti.module.dto.ResponseDto
+import com.gcc.miti.module.dto.authdto.ChangePasswordRequest
 import com.gcc.miti.module.dto.authdto.SignInDto
 import com.gcc.miti.module.dto.authdto.SignUpDto
 import com.gcc.miti.module.dto.authdto.TokenDto
@@ -8,6 +9,7 @@ import com.gcc.miti.module.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,6 +23,14 @@ class AuthController(private val authService: AuthService) {
     @Operation(summary = "이메일 인증번호 전송")
     fun sendEmailVerification(@RequestParam email: String): Boolean {
         return authService.saveMail(email)
+    }
+
+    @PatchMapping("/password")
+    @Operation(summary = "비용번호 변경")
+    fun changePassword(
+        @RequestBody request: ChangePasswordRequest,
+    ): Boolean {
+        return authService.changePassword(request)
     }
 
     @PostMapping("/sign-up")

@@ -4,12 +4,7 @@ import com.gcc.miti.module.constants.Gender
 import com.gcc.miti.module.constants.Height
 import com.gcc.miti.module.constants.Weight
 import java.time.LocalDate
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "users")
@@ -44,4 +39,13 @@ class User(
 
     val age
         get() = birthDate.year - LocalDate.now().year
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var partyMembers: MutableList<PartyMember> = mutableListOf()
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val chatMessages: MutableList<ChatMessage> = mutableListOf()
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "leader", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val groups: MutableList<Group> = mutableListOf()
 }

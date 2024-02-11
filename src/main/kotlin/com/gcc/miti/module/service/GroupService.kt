@@ -8,10 +8,7 @@ import com.gcc.miti.module.entity.ChatMessage
 import com.gcc.miti.module.entity.Party
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
-import com.gcc.miti.module.repository.ChatMessageRepository
-import com.gcc.miti.module.repository.GroupRepository
-import com.gcc.miti.module.repository.PartyRepository
-import com.gcc.miti.module.repository.UserRepository
+import com.gcc.miti.module.repository.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -23,7 +20,7 @@ class GroupService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
     private val partyRepository: PartyRepository,
-    private val chatMessageRepository: ChatMessageRepository,
+    private val chatMessageRepository: ChatMessageRepository, private val partyMemberRepository: PartyMemberRepository,
 ) {
 
     @Transactional
@@ -125,11 +122,22 @@ class GroupService(
     }
 
     @Transactional
-    fun deleteGroup(groupId: Long, userId: String) {
+    fun deleteGroup(groupId: Long, userId: String): Boolean {
         val group = groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
             BaseExceptionCode.NOT_FOUND,
         )
-
         groupRepository.delete(group)
+        return true
+    }
+
+    @Transactional
+    fun leaveGroup(groupId: Long, userId: String): Boolean {
+        val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        group.parties.flatMap { it.partyMember }.find { it.user?.userId == userId }?.let {
+            partyMemberRepository.delete(it)
+            return true
+        }
+        return false
+
     }
 }

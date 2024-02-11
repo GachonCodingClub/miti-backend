@@ -98,12 +98,21 @@ class GroupController(
         return groupService.getGroup(groupId)
     }
 
-    @Operation(summary = "그룹 삭제하기")
+    @Operation(summary = "미팅방 삭제하기 (방장용) 방폭파됨.")
     @DeleteMapping("/{groupId}")
     fun deleteGroup(
         @PathVariable groupId: Long,
         @Parameter(hidden = true) @GetIdFromToken userId: String,
-    ) {
-        groupService.deleteGroup(groupId, userId)
+    ): Boolean {
+        return groupService.deleteGroup(groupId, userId)
+    }
+
+    @Operation(summary = "미팅방 나가기 (비방장용)")
+    @GetMapping("/{groupId}/leave")
+    fun leaveGroup(
+        @PathVariable groupId: Long,
+        @Parameter(hidden = true) @GetIdFromToken userId: String,
+    ): Boolean {
+        return groupService.leaveGroup(groupId, userId)
     }
 }

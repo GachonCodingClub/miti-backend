@@ -1,5 +1,6 @@
 package com.gcc.miti.module.service
 
+import com.gcc.miti.module.dto.authdto.ChangePasswordRequest
 import com.gcc.miti.module.dto.authdto.SignInDto
 import com.gcc.miti.module.dto.authdto.SignUpDto
 import com.gcc.miti.module.dto.authdto.TokenDto
@@ -10,6 +11,7 @@ import com.gcc.miti.module.global.security.JwtTokenProvider
 import com.gcc.miti.module.helper.AuthHelper
 import com.gcc.miti.module.repository.CertificationRepository
 import com.gcc.miti.module.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -30,7 +32,7 @@ class AuthService(
 ) {
     @Transactional
     fun saveMail(email: String): Boolean {
-        if(userRepository.existsById(email)){
+        if (userRepository.existsById(email)) {
             throw BaseException(BaseExceptionCode.ALREADY_REGISTERED)
         }
         authHelper.isUniversityEmail(email)
@@ -84,12 +86,24 @@ class AuthService(
         return false
     }
 
-    fun checkNicknameExists(nickname:String): Boolean {
-        if(userRepository.existsByNickname(nickname)){
+    fun checkNicknameExists(nickname: String): Boolean {
+        if (userRepository.existsByNickname(nickname)) {
             throw BaseException(BaseExceptionCode.NICKNAME_CONFLICT)
-        }else{
+        } else {
             return false
         }
+    }
+
+    @Transactional
+    fun changePassword(request: ChangePasswordRequest): Boolean {
+        val certification =
+            certificationRepository.getByEmail(request.email) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        if (certification.randomNumber == request.certificationNumber) {
+            val user = userRepository.findByIdOrNull(request.email) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+            user.password = passwordEncoder.encode(request.newPassword)
+            return true
+        }
+        return false
     }
 
     fun signIn(signInDto: SignInDto): TokenDto {
@@ -101,7 +115,6 @@ class AuthService(
             return token
         }
     }
-
 
 //    fun refresh(tokenDto: TokenDto): TokenDto {
 //        val userId = tokenProvider.getUserPk(tokenDto.accessToken)

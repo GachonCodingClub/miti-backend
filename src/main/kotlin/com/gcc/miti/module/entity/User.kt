@@ -15,7 +15,7 @@ import javax.persistence.Table
 @Table(name = "users")
 class User(
     @Column(nullable = false)
-    val password: String,
+    var password: String,
     @Column(nullable = false)
     val userName: String,
     @Column(nullable = true)

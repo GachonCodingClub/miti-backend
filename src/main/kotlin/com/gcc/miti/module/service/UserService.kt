@@ -5,13 +5,17 @@ import com.gcc.miti.module.dto.user.dto.UpdateProfileReq
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.global.security.SecurityUtils
+import com.gcc.miti.module.repository.CertificationRepository
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class UserService(private val userRepository: UserRepository) {
+class UserService(
+    private val userRepository: UserRepository,
+    private val certificationRepository: CertificationRepository,
+) {
     @Transactional(readOnly = true)
     fun getMyProfile(): ProfileRes {
         val userId = SecurityUtils.getUserIdFromJwt()
@@ -32,6 +36,9 @@ class UserService(private val userRepository: UserRepository) {
     @Transactional
     fun deleteUser(userId: String) {
         val user = userRepository.getReferenceById(userId)
+        certificationRepository.getByEmail(user.userId)?.let {
+            certificationRepository.delete(it)
+        }
         userRepository.delete(user)
     }
 }

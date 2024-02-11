@@ -3,7 +3,7 @@ package com.gcc.miti.module.dto
 import com.gcc.miti.module.constants.Gender
 import com.gcc.miti.module.constants.Height
 import com.gcc.miti.module.constants.Weight
-import com.gcc.miti.module.entity.PartyMember
+import com.gcc.miti.module.entity.User
 import java.time.LocalDate
 
 class UserSummaryDto(
@@ -16,8 +16,8 @@ class UserSummaryDto(
     val description: String?,
 ) {
     companion object {
-        fun toDto(partyMember: PartyMember): UserSummaryDto {
-            with(partyMember.user!!) {
+        fun toDto(user: User): UserSummaryDto {
+            with(user) {
                 return UserSummaryDto(
                     userId,
                     userName,

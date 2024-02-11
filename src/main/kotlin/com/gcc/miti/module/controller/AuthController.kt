@@ -25,6 +25,12 @@ class AuthController(private val authService: AuthService) {
         return authService.saveMail(email)
     }
 
+    @PostMapping("/certification/password")
+    @Operation(summary = "이메일 인증번호 전송 (비밀번호 변경 전용)")
+    fun sendEmailCertificationForChangingPassword(@RequestParam email: String): Boolean {
+        return authService.sendEmailCertificationForChangingPassword(email)
+    }
+
     @PatchMapping("/password")
     @Operation(summary = "비용번호 변경")
     fun changePassword(

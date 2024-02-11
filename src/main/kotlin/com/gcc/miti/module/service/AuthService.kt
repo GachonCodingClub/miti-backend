@@ -53,6 +53,28 @@ class AuthService(
     }
 
     @Transactional
+    fun sendEmailCertificationForChangingPassword(email: String): Boolean {
+        if (!userRepository.existsById(email)) {
+            throw BaseException(BaseExceptionCode.NOT_FOUND)
+        }
+        authHelper.isUniversityEmail(email)
+        val certificationNumber: String = mailService.randomNumber()
+        mailService.sendMail(email, certificationNumber)
+        val certification = certificationRepository.getByEmail(email)
+        return if (certification != null) {
+            certificationRepository.save(
+                certification.apply {
+                    this.randomNumber = certificationNumber
+                },
+            )
+            true
+        } else {
+            certificationRepository.save(Certification(certificationNumber, email))
+            true
+        }
+    }
+
+    @Transactional
     fun signUp(signUpDto: SignUpDto): Boolean {
         if (userRepository.existsById(signUpDto.userId)) {
             throw BaseException(BaseExceptionCode.USER_ID_CONFLICT)

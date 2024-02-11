@@ -13,6 +13,7 @@ class UserSummaryDto(
     val height: Height,
     val weight: Weight,
     val age: Int,
+    val description: String?,
 ) {
     companion object {
         fun toDto(partyMember: PartyMember): UserSummaryDto {
@@ -24,7 +25,7 @@ class UserSummaryDto(
                     height,
                     weight,
                     LocalDate.now().year - birthDate.year,
-
+                    description,
                 )
             }
         }

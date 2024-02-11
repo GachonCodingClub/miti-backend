@@ -17,7 +17,7 @@ class Group(
     @Enumerated(EnumType.STRING)
     var groupStatus: GroupStatus,
 
-    ) : BaseTimeEntity() {
+) : BaseTimeEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0

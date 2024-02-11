@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -44,7 +45,7 @@ class GroupController(
         @Parameter(hidden = true) @GetIdFromToken userId: String,
         @PathVariable groupId: Long,
     ): Boolean {
-       return groupService.updateGroup(updateGroupReq, userId, groupId)
+        return groupService.updateGroup(updateGroupReq, userId, groupId)
     }
 
     @GetMapping("")
@@ -95,5 +96,14 @@ class GroupController(
     @GetMapping("/{groupId}")
     fun getParty(@PathVariable groupId: Long): GroupRes {
         return groupService.getGroup(groupId)
+    }
+
+    @Operation(summary = "그룹 삭제하기")
+    @DeleteMapping("/{groupId}")
+    fun deleteGroup(
+        @PathVariable groupId: Long,
+        @Parameter(hidden = true) @GetIdFromToken userId: String,
+    ) {
+        groupService.deleteGroup(groupId, userId)
     }
 }

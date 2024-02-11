@@ -5,6 +5,7 @@ import com.gcc.miti.module.entity.Party
 data class GroupPartiesDto(
     val waitingParties: List<PartyMembersDto>,
     val acceptedParties: List<PartyMembersDto>,
+    val leaderUserSummaryDto: UserSummaryDto,
 )
 
 class PartyMembersDto(

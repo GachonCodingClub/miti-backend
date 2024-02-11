@@ -68,6 +68,7 @@ class GroupService(
             group.acceptedParties.map {
                 PartyMembersDto.partyToPartyMembersDto(it)
             },
+            UserSummaryDto.toDto(group.leader)
         )
     }
 

@@ -1,10 +1,7 @@
 package com.gcc.miti.module.service
 
 import com.gcc.miti.module.constants.PartyStatus
-import com.gcc.miti.module.dto.GroupListDto
-import com.gcc.miti.module.dto.GroupPartiesDto
-import com.gcc.miti.module.dto.GroupRes
-import com.gcc.miti.module.dto.PartyMembersDto
+import com.gcc.miti.module.dto.*
 import com.gcc.miti.module.dto.group.dto.CreateGroupReq
 import com.gcc.miti.module.dto.group.dto.UpdateGroupReq
 import com.gcc.miti.module.entity.ChatMessage
@@ -121,7 +118,7 @@ class GroupService(
             maxUsers = group.maxUsers,
             meetDate = group.meetDate,
             meetPlace = group.meetPlace,
-            leaderUserId = group.leader.userId,
+            leaderUserSummaryDto = UserSummaryDto.toDto(group.leader),
             groupStatus = group.groupStatus,
         )
     }

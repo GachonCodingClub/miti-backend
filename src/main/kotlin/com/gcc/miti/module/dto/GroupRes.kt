@@ -9,6 +9,6 @@ data class GroupRes(
     val maxUsers: Int,
     val meetDate: LocalDateTime?,
     val meetPlace: String?,
-    val leaderUserId: String,
+    val leaderUserSummaryDto: UserSummaryDto,
     val groupStatus: GroupStatus,
 )

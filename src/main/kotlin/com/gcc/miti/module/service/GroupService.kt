@@ -17,6 +17,7 @@ import com.gcc.miti.module.repository.PartyRepository
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -58,14 +59,15 @@ class GroupService(
 
     @Transactional(readOnly = true)
     fun getRequestedParties(groupId: Long, userId: String): GroupPartiesDto {
-        val group =
-            groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
-                BaseExceptionCode.NOT_FOUND,
-            )
-        return GroupPartiesDto(
-            group.waitingParties.map {
+        val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        var waitingParties = emptyList<PartyMembersDto>()
+        if(group.leader.userId == userId){
+            waitingParties = group.waitingParties.map {
                 PartyMembersDto.partyToPartyMembersDto(it)
-            },
+            }
+        }
+        return GroupPartiesDto(
+            waitingParties,
             group.acceptedParties.map {
                 PartyMembersDto.partyToPartyMembersDto(it)
             },

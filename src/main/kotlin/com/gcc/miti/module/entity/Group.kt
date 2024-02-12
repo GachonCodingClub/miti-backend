@@ -33,6 +33,9 @@ class Group(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", cascade = [CascadeType.ALL])
     var parties: MutableList<Party> = mutableListOf()
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", cascade = [CascadeType.ALL])
+    var chatMessages: MutableList<ChatMessage> = mutableListOf()
+
     val acceptedParties: List<Party>
         get() {
             return parties.filter { it.partyStatus == PartyStatus.ACCEPTED }

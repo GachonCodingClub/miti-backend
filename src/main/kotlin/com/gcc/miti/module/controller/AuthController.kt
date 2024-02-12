@@ -32,7 +32,7 @@ class AuthController(private val authService: AuthService) {
     }
 
     @PatchMapping("/password")
-    @Operation(summary = "비용번호 변경")
+    @Operation(summary = "비밀번호 변경")
     fun changePassword(
         @RequestBody request: ChangePasswordRequest,
     ): Boolean {

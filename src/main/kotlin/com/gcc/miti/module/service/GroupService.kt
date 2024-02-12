@@ -20,12 +20,14 @@ class GroupService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
     private val partyRepository: PartyRepository,
-    private val chatMessageRepository: ChatMessageRepository, private val partyMemberRepository: PartyMemberRepository,
+    private val chatMessageRepository: ChatMessageRepository,
+    private val partyMemberRepository: PartyMemberRepository,
 ) {
 
     @Transactional
     fun createGroup(createGroupReq: CreateGroupReq, userId: String): Boolean {
-        val group = groupRepository.save(CreateGroupReq.toGroup(createGroupReq, userRepository.getReferenceById(userId)))
+        val group =
+            groupRepository.save(CreateGroupReq.toGroup(createGroupReq, userRepository.getReferenceById(userId)))
         val users = userRepository.findAllByNicknameIn(createGroupReq.nicknames)
         val party = partyRepository.save(Party(PartyStatus.ACCEPTED).also { it.group = group })
         party.partyMember = users.map {
@@ -55,7 +57,7 @@ class GroupService(
     fun getRequestedParties(groupId: Long, userId: String): GroupPartiesDto {
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         var waitingParties = emptyList<PartyMembersDto>()
-        if(group.leader.userId == userId){
+        if (group.leader.userId == userId) {
             waitingParties = group.waitingParties.map {
                 PartyMembersDto.partyToPartyMembersDto(it)
             }
@@ -65,7 +67,7 @@ class GroupService(
             group.acceptedParties.map {
                 PartyMembersDto.partyToPartyMembersDto(it)
             },
-            UserSummaryDto.toDto(group.leader)
+            UserSummaryDto.toDto(group.leader),
         )
     }
 
@@ -92,7 +94,12 @@ class GroupService(
         group.acceptParty(partyId)
         val party = group.parties.find { it.id == partyId } ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         party.partyMember.forEach {
-            chatMessageRepository.save(ChatMessage(it.user!!, "[MITI]${it.user!!.nickname}님이 미팅에 참가하셨습니다.").also { it.group = group })
+            chatMessageRepository.save(
+                ChatMessage(
+                    it.user!!,
+                    "[MITI]${it.user!!.nickname}님이 미팅에 참가하셨습니다.",
+                ).also { it.group = group },
+            )
         }
         return true
     }
@@ -123,9 +130,10 @@ class GroupService(
 
     @Transactional
     fun deleteGroup(groupId: Long, userId: String): Boolean {
-        val group = groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
-            BaseExceptionCode.NOT_FOUND,
-        )
+        val group =
+            groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
+                BaseExceptionCode.NOT_FOUND,
+            )
         groupRepository.delete(group)
         return true
     }
@@ -138,6 +146,5 @@ class GroupService(
             return true
         }
         return false
-
     }
 }

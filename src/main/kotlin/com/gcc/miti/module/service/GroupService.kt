@@ -20,8 +20,7 @@ class GroupService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
     private val partyRepository: PartyRepository,
-    private val chatMessageRepository: ChatMessageRepository,
-    private val partyMemberRepository: PartyMemberRepository,
+    private val chatMessageRepository: ChatMessageRepository
 ) {
 
     @Transactional
@@ -141,8 +140,8 @@ class GroupService(
     @Transactional
     fun leaveGroup(groupId: Long, userId: String): Boolean {
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
-        group.parties.flatMap { it.partyMember }.find { it.user?.userId == userId }?.let {
-            partyMemberRepository.delete(it)
+        group.parties.flatMap { it.partyMember }.find { it.user?.userId == userId }?.let { partyMember ->
+            group.parties.find { it.id == partyMember.party?.id }?.partyMember?.remove(partyMember)
             return true
         }
         return false

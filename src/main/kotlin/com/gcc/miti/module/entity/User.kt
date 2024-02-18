@@ -38,7 +38,7 @@ class User(
     }
 
     val age
-        get() = birthDate.year - LocalDate.now().year
+        get() = LocalDate.now().year - birthDate.year
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     var partyMembers: MutableList<PartyMember> = mutableListOf()

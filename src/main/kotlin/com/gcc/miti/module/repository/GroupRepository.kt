@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 
 @Repository
 interface GroupRepository : JpaRepository<Group, Long> {
@@ -17,4 +18,6 @@ interface GroupRepository : JpaRepository<Group, Long> {
         left join PartyMember pm on p.id = pm.party.id
         where g.leader.userId = :userId or pm.user.userId = :userId """)
     fun findMyGroups(@Param("userId") userId: String, pageable: Pageable): Page<Group>
+
+    fun findAllByMeetDateIsBefore(localDateTime: LocalDateTime): List<Group>
 }

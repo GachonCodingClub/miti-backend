@@ -1,7 +1,10 @@
 package com.gcc.miti.module.controller
 
 import com.gcc.miti.module.dto.ChatMessageDto
+import com.gcc.miti.module.global.security.GetIdFromToken
 import com.gcc.miti.module.repository.ChatMessageRepository
+import com.gcc.miti.module.repository.GroupRepository
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.transaction.annotation.Transactional
@@ -14,11 +17,20 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/message")
 class MessageController(
     private val chatMessageRepository: ChatMessageRepository,
+    private val groupRepository: GroupRepository
 ) {
 
     @GetMapping("/{groupId}")
     @Transactional(readOnly = true)
-    fun getAllMessages(@PathVariable(name = "groupId") groupId: Long): List<ChatMessageDto> {
+    fun getAllMessages(
+        @PathVariable(name = "groupId") groupId: Long,
+        @Parameter(hidden = true) @GetIdFromToken userId: String,
+    ): List<ChatMessageDto> {
+        val group = groupRepository.getReferenceById(groupId)
+        if (group.leader.userId != userId && !group.acceptedParties.flatMap { it.partyMember }
+                .any { it.user?.userId == userId }) {
+            return listOf()
+        }
         return chatMessageRepository.findAllByGroup_IdOrderByCreatedAt(groupId).map {
             ChatMessageDto.chatMessageToDto(it)
         }
@@ -26,9 +38,16 @@ class MessageController(
 
     @GetMapping("/{groupId}/page")
     @Transactional(readOnly = true)
-    fun getAllMessagesPageable(@PathVariable(name = "groupId") groupId: Long,
-    @PageableDefault(page = 0, size = 10) pageable: Pageable
+    fun getAllMessagesPageable(
+        @PathVariable(name = "groupId") groupId: Long,
+        @PageableDefault(page = 0, size = 10) pageable: Pageable,
+        @Parameter(hidden = true) @GetIdFromToken userId: String,
     ): List<ChatMessageDto> {
+        val group = groupRepository.getReferenceById(groupId)
+        if (group.leader.userId != userId && !group.acceptedParties.flatMap { it.partyMember }
+                .any { it.user?.userId == userId }) {
+            return listOf()
+        }
         return chatMessageRepository.findAllByGroup_IdOrderByCreatedAtDesc(groupId, pageable).map {
             ChatMessageDto.chatMessageToDto(it)
         }

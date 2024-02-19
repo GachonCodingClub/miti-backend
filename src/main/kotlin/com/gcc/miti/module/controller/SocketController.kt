@@ -20,10 +20,15 @@ class SocketController(
     @MessageMapping("/send")
     @Transactional
     fun send(message: MessageDto) {
+        val group = groupRepository.getReferenceById(message.groupId.toLong())
+        if (group.leader.userId != message.sender && !group.acceptedParties.flatMap { it.partyMember }
+                .any { it.user?.userId == message.sender }) {
+            return
+        }
         val user = userRepository.getReferenceById(message.sender)
         chatMessageRepository.save(
             ChatMessage(userRepository.getReferenceById(message.sender), message.message).also {
-                it.group = groupRepository.getReferenceById(message.groupId.toLong())
+                it.group = group
             },
         )
         simpMessagingTemplate.convertAndSend("/sub/${message.groupId}", message.toDto(user))

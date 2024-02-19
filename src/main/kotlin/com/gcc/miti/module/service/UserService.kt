@@ -24,13 +24,14 @@ class UserService(
     }
 
     @Transactional
-    fun updateProfile(updateProfileReq: UpdateProfileReq) {
+    fun updateProfile(updateProfileReq: UpdateProfileReq): Boolean {
         val userId = SecurityUtils.getUserIdFromJwt()
         val user = userRepository.getReferenceById(userId)
         user.description = updateProfileReq.description
         user.nickname = updateProfileReq.nickname
         user.height = updateProfileReq.height
         user.weight = updateProfileReq.weight
+        return true
     }
 
     @Transactional

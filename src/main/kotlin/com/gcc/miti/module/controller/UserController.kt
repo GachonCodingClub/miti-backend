@@ -19,8 +19,8 @@ class UserController(private val userService: UserService) {
 
     @PatchMapping("/profile/my")
     @Operation(summary = "내 프로필 수정")
-    fun updateProfile(@RequestBody updateProfileReq: UpdateProfileReq) {
-        userService.updateProfile(updateProfileReq)
+    fun updateProfile(@RequestBody updateProfileReq: UpdateProfileReq): Map<String, Boolean> {
+        return mapOf("success" to userService.updateProfile(updateProfileReq))
     }
 
     @DeleteMapping("/me")

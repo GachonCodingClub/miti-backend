@@ -1,5 +1,6 @@
 package com.gcc.miti.module.service
 
+import com.gcc.miti.module.constants.GroupStatus
 import com.gcc.miti.module.constants.PartyStatus
 import com.gcc.miti.module.dto.*
 import com.gcc.miti.module.dto.group.dto.CreateGroupReq
@@ -152,6 +153,9 @@ class GroupService(
         )
         group.parties.flatMap { it.partyMember }.find { it.user?.userId == userId }?.let { partyMember ->
             group.parties.find { it.id == partyMember.party?.id }?.partyMember?.remove(partyMember)
+            if(group.groupStatus == GroupStatus.CLOSE){
+                group.groupStatus = GroupStatus.OPEN
+            }
             return true
         }
         return false

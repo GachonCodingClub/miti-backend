@@ -12,8 +12,11 @@ import com.gcc.miti.module.repository.*
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 @Service
 class GroupService(
@@ -145,5 +148,12 @@ class GroupService(
             return true
         }
         return false
+    }
+
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.HOURS)
+    @Transactional
+    fun deleteGroupsAfterThreeDays(){
+        val groups = groupRepository.findAllByMeetDateIsBefore(LocalDateTime.now().minusDays(3))
+        groupRepository.deleteAll(groups)
     }
 }

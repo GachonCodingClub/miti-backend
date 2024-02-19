@@ -142,7 +142,14 @@ class GroupService(
 
     @Transactional
     fun leaveGroup(groupId: Long, userId: String): Boolean {
+        val user = userRepository.getReferenceById(userId)
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        chatMessageRepository.save(
+            ChatMessage(
+                user,
+                "[MITI]${user.nickname}님이 미팅에서 나가셨습니다.",
+            ).also { it.group = group },
+        )
         group.parties.flatMap { it.partyMember }.find { it.user?.userId == userId }?.let { partyMember ->
             group.parties.find { it.id == partyMember.party?.id }?.partyMember?.remove(partyMember)
             return true

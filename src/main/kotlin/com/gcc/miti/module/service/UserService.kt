@@ -2,10 +2,12 @@ package com.gcc.miti.module.service
 
 import com.gcc.miti.module.dto.user.dto.ProfileRes
 import com.gcc.miti.module.dto.user.dto.UpdateProfileReq
+import com.gcc.miti.module.entity.DeletedUser
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
 import com.gcc.miti.module.global.security.SecurityUtils
 import com.gcc.miti.module.repository.CertificationRepository
+import com.gcc.miti.module.repository.DeletedUserRepository
 import com.gcc.miti.module.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class UserService(
     private val userRepository: UserRepository,
     private val certificationRepository: CertificationRepository,
+    private val deletedUserRepository: DeletedUserRepository,
 ) {
     @Transactional(readOnly = true)
     fun getMyProfile(): ProfileRes {
@@ -41,5 +44,6 @@ class UserService(
             certificationRepository.delete(it)
         }
         userRepository.delete(user)
+        deletedUserRepository.save(DeletedUser(user.userId, user.birthDate))
     }
 }

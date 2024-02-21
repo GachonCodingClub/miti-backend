@@ -15,16 +15,16 @@ import javax.persistence.Table
 class ChatMessage(
 
     @ManyToOne(fetch = FetchType.LAZY)
-    var user: com.gcc.miti.entity.User,
+    var user: User,
 
     @Column(nullable = false)
     var content: String,
 
     @Column(nullable = false)
     var createdAt: LocalDateTime = LocalDateTime.now(),
-) : com.gcc.miti.entity.BaseTimeEntity() {
+) : BaseTimeEntity() {
     @ManyToOne(fetch = FetchType.LAZY)
-    var group: com.gcc.miti.entity.Group? = null
+    var group: Group? = null
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

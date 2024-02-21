@@ -30,8 +30,8 @@ class User(
 ) : BaseTimeEntity() {
     @Id
     var userId: String = ""
-    fun toPartyMember(party: Party): com.gcc.miti.entity.PartyMember {
-        return com.gcc.miti.entity.PartyMember().also {
+    fun toPartyMember(party: Party): PartyMember {
+        return PartyMember().also {
             it.user = this
             it.party = party
         }
@@ -41,10 +41,10 @@ class User(
         get() = LocalDate.now().year - birthDate.year
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var partyMembers: MutableList<com.gcc.miti.entity.PartyMember> = mutableListOf()
+    var partyMembers: MutableList<PartyMember> = mutableListOf()
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val chatMessages: MutableList<com.gcc.miti.entity.ChatMessage> = mutableListOf()
+    val chatMessages: MutableList<ChatMessage> = mutableListOf()
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "leader", cascade = [CascadeType.ALL], orphanRemoval = true)
     val groups: MutableList<Group> = mutableListOf()

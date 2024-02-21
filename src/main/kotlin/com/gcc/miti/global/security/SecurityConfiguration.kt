@@ -14,7 +14,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 
 @EnableWebSecurity
-class SecurityConfiguration(private val jwtTokenProvider: com.gcc.miti.global.security.JwtTokenProvider) : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration(private val jwtTokenProvider: JwtTokenProvider) : WebSecurityConfigurerAdapter() {
 
     @Bean
     override fun authenticationManagerBean(): AuthenticationManager {
@@ -40,7 +40,7 @@ class SecurityConfiguration(private val jwtTokenProvider: com.gcc.miti.global.se
             .and()
             .addFilter(corsFilter())
             .addFilterBefore(
-                com.gcc.miti.global.security.JwtAuthenticationFilter(jwtTokenProvider),
+                JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter::class.java,
             )
     }

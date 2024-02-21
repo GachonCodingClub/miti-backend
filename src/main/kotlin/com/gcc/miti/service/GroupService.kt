@@ -77,16 +77,16 @@ class GroupService(
     }
 
     @Transactional(readOnly = true)
-    fun getGroups(pageable: Pageable): Page<com.gcc.miti.dto.GroupListDto> {
+    fun getGroups(pageable: Pageable): Page<GroupListDto> {
         return groupRepository.findAll(pageable).map {
-            com.gcc.miti.dto.GroupListDto.toDto(it)
+            GroupListDto.toDto(it)
         }
     }
 
     @Transactional(readOnly = true)
-    fun getMyGroups(pageable: Pageable, userId: String): Page<com.gcc.miti.dto.GroupListDto> {
+    fun getMyGroups(pageable: Pageable, userId: String): Page<GroupListDto> {
         return groupRepository.findMyGroups(userId, pageable).map {
-            com.gcc.miti.dto.GroupListDto.toDto(it)
+            GroupListDto.toDto(it)
         }
     }
 
@@ -100,7 +100,7 @@ class GroupService(
         val party = group.parties.find { it.id == partyId } ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         party.partyMember.forEach {
             chatMessageRepository.save(
-                com.gcc.miti.entity.ChatMessage(
+                ChatMessage(
                     it.user!!,
                     "[MITI]${it.user!!.nickname}님이 미팅에 참가하셨습니다.",
                 ).also { it.group = group },
@@ -149,7 +149,7 @@ class GroupService(
         val user = userRepository.getReferenceById(userId)
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         chatMessageRepository.save(
-            com.gcc.miti.entity.ChatMessage(
+            ChatMessage(
                 user,
                 "[MITI]${user.nickname}님이 미팅에서 나가셨습니다.",
             ).also { it.group = group },

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ChatMessageRepository : JpaRepository<ChatMessage, Long> {
-    fun findAllByGroup_IdOrderByCreatedAt(groupId: Long): List<com.gcc.miti.entity.ChatMessage>
+    fun findAllByGroup_IdOrderByCreatedAt(groupId: Long): List<ChatMessage>
 
-    fun findAllByGroup_IdOrderByCreatedAtDesc(groupId: Long, pageable: Pageable): List<com.gcc.miti.entity.ChatMessage>
+    fun findAllByGroup_IdOrderByCreatedAtDesc(groupId: Long, pageable: Pageable): List<ChatMessage>
 }

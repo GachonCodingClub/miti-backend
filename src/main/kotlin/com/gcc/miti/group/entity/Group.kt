@@ -1,6 +1,7 @@
 package com.gcc.miti.group.entity
 
 import com.gcc.miti.chat.entity.ChatMessage
+import com.gcc.miti.chat.entity.LastReadChatMessage
 import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.group.constants.GroupStatus
 import com.gcc.miti.group.constants.PartyStatus
@@ -38,6 +39,9 @@ class Group(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", cascade = [CascadeType.ALL])
     var chatMessages: MutableList<ChatMessage> = mutableListOf()
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", cascade = [CascadeType.ALL])
+    var lastReadChatMessages: MutableList<LastReadChatMessage> = mutableListOf()
 
     val acceptedParties: List<Party>
         get() {

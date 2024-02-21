@@ -8,6 +8,7 @@ import com.gcc.miti.group.dto.UpdateGroupReq
 import com.gcc.miti.chat.entity.ChatMessage
 import com.gcc.miti.chat.repository.ChatMessageRepository
 import com.gcc.miti.archive.entity.DeletedGroup
+import com.gcc.miti.chat.repository.LastReadChatMessageRepository
 import com.gcc.miti.group.entity.Party
 import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
@@ -34,7 +35,8 @@ class GroupService(
     private val userRepository: UserRepository,
     private val partyRepository: PartyRepository,
     private val chatMessageRepository: ChatMessageRepository,
-    private val deletedGroupRepository: DeletedGroupRepository
+    private val deletedGroupRepository: DeletedGroupRepository,
+    private val lastReadChatMessageRepository: LastReadChatMessageRepository
 ) {
 
     @Transactional
@@ -93,8 +95,16 @@ class GroupService(
 
     @Transactional(readOnly = true)
     fun getMyGroups(pageable: Pageable, userId: String): Page<GroupListDto> {
-        return groupRepository.findMyGroups(userId, pageable).map {
-            GroupListDto.toDto(it)
+        val myGroups =  groupRepository.findMyGroups(userId, pageable)
+
+        val groupIds = myGroups.content.map { it.id }
+        val lastReadChatMessages = lastReadChatMessageRepository.findAllByGroupIdsAndUser(groupIds, userRepository.getReferenceById(userId))
+
+        return myGroups.map { group ->
+            val lastReadChatMessage = lastReadChatMessages.find { it.group.id == group.id }?.let {
+                chatMessageRepository.countByGroupAndIdGreaterThan(group, it.chatMessage.id)
+            }
+            GroupListDto.toDto(group, lastReadChatMessage)
         }
     }
 

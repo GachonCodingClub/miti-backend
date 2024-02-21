@@ -1,6 +1,7 @@
 package com.gcc.miti.user.entity
 
 import com.gcc.miti.chat.entity.ChatMessage
+import com.gcc.miti.chat.entity.LastReadChatMessage
 import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.group.entity.Group
 import com.gcc.miti.group.entity.Party
@@ -53,4 +54,7 @@ class User(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "leader", cascade = [CascadeType.ALL], orphanRemoval = true)
     val groups: MutableList<Group> = mutableListOf()
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val lastReadChatMessages: MutableList<LastReadChatMessage> = mutableListOf()
 }

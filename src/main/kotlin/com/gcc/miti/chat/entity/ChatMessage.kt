@@ -4,20 +4,14 @@ import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.group.entity.Group
 import com.gcc.miti.user.entity.User
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "chat_message")
 class ChatMessage(
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     var user: User,
 
     @Column(nullable = false)

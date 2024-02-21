@@ -11,9 +11,10 @@ class GroupListDto(
     val title: String,
     val description: String,
     val id: Long,
+    val unreadMessages: Long,
 ) {
     companion object {
-        fun toDto(group: Group): GroupListDto {
+        fun toDto(group: Group, unreadMessages: Long? = null): GroupListDto {
             with(group) {
                 return GroupListDto(
                     meetDate,
@@ -23,6 +24,7 @@ class GroupListDto(
                     title,
                     description,
                     id,
+                    unreadMessages ?: 0
                 )
             }
         }

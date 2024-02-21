@@ -6,6 +6,7 @@ import com.gcc.miti.module.dto.*
 import com.gcc.miti.module.dto.group.dto.CreateGroupReq
 import com.gcc.miti.module.dto.group.dto.UpdateGroupReq
 import com.gcc.miti.module.entity.ChatMessage
+import com.gcc.miti.module.entity.DeletedGroup
 import com.gcc.miti.module.entity.Party
 import com.gcc.miti.module.global.exception.BaseException
 import com.gcc.miti.module.global.exception.BaseExceptionCode
@@ -24,7 +25,8 @@ class GroupService(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
     private val partyRepository: PartyRepository,
-    private val chatMessageRepository: ChatMessageRepository
+    private val chatMessageRepository: ChatMessageRepository,
+    private val deletedGroupRepository: DeletedGroupRepository
 ) {
 
     @Transactional
@@ -138,6 +140,7 @@ class GroupService(
                 BaseExceptionCode.NOT_FOUND,
             )
         groupRepository.delete(group)
+        deletedGroupRepository.save(DeletedGroup.toDeletedGroup(group))
         return true
     }
 
@@ -165,6 +168,8 @@ class GroupService(
     @Transactional
     fun deleteGroupsAfterThreeDays(){
         val groups = groupRepository.findAllByMeetDateIsBefore(LocalDateTime.now().minusDays(3))
+        val deletedGroups = groups.map { DeletedGroup.toDeletedGroup(it) }
         groupRepository.deleteAll(groups)
+        deletedGroupRepository.saveAll(deletedGroups)
     }
 }

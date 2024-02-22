@@ -41,13 +41,24 @@ class GroupService(
 
     @Transactional
     fun createGroup(createGroupReq: CreateGroupReq, userId: String): Boolean {
+        val leader = userRepository.getReferenceById(userId)
         val group =
-            groupRepository.save(CreateGroupReq.toGroup(createGroupReq, userRepository.getReferenceById(userId)))
+            groupRepository.save(CreateGroupReq.toGroup(createGroupReq, leader))
         val users = userRepository.findAllByNicknameIn(createGroupReq.nicknames)
         val party = partyRepository.save(Party(PartyStatus.ACCEPTED).also { it.group = group })
         party.partyMember = users.map {
             it.toPartyMember(party)
         }.toMutableList()
+        val chatMessages = mutableListOf<ChatMessage>()
+        chatMessages.add(ChatMessage(leader, "[MITI]방장 ${leader.nickname} 님이 채팅방을 시작하였습니다.").also { it.group = group })
+        chatMessages.add(ChatMessage(leader, "[MITI]미팅날짜가 3일 지난 미팅과 채팅방은 자동으로 삭제됩니다.").also { it.group = group })
+        users.forEach {
+            chatMessages.add(ChatMessage(
+                it,
+                "[MITI]${it.nickname}님이 미팅에 참가하셨습니다.",
+            ).also { it.group = group })
+        }
+        chatMessageRepository.saveAll(chatMessages)
         return true
     }
 
@@ -95,10 +106,11 @@ class GroupService(
 
     @Transactional(readOnly = true)
     fun getMyGroups(pageable: Pageable, userId: String): Page<GroupListDto> {
-        val myGroups =  groupRepository.findMyGroups(userId, pageable)
+        val myGroups = groupRepository.findMyGroups(userId, pageable)
 
         val groupIds = myGroups.content.map { it.id }
-        val lastReadChatMessages = lastReadChatMessageRepository.findAllByGroupIdsAndUser(groupIds, userRepository.getReferenceById(userId))
+        val lastReadChatMessages =
+            lastReadChatMessageRepository.findAllByGroupIdsAndUser(groupIds, userRepository.getReferenceById(userId))
 
         return myGroups.map { group ->
             val lastReadChatMessage = lastReadChatMessages.find { it.group.id == group.id }?.let {
@@ -174,7 +186,7 @@ class GroupService(
         )
         group.parties.flatMap { it.partyMember }.find { it.user?.userId == userId }?.let { partyMember ->
             group.parties.find { it.id == partyMember.party?.id }?.partyMember?.remove(partyMember)
-            if(group.groupStatus == GroupStatus.CLOSE){
+            if (group.groupStatus == GroupStatus.CLOSE) {
                 group.groupStatus = GroupStatus.OPEN
             }
             return true
@@ -184,7 +196,7 @@ class GroupService(
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.HOURS)
     @Transactional
-    fun deleteGroupsAfterThreeDays(){
+    fun deleteGroupsAfterThreeDays() {
         val groups = groupRepository.findAllByMeetDateIsBefore(LocalDateTime.now().minusDays(3))
         val deletedGroups = groups.map { DeletedGroup.toDeletedGroup(it) }
         groupRepository.deleteAll(groups)

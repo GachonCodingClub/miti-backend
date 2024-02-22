@@ -99,7 +99,7 @@ class GroupService(
 
     @Transactional(readOnly = true)
     fun getGroups(pageable: Pageable): Page<GroupListDto> {
-        return groupRepository.findAll(pageable).map {
+        return groupRepository.findAllByMeetDateIsAfter(LocalDateTime.now(), pageable).map {
             GroupListDto.toDto(it)
         }
     }

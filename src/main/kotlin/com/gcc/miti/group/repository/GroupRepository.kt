@@ -20,4 +20,6 @@ interface GroupRepository : JpaRepository<Group, Long> {
     fun findMyGroups(@Param("userId") userId: String, pageable: Pageable): Page<Group>
 
     fun findAllByMeetDateIsBefore(localDateTime: LocalDateTime): List<Group>
+
+    fun findAllByMeetDateIsAfter(localDateTime: LocalDateTime, pageable: Pageable): Page<Group>
 }

@@ -33,16 +33,6 @@ spring:
   profiles:
     active: ${PROFILE}
 
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
-
 server:
   port: 8080
   error:

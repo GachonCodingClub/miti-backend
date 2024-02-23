@@ -9,6 +9,7 @@ import com.gcc.miti.auth.security.SecurityUtils
 import com.gcc.miti.auth.repository.CertificationRepository
 import com.gcc.miti.archive.repository.DeletedUserRepository
 import com.gcc.miti.user.repository.UserRepository
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -38,6 +39,7 @@ class UserService(
     }
 
     @Transactional
+    @CacheEvict(cacheNames = ["group"], allEntries = true)
     fun deleteUser(userId: String) {
         val user = userRepository.getReferenceById(userId)
         certificationRepository.getByEmail(user.userId)?.let {

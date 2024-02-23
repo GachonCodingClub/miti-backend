@@ -30,6 +30,7 @@ spring:
     properties:
       hibernate:
         format-sql: true
+        default_batch_fetch_size: 300
   profiles:
     active: ${PROFILE}
 

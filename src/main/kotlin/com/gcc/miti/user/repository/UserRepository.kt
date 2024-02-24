@@ -9,4 +9,6 @@ interface UserRepository : JpaRepository<User, String> {
     fun findAllByNicknameIn(nicknames: List<String>): List<User>
 
     fun existsByNickname(nickname:String):Boolean
+
+    fun findByNickname(nickname:String): User?
 }

@@ -17,7 +17,7 @@ class GroupListDto(
     val isWaitingParty: Boolean,
 ) {
     companion object {
-        fun toDto(group: Group, unreadMessagesCount: Long? = null): GroupListDto {
+        fun toDto(group: Group, unreadMessagesCount: Long? = null, isLeader: Boolean = false): GroupListDto {
             with(group) {
                 return GroupListDto(
                     meetDate,
@@ -29,7 +29,7 @@ class GroupListDto(
                     id,
                     unreadMessagesCount ?: 0,
                     UserSummaryDto.toDto(leader),
-                    group.waitingParties.isNotEmpty()
+                    isLeader && group.waitingParties.isNotEmpty()
                 )
             }
         }

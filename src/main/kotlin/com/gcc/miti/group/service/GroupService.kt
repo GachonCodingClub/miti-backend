@@ -119,7 +119,7 @@ class GroupService(
             val lastReadChatMessage = lastReadChatMessages.find { it.group.id == group.id }?.let {
                 chatMessageRepository.countByGroupAndIdGreaterThan(group, it.chatMessage.id)
             }
-            GroupListDto.toDto(group, lastReadChatMessage)
+            GroupListDto.toDto(group, lastReadChatMessage, group.leader.userId == userId)
         }
     }
 

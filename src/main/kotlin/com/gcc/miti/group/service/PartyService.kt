@@ -8,6 +8,7 @@ import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.group.repository.PartyMemberRepository
 import com.gcc.miti.group.repository.PartyRepository
 import com.gcc.miti.user.repository.UserRepository
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,6 +20,7 @@ class PartyService(
     private val groupRepository: GroupRepository,
 
     ) {
+    @CacheEvict(cacheNames = ["group"], key = "#groupId")
     @Transactional
     fun makeParty(partyDto: PartyDto, userId: String, groupId: Long): Boolean {
         val group = groupRepository.getReferenceById(groupId)

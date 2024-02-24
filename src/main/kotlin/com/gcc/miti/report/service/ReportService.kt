@@ -14,9 +14,8 @@ class ReportService(
     private val reportRepository: ReportRepository,
     private val userRepository: UserRepository
 ) {
-    fun report(request: ReportReq){
-        val reporter = SecurityUtils.getUserIdFromJwt()
+    fun report(request: ReportReq, userId: String){
         val targetUser = userRepository.findByNickname(request.targetUserNickname) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
-        reportRepository.save(Report(request.content, reporter, targetUser.userId))
+        reportRepository.save(Report(request.content, userId, targetUser.userId))
     }
 }

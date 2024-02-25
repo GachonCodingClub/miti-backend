@@ -2,6 +2,7 @@ package com.gcc.miti.notification.service
 
 import com.gcc.miti.auth.security.SecurityUtils
 import com.gcc.miti.chat.repository.ChatMessageRepository
+import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.notification.dto.NotificationTokenRequest
 import com.gcc.miti.notification.entity.UserNotification
 import com.gcc.miti.notification.repository.UserNotificationRepository
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 class NotificationService(
     private val firebaseMessaging: FirebaseMessaging,
     private val userNotificationRepository: UserNotificationRepository, private val userRepository: UserRepository,
-    private val chatMessageRepository: ChatMessageRepository
+    private val chatMessageRepository: ChatMessageRepository, private val groupRepository: GroupRepository
 ) {
 
     fun putToken(request: NotificationTokenRequest) {
@@ -26,14 +27,19 @@ class NotificationService(
         userNotificationRepository.save(UserNotification(user.userId, user, false, request.token))
     }
 
-    fun sendNotification(userId: String) {
+    @Async
+    @Transactional(readOnly = true)
+    fun sendNewPartyRequestNotification(leaderUserId: String, groupId: Long) {
+        val userNotification = userRepository.findByIdOrNull(leaderUserId)?.userNotification ?: return
+        if(!userNotification.isAgreed) return
+        val group = groupRepository.findByIdOrNull(groupId) ?: return
         val notification = Notification.builder()
-            .setTitle("")
-            .setBody("으억")
+            .setTitle("${group.title}")
+            .setBody("새로운 참가 요청이 있습니다!")
             .build()
         val message = Message.builder()
             .setNotification(notification)
-            .setToken("eBLSaUWfR4iXZpxPGnTAyk:APA91bGlejfBpjhwmHRcrAgSHRIkTf_8sVgrbeP-_lTuSSokUBcHPdHIBDfKQcgSKP2zxhR6pGJg9hG-f5o9l70xgt47FrWd2WPxhSjzDPwgb7dlIF6yfPKFoYiy_8Hg2UZjgwKRRXGZ")
+            .setToken(userNotification.token)
             .build()
         firebaseMessaging.send(message)
     }

@@ -2,6 +2,7 @@ package com.gcc.miti.notification.service
 
 import com.gcc.miti.chat.entity.ChatMessage
 import com.gcc.miti.group.entity.Group
+import com.gcc.miti.group.entity.Party
 import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.notification.dto.NotificationTokenRequest
 import com.gcc.miti.notification.entity.UserNotification
@@ -66,6 +67,22 @@ class NotificationService(
         if(messages.isNotEmpty()){
             firebaseMessaging.sendAllAsync(messages)
         }
+    }
+
+    fun sendPartyAcceptedNotification(group: Group, party: Party) {
+        val notification = Notification.builder()
+            .setTitle("${group.title}")
+            .setBody("참가 요청이 수락되었습니다!")
+            .build()
+        val messages = party.partyMember.mapNotNull {
+            val userNotification = userNotificationRepository.findByIdOrNull(it.user?.userId) ?: return@mapNotNull null
+            Message.builder()
+                .setNotification(notification)
+                .setToken(userNotification.token)
+                .build()
+        }
+        firebaseMessaging.sendAllAsync(messages)
+
     }
 
 //    @Scheduled(fixedDelay = 2500)

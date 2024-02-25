@@ -33,7 +33,7 @@ class SocketController(
                 it.group = group
             },
         )
-        notificationService.sendNewChatNotification(chatMessage.id)
+        notificationService.sendNewChatNotification(chatMessage)
         simpMessagingTemplate.convertAndSend("/sub/${message.groupId}", message.toDto(user))
     }
 }

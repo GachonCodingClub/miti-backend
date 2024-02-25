@@ -38,7 +38,7 @@ class PartyService(
         party.partyMember = users.map {
             it.toPartyMember(party)
         }.toMutableList()
-        notificationService.sendNewPartyRequestNotification(group.leader.userId, groupId)
+        notificationService.sendNewPartyRequestNotification(group.leader.userId, group)
         return true
     }
 }

@@ -29,7 +29,6 @@ class NotificationService(
 
     @Transactional(readOnly = true)
     fun sendNewPartyRequestNotification(leaderUserId: String, group: Group) {
-        println("try to send new party request notification leaderUserId: ${leaderUserId} groupId: ${group.id}")
         val userNotification = userNotificationRepository.findByIdOrNull(leaderUserId) ?: return
         if(!userNotification.isAgreed) return
         val notification = Notification.builder()
@@ -40,13 +39,11 @@ class NotificationService(
             .setNotification(notification)
             .setToken(userNotification.token)
             .build()
-        println("send notification to $leaderUserId : ${userNotification.token}")
         firebaseMessaging.sendAsync(message)
     }
 
     @Transactional(readOnly = true)
     fun sendNewChatNotification(chatMessage: ChatMessage) {
-        println("try to send chat notification ${chatMessage.id}")
         val sender = chatMessage.user
         val receivers = chatMessage.group!!.acceptedParties.flatMap { it.partyMember }.map { it.user!! }.toMutableList()
         receivers.add(chatMessage.group!!.leader)
@@ -56,9 +53,7 @@ class NotificationService(
             .setBody(chatMessage.content)
             .build()
         val messages = receivers.mapNotNull {
-            println("${it.userId}")
             val userNotification = userNotificationRepository.findByIdOrNull(it.userId)
-            println("${userNotification?.token}")
             if(userNotification?.isAgreed == true){
                 Message.builder()
                     .setNotification(notification)
@@ -69,9 +64,6 @@ class NotificationService(
             }
         }
         if(messages.isNotEmpty()){
-            receivers.forEach {
-                println("send notification to ${it.userId} : ${it.userNotification?.token}")
-            }
             firebaseMessaging.sendAllAsync(messages)
         }
     }

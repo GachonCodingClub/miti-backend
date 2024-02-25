@@ -24,7 +24,7 @@ class NotificationService(
 
     fun putToken(request: NotificationTokenRequest, userId: String) {
         val user = userRepository.getReferenceById(userId)
-        userNotificationRepository.save(UserNotification(user.userId, user, false, request.token))
+        userNotificationRepository.save(UserNotification(user.userId, user, true, request.token))
     }
 
     @Async

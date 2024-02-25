@@ -12,6 +12,7 @@ import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Async
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,7 +28,7 @@ class NotificationService(
         userNotificationRepository.save(UserNotification(user.userId, user, true, request.token))
     }
 
-    @Async
+
     @Transactional(readOnly = true)
     fun sendNewPartyRequestNotification(leaderUserId: String, groupId: Long) {
         val userNotification = userRepository.findByIdOrNull(leaderUserId)?.userNotification ?: return
@@ -41,10 +42,9 @@ class NotificationService(
             .setNotification(notification)
             .setToken(userNotification.token)
             .build()
-        firebaseMessaging.send(message)
+        firebaseMessaging.sendAsync(message)
     }
 
-    @Async
     @Transactional(readOnly = true)
     fun sendNewChatNotification(chatMessageId: Long) {
         val chatMessage = chatMessageRepository.findByIdOrNull(chatMessageId)
@@ -67,7 +67,20 @@ class NotificationService(
             }
         }
         if(messages.isNotEmpty()){
-            firebaseMessaging.sendAll(messages)
+            firebaseMessaging.sendAllAsync(messages)
         }
+    }
+
+//    @Scheduled(fixedDelay = 2500)
+    fun sendNotificationTest(){
+        val notification = Notification.builder()
+            .setTitle("hi")
+            .setBody("새로운 참가 요청이 있습니다!")
+            .build()
+        val message = Message.builder()
+            .setNotification(notification)
+            .setToken("eBLSaUWfR4iXZpxPGnTAyk:APA91bGlejfBpjhwmHRcrAgSHRIkTf_8sVgrbeP-_lTuSSokUBcHPdHIBDfKQcgSKP2zxhR6pGJg9hG-f5o9l70xgt47FrWd2WPxhSjzDPwgb7dlIF6yfPKFoYiy_8Hg2UZjgwKRRXGZ")
+            .build()
+        firebaseMessaging.send(message)
     }
 }

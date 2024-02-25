@@ -22,8 +22,8 @@ class NotificationService(
     private val chatMessageRepository: ChatMessageRepository, private val groupRepository: GroupRepository
 ) {
 
-    fun putToken(request: NotificationTokenRequest) {
-        val user = userRepository.getReferenceById(SecurityUtils.getUserIdFromJwt())
+    fun putToken(request: NotificationTokenRequest, userId: String) {
+        val user = userRepository.getReferenceById(userId)
         userNotificationRepository.save(UserNotification(user.userId, user, false, request.token))
     }
 

@@ -62,7 +62,7 @@ class NotificationService(
             if(userNotification?.isAgreed == true){
                 Message.builder()
                     .setNotification(notification)
-                    .setToken(it.userNotification?.token)
+                    .setToken(userNotification.token)
                     .build()
             }else{
                 null

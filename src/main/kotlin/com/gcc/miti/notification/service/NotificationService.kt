@@ -29,7 +29,7 @@ class NotificationService(
 
     @Transactional(readOnly = true)
     fun sendNewPartyRequestNotification(leaderUserId: String, group: Group) {
-        val userNotification = userRepository.findByIdOrNull(leaderUserId)?.userNotification ?: return
+        val userNotification = userNotificationRepository.findByIdOrNull(leaderUserId) ?: return
         if(!userNotification.isAgreed) return
         val notification = Notification.builder()
             .setTitle("${group.title}")
@@ -54,7 +54,8 @@ class NotificationService(
             .setBody(chatMessage.content)
             .build()
         val messages = receivers.mapNotNull {
-            if(it.userNotification?.isAgreed == true && it.userNotification?.token != null){
+            val userNotification = userNotificationRepository.findByIdOrNull(it.userId)
+            if(userNotification?.isAgreed == true){
                 Message.builder()
                     .setNotification(notification)
                     .setToken(it.userNotification?.token)

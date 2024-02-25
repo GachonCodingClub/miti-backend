@@ -1,7 +1,7 @@
 package com.gcc.miti.notification.service
 
-import com.gcc.miti.auth.security.SecurityUtils
-import com.gcc.miti.chat.repository.ChatMessageRepository
+import com.gcc.miti.chat.entity.ChatMessage
+import com.gcc.miti.group.entity.Group
 import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.notification.dto.NotificationTokenRequest
 import com.gcc.miti.notification.entity.UserNotification
@@ -11,8 +11,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.scheduling.annotation.Async
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 class NotificationService(
     private val firebaseMessaging: FirebaseMessaging,
     private val userNotificationRepository: UserNotificationRepository, private val userRepository: UserRepository,
-    private val chatMessageRepository: ChatMessageRepository, private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository
 ) {
 
     fun putToken(request: NotificationTokenRequest, userId: String) {
@@ -30,10 +28,9 @@ class NotificationService(
 
 
     @Transactional(readOnly = true)
-    fun sendNewPartyRequestNotification(leaderUserId: String, groupId: Long) {
+    fun sendNewPartyRequestNotification(leaderUserId: String, group: Group) {
         val userNotification = userRepository.findByIdOrNull(leaderUserId)?.userNotification ?: return
         if(!userNotification.isAgreed) return
-        val group = groupRepository.findByIdOrNull(groupId) ?: return
         val notification = Notification.builder()
             .setTitle("${group.title}")
             .setBody("새로운 참가 요청이 있습니다!")
@@ -42,13 +39,13 @@ class NotificationService(
             .setNotification(notification)
             .setToken(userNotification.token)
             .build()
+        println("send notification to $leaderUserId : ${userNotification.token}")
         firebaseMessaging.sendAsync(message)
     }
 
     @Transactional(readOnly = true)
-    fun sendNewChatNotification(chatMessageId: Long) {
-        val chatMessage = chatMessageRepository.findByIdOrNull(chatMessageId)
-        val sender = chatMessage!!.user
+    fun sendNewChatNotification(chatMessage: ChatMessage) {
+        val sender = chatMessage.user
         val receivers = chatMessage.group!!.acceptedParties.flatMap { it.partyMember }.map { it.user!! }.toMutableList()
         receivers.add(chatMessage.group!!.leader)
         receivers.removeIf { it.userId == sender.userId }
@@ -67,6 +64,9 @@ class NotificationService(
             }
         }
         if(messages.isNotEmpty()){
+            receivers.forEach {
+                println("send notification to ${it.userId} : ${it.userNotification?.token}")
+            }
             firebaseMessaging.sendAllAsync(messages)
         }
     }

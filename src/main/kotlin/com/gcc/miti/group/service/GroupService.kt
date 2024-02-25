@@ -18,6 +18,7 @@ import com.gcc.miti.group.dto.GroupRes
 import com.gcc.miti.group.dto.PartyMembersDto
 import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.group.repository.PartyRepository
+import com.gcc.miti.notification.service.NotificationService
 import com.gcc.miti.user.dto.UserSummaryDto
 import com.gcc.miti.user.repository.UserRepository
 import org.springframework.cache.annotation.CacheEvict
@@ -38,7 +39,8 @@ class GroupService(
     private val partyRepository: PartyRepository,
     private val chatMessageRepository: ChatMessageRepository,
     private val deletedGroupRepository: DeletedGroupRepository,
-    private val lastReadChatMessageRepository: LastReadChatMessageRepository
+    private val lastReadChatMessageRepository: LastReadChatMessageRepository,
+    private val notificationService: NotificationService
 ) {
 
     @Transactional
@@ -140,6 +142,7 @@ class GroupService(
                 ).also { it.group = group },
             )
         }
+        notificationService.sendPartyAcceptedNotification(group, party)
         return true
     }
 

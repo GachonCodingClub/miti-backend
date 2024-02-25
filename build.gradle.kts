@@ -27,6 +27,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-mail:2.6.7")
+    implementation("com.google.firebase:firebase-admin:9.2.0")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("io.jsonwebtoken", "jjwt-api", "0.11.2")

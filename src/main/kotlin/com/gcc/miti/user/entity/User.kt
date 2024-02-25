@@ -6,6 +6,7 @@ import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.group.entity.Group
 import com.gcc.miti.group.entity.Party
 import com.gcc.miti.group.entity.PartyMember
+import com.gcc.miti.notification.entity.UserNotification
 import com.gcc.miti.user.constants.Gender
 import com.gcc.miti.user.constants.Height
 import com.gcc.miti.user.constants.Weight
@@ -57,4 +58,7 @@ class User(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val lastReadChatMessages: MutableList<LastReadChatMessage> = mutableListOf()
+
+    @OneToOne(fetch = FetchType.LAZY)
+    val userNotification: UserNotification? = null
 }

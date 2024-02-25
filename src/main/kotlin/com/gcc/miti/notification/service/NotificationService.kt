@@ -2,6 +2,7 @@ package com.gcc.miti.notification.service
 
 import com.gcc.miti.auth.security.SecurityUtils
 import com.gcc.miti.chat.repository.ChatMessageRepository
+import com.gcc.miti.notification.dto.NotificationTokenRequest
 import com.gcc.miti.notification.entity.UserNotification
 import com.gcc.miti.notification.repository.UserNotificationRepository
 import com.gcc.miti.user.repository.UserRepository
@@ -20,9 +21,9 @@ class NotificationService(
     private val chatMessageRepository: ChatMessageRepository
 ) {
 
-    fun putToken(token: String) {
+    fun putToken(request: NotificationTokenRequest) {
         val user = userRepository.getReferenceById(SecurityUtils.getUserIdFromJwt())
-        userNotificationRepository.save(UserNotification(user.userId, user, false, token))
+        userNotificationRepository.save(UserNotification(user.userId, user, false, request.token))
     }
 
     fun sendNotification(userId: String) {

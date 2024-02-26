@@ -64,9 +64,8 @@ class NotificationService(
                 null
             }
         }
-        if(messages.isNotEmpty()){
-            firebaseMessaging.sendAllAsync(messages)
-        }
+        if(messages.isEmpty()) return
+        firebaseMessaging.sendAllAsync(messages)
     }
 
     fun sendPartyAcceptedNotification(group: Group, party: Party) {
@@ -81,6 +80,7 @@ class NotificationService(
                 .setToken(userNotification.token)
                 .build()
         }
+        if(messages.isEmpty()) return
         firebaseMessaging.sendAllAsync(messages)
 
     }

@@ -18,12 +18,14 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class NotificationService(
     private val firebaseMessaging: FirebaseMessaging,
-    private val userNotificationRepository: UserNotificationRepository, private val userRepository: UserRepository,
+    private val userNotificationRepository: UserNotificationRepository,
+    private val userRepository: UserRepository,
     private val groupRepository: GroupRepository
 ) {
 
     fun putToken(request: NotificationTokenRequest, userId: String) {
         val user = userRepository.getReferenceById(userId)
+        userNotificationRepository.deleteByToken(token = request.token)
         userNotificationRepository.save(UserNotification(user.userId, user, true, request.token))
     }
 

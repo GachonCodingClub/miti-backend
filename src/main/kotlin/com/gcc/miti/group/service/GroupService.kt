@@ -67,7 +67,6 @@ class GroupService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["group"], key = "#groupId")
     fun updateGroup(updateGroupReq: UpdateGroupReq, userId: String, groupId: Long): Boolean {
         val group = groupRepository.getReferenceById(groupId)
         if (group.leader.userId != userId) {
@@ -126,7 +125,6 @@ class GroupService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["group"], key = "#groupId")
     fun acceptParty(groupId: Long, partyId: Long, userId: String): Boolean {
         val group =
             groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
@@ -147,7 +145,6 @@ class GroupService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["group"], key = "#groupId")
     fun rejectParty(groupId: Long, partyId: Long, userId: String): Boolean {
         val group =
             groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
@@ -158,7 +155,6 @@ class GroupService(
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(key = "#groupId", cacheNames = ["group"])
     fun getGroup(groupId: Long): GroupRes {
         val group = groupRepository.getReferenceById(groupId)
         return GroupRes(
@@ -173,7 +169,6 @@ class GroupService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["group"], key = "#groupId")
     fun deleteGroup(groupId: Long, userId: String): Boolean {
         val group =
             groupRepository.getByLeaderAndId(userRepository.getReferenceById(userId), groupId) ?: throw BaseException(
@@ -185,7 +180,6 @@ class GroupService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["group"], key = "#groupId")
     fun leaveGroup(groupId: Long, userId: String): Boolean {
         val user = userRepository.getReferenceById(userId)
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
@@ -207,7 +201,6 @@ class GroupService(
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.HOURS)
     @Transactional
-    @CacheEvict(cacheNames = ["group"], allEntries = true)
     fun deleteGroupsAfterThreeDays() {
         val groups = groupRepository.findAllByMeetDateIsBefore(LocalDateTime.now().minusDays(3))
         val deletedGroups = groups.map { DeletedGroup.toDeletedGroup(it) }

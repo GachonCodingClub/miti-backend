@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserNotificationRepository: JpaRepository<UserNotification, String> {
     @Modifying
-    fun deleteByToken(token: String): Int
+    fun deleteAllByToken(token: String): Int
 }

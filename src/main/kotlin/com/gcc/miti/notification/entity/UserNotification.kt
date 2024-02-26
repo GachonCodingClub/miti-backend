@@ -1,5 +1,6 @@
 package com.gcc.miti.notification.entity
 
+import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.user.entity.User
 import javax.persistence.*
 
@@ -18,4 +19,4 @@ class UserNotification(
 
     @Column(name = "token")
     val token: String
-)
+): BaseTimeEntity()

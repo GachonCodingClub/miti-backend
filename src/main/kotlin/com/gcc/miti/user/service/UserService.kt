@@ -39,7 +39,6 @@ class UserService(
     }
 
     @Transactional
-    @CacheEvict(cacheNames = ["group"], allEntries = true)
     fun deleteUser(userId: String) {
         val user = userRepository.getReferenceById(userId)
         certificationRepository.getByEmail(user.userId)?.let {

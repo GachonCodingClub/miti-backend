@@ -15,14 +15,12 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PartyService(
-    private val partyMemberRepository: PartyMemberRepository,
     private val userRepository: UserRepository,
     private val partyRepository: PartyRepository,
     private val groupRepository: GroupRepository,
     private val notificationService: NotificationService,
 
     ) {
-    @CacheEvict(cacheNames = ["group"], key = "#groupId")
     @Transactional
     fun makeParty(partyDto: PartyDto, userId: String, groupId: Long): Boolean {
         val group = groupRepository.getReferenceById(groupId)

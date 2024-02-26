@@ -23,6 +23,7 @@ class NotificationService(
     private val groupRepository: GroupRepository
 ) {
 
+    @Transactional
     fun putToken(request: NotificationTokenRequest, userId: String) {
         val user = userRepository.getReferenceById(userId)
         userNotificationRepository.deleteAllByToken(token = request.token)

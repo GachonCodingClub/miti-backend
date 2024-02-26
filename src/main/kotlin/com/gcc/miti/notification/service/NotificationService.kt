@@ -54,7 +54,7 @@ class NotificationService(
         receivers.removeIf { it.userId == sender.userId }
         val notification = Notification.builder()
             .setTitle(sender.nickname)
-            .setBody(chatMessage.content)
+            .setBody(chatMessage.content.removePrefix("[MITI]"))
             .build()
         val messages = receivers.mapNotNull {
             val userNotification = userNotificationRepository.findByIdOrNull(it.userId)

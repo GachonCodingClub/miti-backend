@@ -23,6 +23,7 @@ jobs:
         run: | 
           mkdir ./.ebextensions
           echo ${{ secrets.EB_SECRETS }} | base64 --decode >> ./.ebextensions/99-secrets.config
+          mkdir ./src/main/resources/firebase
           echo ${{ secrets.FIREBASE_JSON }} | base64 --decode >> ./src/main/resources/firebase/miti-app-firebase.json
         shell: bash
 

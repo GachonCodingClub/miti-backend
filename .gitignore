@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### SECRETS ###
+
+.ebextensions/99-secrets.config
+src/main/resources/firebase/miti-app-firebase.json

@@ -19,6 +19,12 @@ jobs:
         with:
           java-version: 17
 
+      - name: Secret SetUp
+        run: | 
+          echo ${{ secrets.EB_SECRETS }} | base64 --decode >> .ebextensions/99-secrets.config
+          echo ${{ secrets.FIREBASE_JSON }} | base64 --decode >> src/main/resources/firebase/miti-app-firebase.json
+        shell: bash
+
       - name: Gradle Caching
         uses: actions/cache@v3
         with:

@@ -21,8 +21,8 @@ jobs:
 
       - name: Secret SetUp
         run: | 
-          rm -f .ebextensions/99-secrets.config
-          rm -f src/main/resources/firebase/miti-app-firebase.json
+          rm -f .ebextensions/99-secrets.config || true
+          rm -f src/main/resources/firebase/miti-app-firebase.json || true
           echo ${{ secrets.EB_SECRETS }} | base64 --decode >> .ebextensions/99-secrets.config
           echo ${{ secrets.FIREBASE_JSON }} | base64 --decode >> src/main/resources/firebase/miti-app-firebase.json
         shell: bash

@@ -7,16 +7,18 @@ import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.group.repository.PartyMemberRepository
 import com.gcc.miti.group.repository.PartyRepository
+import com.gcc.miti.notification.service.NotificationService
 import com.gcc.miti.user.repository.UserRepository
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class PartyService(
-    private val partyMemberRepository: PartyMemberRepository,
     private val userRepository: UserRepository,
     private val partyRepository: PartyRepository,
     private val groupRepository: GroupRepository,
+    private val notificationService: NotificationService,
 
     ) {
     @Transactional
@@ -34,6 +36,7 @@ class PartyService(
         party.partyMember = users.map {
             it.toPartyMember(party)
         }.toMutableList()
+        notificationService.sendNewPartyRequestNotification(group.leader.userId, group)
         return true
     }
 }

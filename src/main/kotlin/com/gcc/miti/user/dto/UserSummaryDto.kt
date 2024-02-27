@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 class UserSummaryDto(
     val userId: String,
-    val userName: String,
+    val nickname: String,
     val gender: Gender,
     val height: String,
     val weight: String,
@@ -18,7 +18,7 @@ class UserSummaryDto(
             with(user) {
                 return UserSummaryDto(
                     userId,
-                    userName,
+                    nickname,
                     gender,
                     height.toMinMaxString(),
                     weight.toMinMaxString(),

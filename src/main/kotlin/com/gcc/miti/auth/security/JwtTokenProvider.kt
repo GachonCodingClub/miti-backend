@@ -68,7 +68,7 @@ class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
     }
 
     fun getUserPk(token: String): String {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).body.subject
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token.removePrefix("Bearer ")).body.subject
     }
 
     fun resolveToken(request: HttpServletRequest): String? {

@@ -4,6 +4,7 @@ import com.gcc.miti.chat.dto.MessageDto
 import com.gcc.miti.chat.entity.ChatMessage
 import com.gcc.miti.chat.repository.ChatMessageRepository
 import com.gcc.miti.group.repository.GroupRepository
+import com.gcc.miti.notification.service.NotificationService
 import com.gcc.miti.user.repository.UserRepository
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
@@ -16,6 +17,7 @@ class SocketController(
     private val chatMessageRepository: ChatMessageRepository,
     private val userRepository: UserRepository,
     private val groupRepository: GroupRepository,
+    private val notificationService: NotificationService,
 ) {
     @MessageMapping("/send")
     @Transactional
@@ -26,11 +28,12 @@ class SocketController(
             return
         }
         val user = userRepository.getReferenceById(message.sender)
-        chatMessageRepository.save(
+        val chatMessage = chatMessageRepository.save(
             ChatMessage(userRepository.getReferenceById(message.sender), message.message).also {
                 it.group = group
             },
         )
+        notificationService.sendNewChatNotification(chatMessage)
         simpMessagingTemplate.convertAndSend("/sub/${message.groupId}", message.toDto(user))
     }
 }

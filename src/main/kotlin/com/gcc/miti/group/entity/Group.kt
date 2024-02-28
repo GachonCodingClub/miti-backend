@@ -9,7 +9,7 @@ import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.user.entity.User
 import java.time.LocalDateTime
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "my_group")

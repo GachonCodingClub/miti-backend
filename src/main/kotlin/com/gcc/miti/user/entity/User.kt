@@ -11,7 +11,7 @@ import com.gcc.miti.user.constants.Gender
 import com.gcc.miti.user.constants.Height
 import com.gcc.miti.user.constants.Weight
 import java.time.LocalDate
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "users")

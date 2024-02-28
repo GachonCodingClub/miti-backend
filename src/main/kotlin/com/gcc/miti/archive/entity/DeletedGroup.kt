@@ -4,7 +4,7 @@ import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.group.constants.GroupStatus
 import com.gcc.miti.group.entity.Group
 import java.time.LocalDateTime
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "deleted_group")

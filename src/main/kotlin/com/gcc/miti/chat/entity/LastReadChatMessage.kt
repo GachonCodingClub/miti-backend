@@ -2,7 +2,7 @@ package com.gcc.miti.chat.entity
 
 import com.gcc.miti.group.entity.Group
 import com.gcc.miti.user.entity.User
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "last_read_chat_message")

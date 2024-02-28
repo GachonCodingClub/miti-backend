@@ -1,58 +1,62 @@
 package com.gcc.miti.auth.security
 
 import org.springframework.context.annotation.Bean
-import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.filter.CorsFilter
 
 @EnableWebSecurity
-class SecurityConfiguration(private val jwtTokenProvider: JwtTokenProvider) : WebSecurityConfigurerAdapter() {
+@Configuration
+class SecurityConfig(private val jwtTokenProvider: JwtTokenProvider) {
 
     @Bean
-    override fun authenticationManagerBean(): AuthenticationManager {
-        return super.authenticationManagerBean()
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .httpBasic {
+                it.disable()
+            }
+            .csrf {
+                it.disable()
+            }
+            .sessionManagement{
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .cors{
+                it.configurationSource(corsConfigurationSource())
+            }
+            .authorizeHttpRequests {
+                it.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/", "/health").permitAll()
+                it.anyRequest().authenticated()
+            }
+            .addFilterBefore(
+                JwtAuthenticationFilter(jwtTokenProvider),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
+        return http.build()
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder? {
+    fun passwordEncoder(): PasswordEncoder{
         return BCryptPasswordEncoder()
     }
 
-    override fun configure(http: HttpSecurity) {
-        http
-            .httpBasic().disable()
-            .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .cors()
-            .and()
-            .authorizeRequests()
-            .antMatchers("/auth/**", "swagger-ui/**", "/v3/api-docs/", "/health").permitAll()
-            .anyRequest().permitAll()
-            .and()
-            .addFilter(corsFilter())
-            .addFilterBefore(
-                JwtAuthenticationFilter(jwtTokenProvider),
-                UsernamePasswordAuthenticationFilter::class.java,
-            )
-    }
-
     @Bean
-    fun corsFilter(): CorsFilter {
-        val source = UrlBasedCorsConfigurationSource()
-        val config = CorsConfiguration()
-        config.addAllowedOrigin("*")
-        config.addAllowedHeader("*")
-        config.addAllowedMethod("*")
-        source.registerCorsConfiguration("/**", config)
-        return CorsFilter(source)
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration().apply {
+            allowedOriginPatterns = listOf("*")
+            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            allowCredentials = true
+        }
+        return UrlBasedCorsConfigurationSource().apply {
+            registerCorsConfiguration("/**", configuration)
+        }
     }
 }

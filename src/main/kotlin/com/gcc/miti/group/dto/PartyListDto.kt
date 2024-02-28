@@ -3,9 +3,9 @@ package com.gcc.miti.group.dto
 import com.gcc.miti.group.entity.Party
 import com.gcc.miti.group.entity.PartyMember
 import com.gcc.miti.user.entity.User
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
 
 data class PartyListDto(
     @Id

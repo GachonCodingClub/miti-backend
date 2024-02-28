@@ -4,7 +4,7 @@ import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.group.entity.Group
 import com.gcc.miti.user.entity.User
 import java.time.LocalDateTime
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "chat_message")

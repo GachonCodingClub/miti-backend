@@ -1,9 +1,9 @@
 package com.gcc.miti.auth.entity
 
 import com.gcc.miti.common.entity.BaseTimeEntity
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "certification")

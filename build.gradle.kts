@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.7.10"
-    id("io.spring.dependency-management") version "1.0.15.RELEASE"
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
-    kotlin("plugin.jpa") version "1.6.21"
+    id("org.springframework.boot") version "3.2.3"
+    id("io.spring.dependency-management") version "1.1.4"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.spring") version "1.9.22"
+    kotlin("plugin.jpa") version "1.9.22"
 }
 
 group = "com.gcc"
@@ -26,7 +26,7 @@ dependencies {
     implementation("org.springdoc", "springdoc-openapi-ui", "1.6.6")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.springframework.boot:spring-boot-starter-mail:2.6.7")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("com.google.firebase:firebase-admin:9.2.0")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -38,7 +38,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
@@ -47,13 +47,13 @@ tasks.withType<Test> {
 }
 
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.MappedSuperclass")
-    annotation("javax.persistence.Embeddable")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 noArg {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.MappedSuperclass")
-    annotation("javax.persistence.Embeddable")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }

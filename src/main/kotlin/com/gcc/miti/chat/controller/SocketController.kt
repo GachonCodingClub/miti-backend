@@ -9,7 +9,7 @@ import com.gcc.miti.user.repository.UserRepository
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
-import javax.transaction.Transactional
+import jakarta.transaction.Transactional
 
 @Controller
 class SocketController(

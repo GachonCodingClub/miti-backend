@@ -12,8 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
 import java.security.Key
 import java.util.Date
-import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletRequest
 
 @Component
 class JwtTokenProvider(private val userDetailsService: UserDetailsService) {

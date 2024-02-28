@@ -34,7 +34,7 @@ class SecurityConfig(private val jwtTokenProvider: JwtTokenProvider) {
             }
             .authorizeHttpRequests {
                 it.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/", "/health").permitAll()
-                it.anyRequest().authenticated()
+                it.requestMatchers("/**").permitAll()
             }
             .addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),

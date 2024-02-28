@@ -11,7 +11,7 @@ class Certification(
     var randomNumber: String? = null,
 
     @Id
-    val email: String? = null,
+    val email: String,
 ) : BaseTimeEntity() {
     var flag: Boolean = false
 }

@@ -29,9 +29,7 @@ class SecurityConfig(private val jwtTokenProvider: JwtTokenProvider) {
             .sessionManagement{
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-            .cors{
-                it.configurationSource(corsConfigurationSource())
-            }
+            .cors{}
             .authorizeHttpRequests {
                 it.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/", "/health").permitAll()
                 it.requestMatchers("/**").permitAll()
@@ -50,13 +48,12 @@ class SecurityConfig(private val jwtTokenProvider: JwtTokenProvider) {
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration().apply {
-            allowedOriginPatterns = listOf("*")
-            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            allowCredentials = true
-        }
-        return UrlBasedCorsConfigurationSource().apply {
-            registerCorsConfiguration("/**", configuration)
-        }
+        val configuration = CorsConfiguration()
+        configuration.allowedOriginPatterns = listOf("*")
+        configuration.allowedMethods = listOf("*")
+        configuration.allowedHeaders = listOf("*")
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 }

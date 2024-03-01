@@ -12,7 +12,6 @@ data class SignUpDto(
     var password: String,
     val description: String?,
     val gender: Gender,
-    val userName: String,
     val nickname: String,
     val height: Height,
     val weight: Weight,
@@ -21,7 +20,6 @@ data class SignUpDto(
     fun toUser(passwordEncoder: PasswordEncoder): User {
         return User(
             passwordEncoder.encode(password),
-            userName,
             description,
             gender,
             height,

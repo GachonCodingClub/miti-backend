@@ -10,22 +10,24 @@ import com.gcc.miti.notification.entity.UserNotification
 import com.gcc.miti.user.constants.Gender
 import com.gcc.miti.user.constants.Height
 import com.gcc.miti.user.constants.Weight
-import java.time.LocalDate
 import jakarta.persistence.*
+import java.time.LocalDate
 
 @Entity
 @Table(name = "users")
 class User(
     @Column(nullable = false)
     var password: String,
-    @Column(nullable = false)
-    val userName: String,
+
     @Column(nullable = true)
     var description: String?,
+
     @Enumerated(value = EnumType.STRING)
     val gender: Gender,
+
     @Enumerated(value = EnumType.STRING)
     var height: Height,
+
     @Enumerated(value = EnumType.STRING)
     var weight: Weight,
 
@@ -34,7 +36,7 @@ class User(
 
     val birthDate: LocalDate,
 
-    ) : BaseTimeEntity() {
+) : BaseTimeEntity() {
     @Id
     var userId: String = ""
     fun toPartyMember(party: Party): PartyMember {

@@ -1,15 +1,14 @@
 package com.gcc.miti.user.service
 
-import com.gcc.miti.user.dto.ProfileRes
-import com.gcc.miti.user.dto.UpdateProfileReq
 import com.gcc.miti.archive.entity.DeletedUser
+import com.gcc.miti.archive.repository.DeletedUserRepository
+import com.gcc.miti.auth.repository.CertificationRepository
+import com.gcc.miti.auth.security.SecurityUtils
 import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
-import com.gcc.miti.auth.security.SecurityUtils
-import com.gcc.miti.auth.repository.CertificationRepository
-import com.gcc.miti.archive.repository.DeletedUserRepository
+import com.gcc.miti.user.dto.ProfileRes
+import com.gcc.miti.user.dto.UpdateProfileReq
 import com.gcc.miti.user.repository.UserRepository
-import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -45,6 +44,6 @@ class UserService(
             certificationRepository.delete(it)
         }
         userRepository.delete(user)
-        deletedUserRepository.save(DeletedUser(user.userId, user.birthDate))
+        deletedUserRepository.save(DeletedUser(user.userId))
     }
 }

@@ -100,7 +100,7 @@ class AuthService(
     fun changePassword(request: ChangePasswordRequest): Boolean {
         val emailVerification =
             emailVerificationRepository.getByEmail(request.email) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
-        if (emailVerification.randomNumber == request.certificationNumber) {
+        if (emailVerification.randomNumber == request.verificationNumber) {
             val user = userRepository.findByIdOrNull(request.email) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
             user.password = passwordEncoder.encode(request.newPassword)
             return true

@@ -7,6 +7,7 @@ import com.gcc.miti.auth.dto.TokenDto
 import com.gcc.miti.auth.service.AuthService
 import com.gcc.miti.common.dto.ResponseDto
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@Tag(name = "Auth", description = "계정 관련 API")
 @RequestMapping("/auth")
 class AuthController(private val authService: AuthService) {
     @PostMapping("/verification")

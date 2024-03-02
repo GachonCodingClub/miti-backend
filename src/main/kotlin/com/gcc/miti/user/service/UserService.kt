@@ -2,7 +2,7 @@ package com.gcc.miti.user.service
 
 import com.gcc.miti.archive.entity.DeletedUser
 import com.gcc.miti.archive.repository.DeletedUserRepository
-import com.gcc.miti.auth.repository.CertificationRepository
+import com.gcc.miti.auth.repository.EmailVerificationRepository
 import com.gcc.miti.auth.security.SecurityUtils
 import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val certificationRepository: CertificationRepository,
+    private val emailVerificationRepository: EmailVerificationRepository,
     private val deletedUserRepository: DeletedUserRepository,
 ) {
     @Transactional(readOnly = true)
@@ -40,8 +40,8 @@ class UserService(
     @Transactional
     fun deleteUser(userId: String) {
         val user = userRepository.getReferenceById(userId)
-        certificationRepository.getByEmail(user.userId)?.let {
-            certificationRepository.delete(it)
+        emailVerificationRepository.getByEmail(user.userId)?.let {
+            emailVerificationRepository.delete(it)
         }
         userRepository.delete(user)
         deletedUserRepository.save(DeletedUser(user.userId))

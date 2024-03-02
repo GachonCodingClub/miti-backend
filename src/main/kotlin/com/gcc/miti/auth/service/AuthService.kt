@@ -4,12 +4,12 @@ import com.gcc.miti.auth.dto.ChangePasswordRequest
 import com.gcc.miti.auth.dto.SignInDto
 import com.gcc.miti.auth.dto.SignUpDto
 import com.gcc.miti.auth.dto.TokenDto
-import com.gcc.miti.auth.entity.Certification
+import com.gcc.miti.auth.entity.EmailVerification
 import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.auth.security.JwtTokenProvider
 import com.gcc.miti.auth.helper.AuthHelper
-import com.gcc.miti.auth.repository.CertificationRepository
+import com.gcc.miti.auth.repository.EmailVerificationRepository
 import com.gcc.miti.user.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 
 @Service
 class AuthService(
-    private val certificationRepository: CertificationRepository,
+    private val emailVerificationRepository: EmailVerificationRepository,
     private val mailService: MailService,
     private val tokenProvider: JwtTokenProvider,
 //    private val refreshTokenRepository: RefreshTokenRepository,
@@ -31,47 +31,27 @@ class AuthService(
     private val authHelper: AuthHelper,
 ) {
     @Transactional
-    fun saveMail(email: String): Boolean {
+    fun sendEmailVerification(email: String): Boolean {
         if (userRepository.existsById(email)) {
             throw BaseException(BaseExceptionCode.ALREADY_REGISTERED)
         }
         authHelper.isUniversityEmail(email)
-        val certificationNumber: String = mailService.randomNumber()
-        mailService.sendMail(email, certificationNumber)
-        val certification = certificationRepository.getByEmail(email)
-        return if (certification != null) {
-            certificationRepository.save(
-                certification.apply {
-                    this.randomNumber = certificationNumber
-                },
-            )
-            true
-        } else {
-            certificationRepository.save(Certification(certificationNumber, email))
-            true
-        }
+        val randomNumber: String = mailService.randomNumber()
+        mailService.sendMail(email, randomNumber)
+        emailVerificationRepository.save(EmailVerification(randomNumber, email))
+        return true
     }
 
     @Transactional
-    fun sendEmailCertificationForChangingPassword(email: String): Boolean {
+    fun sendEmailVerificationForChangingPassword(email: String): Boolean {
         if (!userRepository.existsById(email)) {
             throw BaseException(BaseExceptionCode.NOT_FOUND)
         }
         authHelper.isUniversityEmail(email)
-        val certificationNumber: String = mailService.randomNumber()
-        mailService.sendMail(email, certificationNumber)
-        val certification = certificationRepository.getByEmail(email)
-        return if (certification != null) {
-            certificationRepository.save(
-                certification.apply {
-                    this.randomNumber = certificationNumber
-                },
-            )
-            true
-        } else {
-            certificationRepository.save(Certification(certificationNumber, email))
-            true
-        }
+        val randomNumber: String = mailService.randomNumber()
+        mailService.sendMail(email, randomNumber)
+        emailVerificationRepository.save(EmailVerification(randomNumber, email))
+        return true
     }
 
     @Transactional
@@ -80,7 +60,7 @@ class AuthService(
             throw BaseException(BaseExceptionCode.USER_ID_CONFLICT)
         }
         val certification =
-            certificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
+            emailVerificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
         if (!certification.flag || certification.modifiedDate!!.plusHours(1).isBefore(
                 LocalDateTime.now(),
             )
@@ -93,12 +73,12 @@ class AuthService(
     }
 
     @Transactional
-    fun checkCertification(email: String, certificationNumber: String): Boolean {
-        val certification = certificationRepository.getByEmail(email)
-        if (certification != null) {
-            if (certification.modifiedDate!!.plusMinutes(3).isAfter(LocalDateTime.now())) {
-                return if (certificationNumber == certification.randomNumber) {
-                    certification.flag = true
+    fun verifyVerificationNumber(email: String, verificationNumber: String): Boolean {
+        val emailVerification = emailVerificationRepository.getByEmail(email)
+        if (emailVerification != null) {
+            if (emailVerification.modifiedDate!!.plusMinutes(3).isAfter(LocalDateTime.now())) {
+                return if (verificationNumber == emailVerification.randomNumber) {
+                    emailVerification.flag = true
                     true
                 } else {
                     false
@@ -118,9 +98,9 @@ class AuthService(
 
     @Transactional
     fun changePassword(request: ChangePasswordRequest): Boolean {
-        val certification =
-            certificationRepository.getByEmail(request.email) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
-        if (certification.randomNumber == request.certificationNumber) {
+        val emailVerification =
+            emailVerificationRepository.getByEmail(request.email) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        if (emailVerification.randomNumber == request.certificationNumber) {
             val user = userRepository.findByIdOrNull(request.email) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
             user.password = passwordEncoder.encode(request.newPassword)
             return true

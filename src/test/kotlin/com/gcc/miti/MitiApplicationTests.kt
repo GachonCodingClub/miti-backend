@@ -10,7 +10,7 @@ package com.gcc.miti
 //    lateinit var authService: AuthService
 //
 //    @Autowired
-//    lateinit var certificationRepository: CertificationRepository
+//    lateinit var certificationRepository: EmailVerificationRepository
 //
 //    @Autowired
 //    lateinit var userRepository: UserRepository

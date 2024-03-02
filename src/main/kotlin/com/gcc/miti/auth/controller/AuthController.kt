@@ -1,11 +1,11 @@
 package com.gcc.miti.auth.controller
 
-import com.gcc.miti.common.dto.ResponseDto
 import com.gcc.miti.auth.dto.ChangePasswordRequest
 import com.gcc.miti.auth.dto.SignInDto
 import com.gcc.miti.auth.dto.SignUpDto
 import com.gcc.miti.auth.dto.TokenDto
 import com.gcc.miti.auth.service.AuthService
+import com.gcc.miti.common.dto.ResponseDto
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,13 +22,13 @@ class AuthController(private val authService: AuthService) {
     @PostMapping("/certification")
     @Operation(summary = "이메일 인증번호 전송")
     fun sendEmailVerification(@RequestParam email: String): Boolean {
-        return authService.saveMail(email)
+        return authService.sendEmailVerification(email)
     }
 
     @PostMapping("/certification/password")
     @Operation(summary = "이메일 인증번호 전송 (비밀번호 변경 전용)")
     fun sendEmailCertificationForChangingPassword(@RequestParam email: String): Boolean {
-        return authService.sendEmailCertificationForChangingPassword(email)
+        return authService.sendEmailVerificationForChangingPassword(email)
     }
 
     @PatchMapping("/password")
@@ -54,7 +54,7 @@ class AuthController(private val authService: AuthService) {
         @RequestParam email: String,
         @RequestParam certificationNumber: String,
     ): Boolean {
-        return authService.checkCertification(email, certificationNumber)
+        return authService.verifyVerificationNumber(email, certificationNumber)
     }
 
     @PostMapping("/sign-in")

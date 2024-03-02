@@ -6,8 +6,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "certification")
-class Certification(
+@Table(name = "email_verification")
+class EmailVerification(
     var randomNumber: String? = null,
 
     @Id

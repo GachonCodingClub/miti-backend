@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/auth")
 class AuthController(private val authService: AuthService) {
-    @PostMapping("/certification")
+    @PostMapping("/verification")
     @Operation(summary = "이메일 인증번호 전송")
     fun sendEmailVerification(@RequestParam email: String): Boolean {
         return authService.sendEmailVerification(email)
     }
 
-    @PostMapping("/certification/password")
+    @PostMapping("/verification/password")
     @Operation(summary = "이메일 인증번호 전송 (비밀번호 변경 전용)")
-    fun sendEmailCertificationForChangingPassword(@RequestParam email: String): Boolean {
+    fun sendEmailVerificationForChangingPassword(@RequestParam email: String): Boolean {
         return authService.sendEmailVerificationForChangingPassword(email)
     }
 
@@ -48,13 +48,13 @@ class AuthController(private val authService: AuthService) {
         return ResponseEntity.ok().body(authService.signUp(signUpDto))
     }
 
-    @PostMapping("/certification/confirm")
+    @PostMapping("/verification/confirm")
     @Operation(summary = "이메일 인증번호 검증")
-    fun checkCertification(
+    fun verifyVerificationNumber(
         @RequestParam email: String,
-        @RequestParam certificationNumber: String,
+        @RequestParam verificationNumber: String,
     ): Boolean {
-        return authService.verifyVerificationNumber(email, certificationNumber)
+        return authService.verifyVerificationNumber(email, verificationNumber)
     }
 
     @PostMapping("/sign-in")

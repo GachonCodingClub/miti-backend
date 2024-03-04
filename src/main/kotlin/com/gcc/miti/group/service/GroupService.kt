@@ -1,28 +1,26 @@
 package com.gcc.miti.group.service
 
+import com.gcc.miti.archive.entity.DeletedGroup
 import com.gcc.miti.archive.repository.DeletedGroupRepository
+import com.gcc.miti.chat.entity.ChatMessage
+import com.gcc.miti.chat.repository.ChatMessageRepository
+import com.gcc.miti.chat.repository.LastReadChatMessageRepository
+import com.gcc.miti.common.exception.BaseException
+import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.group.constants.GroupStatus
 import com.gcc.miti.group.constants.PartyStatus
 import com.gcc.miti.group.dto.CreateGroupReq
-import com.gcc.miti.group.dto.UpdateGroupReq
-import com.gcc.miti.chat.entity.ChatMessage
-import com.gcc.miti.chat.repository.ChatMessageRepository
-import com.gcc.miti.archive.entity.DeletedGroup
-import com.gcc.miti.chat.repository.LastReadChatMessageRepository
-import com.gcc.miti.group.entity.Party
-import com.gcc.miti.common.exception.BaseException
-import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.group.dto.GroupListDto
 import com.gcc.miti.group.dto.GroupPartiesDto
 import com.gcc.miti.group.dto.GroupRes
 import com.gcc.miti.group.dto.PartyMembersDto
+import com.gcc.miti.group.dto.UpdateGroupReq
+import com.gcc.miti.group.entity.Party
 import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.group.repository.PartyRepository
 import com.gcc.miti.notification.service.NotificationService
 import com.gcc.miti.user.dto.UserSummaryDto
 import com.gcc.miti.user.repository.UserRepository
-import org.springframework.cache.annotation.CacheEvict
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -40,7 +38,7 @@ class GroupService(
     private val chatMessageRepository: ChatMessageRepository,
     private val deletedGroupRepository: DeletedGroupRepository,
     private val lastReadChatMessageRepository: LastReadChatMessageRepository,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
 
     @Transactional
@@ -56,11 +54,14 @@ class GroupService(
         val chatMessages = mutableListOf<ChatMessage>()
         chatMessages.add(ChatMessage(leader, "[MITI]방장 ${leader.nickname} 님이 채팅방을 시작하였습니다.").also { it.group = group })
         chatMessages.add(ChatMessage(leader, "[MITI]미팅날짜가 3일 지난 미팅과 채팅방은 자동으로 삭제됩니다.").also { it.group = group })
+        chatMessages.add(ChatMessage(leader, "[MITI]부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다.").also { it.group = group })
         users.forEach {
-            chatMessages.add(ChatMessage(
-                it,
-                "[MITI]${it.nickname}님이 미팅에 참가하셨습니다.",
-            ).also { it.group = group })
+            chatMessages.add(
+                ChatMessage(
+                    it,
+                    "[MITI]${it.nickname}님이 미팅에 참가하셨습니다.",
+                ).also { it.group = group },
+            )
         }
         chatMessageRepository.saveAll(chatMessages)
         return true

@@ -6,8 +6,12 @@ import com.gcc.miti.auth.repository.EmailVerificationRepository
 import com.gcc.miti.auth.security.SecurityUtils
 import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
+import com.gcc.miti.user.dto.BlockedUserOutput
+import com.gcc.miti.user.dto.GetBlockedUsersResponse
 import com.gcc.miti.user.dto.ProfileRes
 import com.gcc.miti.user.dto.UpdateProfileReq
+import com.gcc.miti.user.entity.UserBlockList
+import com.gcc.miti.user.repository.UserBlockListRepository
 import com.gcc.miti.user.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -18,6 +22,7 @@ class UserService(
     private val userRepository: UserRepository,
     private val emailVerificationRepository: EmailVerificationRepository,
     private val deletedUserRepository: DeletedUserRepository,
+    private val userBlockListRepository: UserBlockListRepository,
 ) {
     @Transactional(readOnly = true)
     fun getMyProfile(): ProfileRes {
@@ -45,5 +50,23 @@ class UserService(
         }
         userRepository.delete(user)
         deletedUserRepository.save(DeletedUser(user.userId))
+    }
+
+    fun blockUser(blockTargetUserId: String, userId: String) {
+        val blockTargetUser = userRepository.getReferenceById(blockTargetUserId)
+        val user = userRepository.getReferenceById(userId)
+        userBlockListRepository.save(UserBlockList(user, blockTargetUser))
+    }
+
+    fun unblockUser(blockTargetUserId: String, userId: String) {
+        val blockTargetUser = userRepository.getReferenceById(blockTargetUserId)
+        val user = userRepository.getReferenceById(userId)
+        userBlockListRepository.deleteByBlockedTargetUserAndUser(blockTargetUser, user)
+    }
+
+    fun getBlockedUsers(userId: String): GetBlockedUsersResponse {
+        val user = userRepository.getReferenceById(userId)
+        val userBlockLists = userBlockListRepository.findAllByUser(user)
+        return GetBlockedUsersResponse(userBlockLists.map { BlockedUserOutput(it.blockedTargetUser.nickname, it.createdDate) })
     }
 }

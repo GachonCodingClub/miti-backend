@@ -31,9 +31,9 @@ class UserController(private val userService: UserService) {
     }
 
     @Operation(summary = "유저 차단")
-    @PostMapping("/{blockUserId}/block")
-    fun blockUser(@PathVariable blockUserId: String, @Parameter(hidden = true) @GetIdFromToken userId: String) {
-        userService.blockUser(blockUserId, userId)
+    @PostMapping("/{blockTargetUserId}/block")
+    fun blockUser(@PathVariable blockTargetUserId: String, @Parameter(hidden = true) @GetIdFromToken userId: String) {
+        userService.blockUser(blockTargetUserId, userId)
     }
 
     @Operation(summary = "유저 차단 해제")

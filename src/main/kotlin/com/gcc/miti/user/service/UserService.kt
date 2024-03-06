@@ -55,7 +55,7 @@ class UserService(
     fun blockUser(blockTargetUserId: String, userId: String) {
         val blockTargetUser = userRepository.getReferenceById(blockTargetUserId)
         val user = userRepository.getReferenceById(userId)
-        userBlockListRepository.save(UserBlockList(user, blockTargetUser))
+        userBlockListRepository.save(UserBlockList(blockTargetUser, user))
     }
 
     fun unblockUser(blockTargetUserId: String, userId: String) {

@@ -67,6 +67,6 @@ class UserService(
     fun getBlockedUsers(userId: String): GetBlockedUsersResponse {
         val user = userRepository.getReferenceById(userId)
         val userBlockLists = userBlockListRepository.findAllByUser(user)
-        return GetBlockedUsersResponse(userBlockLists.map { BlockedUserOutput(it.blockedTargetUser.nickname, it.createdDate) })
+        return GetBlockedUsersResponse(userBlockLists.map { BlockedUserOutput(it.blockedTargetUser.nickname, it.blockedTargetUser.userId, it.createdDate) })
     }
 }

@@ -58,6 +58,7 @@ class UserService(
         userBlockListRepository.save(UserBlockList(blockTargetUser, user))
     }
 
+    @Transactional
     fun unblockUser(blockTargetUserId: String, userId: String) {
         val blockTargetUser = userRepository.getReferenceById(blockTargetUserId)
         val user = userRepository.getReferenceById(userId)

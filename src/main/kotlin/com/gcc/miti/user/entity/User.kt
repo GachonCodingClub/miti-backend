@@ -61,6 +61,6 @@ class User(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val lastReadChatMessages: MutableList<LastReadChatMessage> = mutableListOf()
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val userNotification: UserNotification? = null
 }

@@ -11,7 +11,7 @@ class UserNotification(
     val id: String,
 
     @MapsId
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     val user: User,
 
     @Column(name = "is_agreed")

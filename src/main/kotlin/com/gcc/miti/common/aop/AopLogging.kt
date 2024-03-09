@@ -22,7 +22,7 @@ class AopLogging(
 ) {
     private val logger = LoggerFactory.getLogger(AopLogging::class.java)
 
-    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
+    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *) && !within(@com.gcc.miti.common.aop.NoLogging *)")
     fun controller() {
     }
 

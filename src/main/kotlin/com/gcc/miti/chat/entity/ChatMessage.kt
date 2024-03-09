@@ -26,4 +26,7 @@ class ChatMessage(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatMessage", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val lastReadChatMessages: MutableList<LastReadChatMessage> = mutableListOf()
 }

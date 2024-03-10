@@ -31,15 +31,15 @@ class UserController(private val userService: UserService) {
     }
 
     @Operation(summary = "유저 차단")
-    @PostMapping("/{blockTargetUserId}/block")
-    fun blockUser(@PathVariable blockTargetUserId: String, @Parameter(hidden = true) @GetIdFromToken userId: String) {
-        userService.blockUser(blockTargetUserId, userId)
+    @PostMapping("/block")
+    fun blockUser(@RequestParam("blockTargetNickname") blockTargetNickname: String, @Parameter(hidden = true) @GetIdFromToken userId: String) {
+        userService.blockUser(blockTargetNickname, userId)
     }
 
     @Operation(summary = "유저 차단 해제")
-    @PostMapping("/{blockUserId}/unblock")
-    fun unblockUser(@PathVariable blockUserId: String, @Parameter(hidden = true) @GetIdFromToken userId: String) {
-        userService.unblockUser(blockUserId, userId)
+    @PostMapping("/unblock")
+    fun unblockUser(@RequestParam("blockTargetNickname") blockTargetNickname: String, @Parameter(hidden = true) @GetIdFromToken userId: String) {
+        userService.unblockUser(blockTargetNickname, userId)
     }
 
     @Operation(summary = "차단 목록")

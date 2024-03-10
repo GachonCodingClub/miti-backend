@@ -52,15 +52,15 @@ class UserService(
         deletedUserRepository.save(DeletedUser(user.userId))
     }
 
-    fun blockUser(blockTargetUserId: String, userId: String) {
-        val blockTargetUser = userRepository.getReferenceById(blockTargetUserId)
+    fun blockUser(blockTargetNickname: String, userId: String) {
+        val blockTargetUser = userRepository.findByNickname(blockTargetNickname) ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
         val user = userRepository.getReferenceById(userId)
         userBlockListRepository.save(UserBlockList(blockTargetUser, user))
     }
 
     @Transactional
-    fun unblockUser(blockTargetUserId: String, userId: String) {
-        val blockTargetUser = userRepository.getReferenceById(blockTargetUserId)
+    fun unblockUser(blockTargetNickname: String, userId: String) {
+        val blockTargetUser = userRepository.findByNickname(blockTargetNickname) ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
         val user = userRepository.getReferenceById(userId)
         userBlockListRepository.deleteByBlockedTargetUserAndUser(blockTargetUser, user)
     }

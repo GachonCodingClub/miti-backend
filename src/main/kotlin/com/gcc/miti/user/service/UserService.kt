@@ -53,14 +53,24 @@ class UserService(
     }
 
     fun blockUser(blockTargetNickname: String, userId: String) {
-        val blockTargetUser = userRepository.findByNickname(blockTargetNickname) ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
+        val blockTargetUser =
+            userRepository.findByNickname(blockTargetNickname) ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
         val user = userRepository.getReferenceById(userId)
-        userBlockListRepository.save(UserBlockList(blockTargetUser, user))
+        try {
+            userBlockListRepository.save(UserBlockList(blockTargetUser, user))
+        } catch (e: Exception) {
+            if (e.message?.contains(BLOCK_INDEX_NAME) == true) {
+                throw BaseException(BaseExceptionCode.ALREADY_BLOCKED)
+            }
+            throw e
+        }
+
     }
 
     @Transactional
     fun unblockUser(blockTargetNickname: String, userId: String) {
-        val blockTargetUser = userRepository.findByNickname(blockTargetNickname) ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
+        val blockTargetUser =
+            userRepository.findByNickname(blockTargetNickname) ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
         val user = userRepository.getReferenceById(userId)
         userBlockListRepository.deleteByBlockedTargetUserAndUser(blockTargetUser, user)
     }
@@ -68,6 +78,16 @@ class UserService(
     fun getBlockedUsers(userId: String): GetBlockedUsersResponse {
         val user = userRepository.getReferenceById(userId)
         val userBlockLists = userBlockListRepository.findAllByUser(user)
-        return GetBlockedUsersResponse(userBlockLists.map { BlockedUserOutput(it.blockedTargetUser.nickname, it.blockedTargetUser.userId, it.createdDate) })
+        return GetBlockedUsersResponse(userBlockLists.map {
+            BlockedUserOutput(
+                it.blockedTargetUser.nickname,
+                it.blockedTargetUser.userId,
+                it.createdDate
+            )
+        })
+    }
+
+    companion object {
+        const val BLOCK_INDEX_NAME = "user_block_list_user_id_block_target_user_id_idx"
     }
 }

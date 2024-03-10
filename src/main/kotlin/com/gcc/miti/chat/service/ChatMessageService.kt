@@ -57,7 +57,6 @@ class ChatMessageService(
     @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
     @CacheEvict("chatMessages", allEntries = true)
     fun removeSize1ChatMessageCaches() {
-        logger.info("Evicting chat messages cache")
     }
 
     @Transactional

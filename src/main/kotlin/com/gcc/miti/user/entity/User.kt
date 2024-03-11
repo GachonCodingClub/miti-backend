@@ -63,4 +63,10 @@ class User(
 
     @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val userNotification: UserNotification? = null
+
+    @OneToMany(mappedBy = "blockedTargetUser" , cascade = [CascadeType.ALL], orphanRemoval = true)
+    val blockListTargets: MutableList<UserBlockList> = mutableListOf()
+
+    @OneToMany(mappedBy = "user" , cascade = [CascadeType.ALL], orphanRemoval = true)
+    val blockLists: MutableList<UserBlockList> = mutableListOf()
 }

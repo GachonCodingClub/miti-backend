@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Tag(name = "Auth", description = "계정 관련 API")
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 class AuthController(private val authService: AuthService) {
     @PostMapping("/verification")
     @Operation(summary = "이메일 인증번호 전송")

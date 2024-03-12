@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 class UserController(private val userService: UserService) {
     @GetMapping("/me/profile")
     @Operation(summary = "내 프로필")

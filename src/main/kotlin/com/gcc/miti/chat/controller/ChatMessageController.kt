@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/message")
+@RequestMapping("/api/message")
 class ChatMessageController(
     private val chatMessageService: ChatMessageService
 ) {

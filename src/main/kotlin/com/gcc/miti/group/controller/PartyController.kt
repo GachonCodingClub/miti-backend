@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/party")
+@RequestMapping("/api/party")
 class PartyController(
     private val partyService: PartyService,
 ) {

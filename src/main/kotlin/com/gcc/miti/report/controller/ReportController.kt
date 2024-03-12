@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/report")
+@RequestMapping("/api/report")
 class ReportController(private val reportService: ReportService) {
 
     @Operation(summary = "신고")

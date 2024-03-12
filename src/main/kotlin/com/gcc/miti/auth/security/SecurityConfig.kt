@@ -31,8 +31,8 @@ class SecurityConfig(private val jwtTokenProvider: JwtTokenProvider) {
             }
             .cors{}
             .authorizeHttpRequests {
-                it.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/", "/health").permitAll()
-                it.requestMatchers("/**").permitAll()
+                it.requestMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/", "/health").permitAll()
+                it.requestMatchers("/**").authenticated()
             }
             .addFilterBefore(
                 JwtAuthenticationFilter(jwtTokenProvider),

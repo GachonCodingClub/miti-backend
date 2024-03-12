@@ -31,7 +31,7 @@ class ApplicationReadyWebhook() {
                 embeds = listOf(
                     Embed(
                         "배포 완료",
-                        "${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))} - MITI BOT"
+                        "${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))} UTC - MITI BOT"
                     )
                 )
             )

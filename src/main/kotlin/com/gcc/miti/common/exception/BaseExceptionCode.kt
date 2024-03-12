@@ -15,6 +15,7 @@ enum class BaseExceptionCode(val httpStatusCode: Int, val message: String) {
 
     // 403 FORBIDDEN
     FORBIDDEN(HttpStatus.FORBIDDEN.value(), "권한이 없습니다."),
+    BANNED_USER(HttpStatus.FORBIDDEN.value(), "영구 정지된 유저입니다."),
 
     // 404 NOT FOUND
     USER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "아이디가 존재하지 않습니다."),

@@ -10,6 +10,7 @@ import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.auth.security.JwtTokenProvider
 import com.gcc.miti.auth.helper.AuthHelper
 import com.gcc.miti.auth.repository.EmailVerificationRepository
+import com.gcc.miti.user.repository.BannedUserRepository
 import com.gcc.miti.user.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -29,9 +30,11 @@ class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val authHelper: AuthHelper,
+    private val bannedUserRepository: BannedUserRepository
 ) {
     @Transactional
     fun sendEmailVerification(email: String): Boolean {
+        if (bannedUserRepository.existsByEmail(email)) throw BaseException(BaseExceptionCode.BANNED_USER)
         if (userRepository.existsById(email)) {
             throw BaseException(BaseExceptionCode.ALREADY_REGISTERED)
         }
@@ -56,11 +59,13 @@ class AuthService(
 
     @Transactional
     fun signUp(signUpDto: SignUpDto): Boolean {
+        if (bannedUserRepository.existsByEmail(signUpDto.userId)) throw BaseException(BaseExceptionCode.BANNED_USER)
         if (userRepository.existsById(signUpDto.userId)) {
             throw BaseException(BaseExceptionCode.USER_ID_CONFLICT)
         }
         val certification =
-            emailVerificationRepository.getByEmail(signUpDto.userId) ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
+            emailVerificationRepository.getByEmail(signUpDto.userId)
+                ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
         if (!certification.flag || certification.modifiedDate!!.plusHours(1).isBefore(
                 LocalDateTime.now(),
             )

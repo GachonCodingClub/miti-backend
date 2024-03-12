@@ -60,10 +60,10 @@ class Group(
         val party = parties.find { it.id == partyId } ?: throw BaseException(
             BaseExceptionCode.NOT_FOUND,
         )
-        val newMemberCount = party.partyMember.count()
+        val newMemberCount = party.partyMembers.count()
         var acceptedPartyMemberCount = 1 // Count Leader
         acceptedParties.forEach {
-            acceptedPartyMemberCount += it.partyMember.count()
+            acceptedPartyMemberCount += it.partyMembers.count()
         }
         if (maxUsers - acceptedPartyMemberCount - newMemberCount > 0) {
             party.partyStatus = PartyStatus.ACCEPTED
@@ -84,7 +84,7 @@ class Group(
         get() {
             var count = 0
             acceptedParties.forEach {
-                count += it.partyMember.count()
+                count += it.partyMembers.count()
             }
             return count + 1 // Plus Leader
         }

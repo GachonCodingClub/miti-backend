@@ -45,7 +45,7 @@ class DeletedGroup(
                     groupStatus,
                     meetDate,
                     meetPlace,
-                    1 + acceptedParties.flatMap { it.partyMember }.size
+                    1 + acceptedParties.flatMap { it.partyMembers }.size
                 )
             }
         }

@@ -27,7 +27,7 @@ class Party(
     var id: Long = 0
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "party", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var partyMember: MutableList<PartyMember> = mutableListOf()
+    var partyMembers: MutableList<PartyMember> = mutableListOf()
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")

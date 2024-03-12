@@ -23,7 +23,7 @@ class SocketController(
     @Transactional
     fun send(message: MessageDto) {
         val group = groupRepository.getReferenceById(message.groupId.toLong())
-        if (group.leader.userId != message.sender && !group.acceptedParties.flatMap { it.partyMember }
+        if (group.leader.userId != message.sender && !group.acceptedParties.flatMap { it.partyMembers }
                 .any { it.user?.userId == message.sender }) {
             return
         }

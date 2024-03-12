@@ -18,7 +18,7 @@ class PartyMembersDto(
             with(party) {
                 return PartyMembersDto(
                     id,
-                    partyMember.map {
+                    partyMembers.map {
                         UserSummaryDto.toDto(it.user!!)
                     },
                 )

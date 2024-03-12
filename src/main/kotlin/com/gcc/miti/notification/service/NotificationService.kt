@@ -49,7 +49,7 @@ class NotificationService(
     @Transactional(readOnly = true)
     fun sendNewChatNotification(chatMessage: ChatMessage) {
         val sender = chatMessage.user
-        val receivers = chatMessage.group!!.acceptedParties.flatMap { it.partyMember }.map { it.user!! }.toMutableList()
+        val receivers = chatMessage.group!!.acceptedParties.flatMap { it.partyMembers }.map { it.user!! }.toMutableList()
         receivers.add(chatMessage.group!!.leader)
         receivers.removeIf { it.userId == sender.userId }
         val notification = Notification.builder()
@@ -76,7 +76,7 @@ class NotificationService(
             .setTitle("${group.title}")
             .setBody("참가 요청이 수락되었습니다!")
             .build()
-        val messages = party.partyMember.mapNotNull {
+        val messages = party.partyMembers.mapNotNull {
             val userNotification = userNotificationRepository.findByIdOrNull(it.user?.userId) ?: return@mapNotNull null
             Message.builder()
                 .setNotification(notification)

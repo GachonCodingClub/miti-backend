@@ -27,7 +27,7 @@ class PartyService(
             throw BaseException(BaseExceptionCode.BAD_REQUEST)
         }
         if (partyDto.nicknames.any { it == user.nickname }) throw BaseException(BaseExceptionCode.BAD_REQUEST)
-        if (group.parties.map { it.partyMember }.flatten()
+        if (group.parties.map { it.partyMembers }.flatten()
                 .find { it.user?.userId == user.userId } != null
         ) {
             throw BaseException(BaseExceptionCode.BAD_REQUEST)
@@ -35,7 +35,7 @@ class PartyService(
         val users = userRepository.findAllByNicknameIn(partyDto.nicknames).toMutableList()
         val party = partyRepository.save(Party().also { it.group = group })
         users.add(userRepository.getReferenceById(userId))
-        party.partyMember = users.map {
+        party.partyMembers = users.map {
             it.toPartyMember(party)
         }.toMutableList()
         notificationService.sendNewPartyRequestNotification(group.leader.userId, group)

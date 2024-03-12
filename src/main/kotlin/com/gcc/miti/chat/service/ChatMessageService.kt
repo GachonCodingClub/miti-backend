@@ -1,15 +1,11 @@
 package com.gcc.miti.chat.service
 
 import com.gcc.miti.chat.dto.ChatMessageDto
-import com.gcc.miti.chat.entity.ChatMessage
 import com.gcc.miti.chat.entity.LastReadChatMessage
 import com.gcc.miti.chat.repository.ChatMessageRepository
 import com.gcc.miti.chat.repository.LastReadChatMessageRepository
-import com.gcc.miti.group.entity.Group
 import com.gcc.miti.group.repository.GroupRepository
-import com.gcc.miti.user.entity.User
 import com.gcc.miti.user.repository.UserRepository
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
@@ -30,7 +26,7 @@ class ChatMessageService(
     @Transactional
     fun getAllMessages(groupId: Long, userId: String): List<ChatMessageDto> {
         val group = groupRepository.getReferenceById(groupId)
-        if (group.leader.userId != userId && !group.acceptedParties.flatMap { it.partyMember }
+        if (group.leader.userId != userId && !group.acceptedParties.flatMap { it.partyMembers }
                 .any { it.user?.userId == userId }) {
             return listOf()
         }
@@ -43,7 +39,7 @@ class ChatMessageService(
     @Cacheable("chatMessages", key = "#groupId", condition = "#pageable.pageSize == 1")
     fun getAllMessagesPageable(groupId: Long, userId: String, pageable: Pageable): List<ChatMessageDto> {
         val group = groupRepository.getReferenceById(groupId)
-        if (group.leader.userId != userId && !group.acceptedParties.flatMap { it.partyMember }
+        if (group.leader.userId != userId && !group.acceptedParties.flatMap { it.partyMembers }
                 .any { it.user?.userId == userId }) {
             return listOf()
         }

@@ -113,6 +113,6 @@ class GroupController(
         @PathVariable groupId: Long,
         @Parameter(hidden = true) @GetIdFromToken userId: String,
     ): Boolean {
-        return groupService.leaveGroup(groupId, userId)
+        return groupService.leavePartyAndGroup(groupId, userId)
     }
 }

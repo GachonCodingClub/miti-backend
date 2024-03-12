@@ -9,12 +9,7 @@ import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.group.constants.GroupStatus
 import com.gcc.miti.group.constants.PartyStatus
-import com.gcc.miti.group.dto.CreateGroupReq
-import com.gcc.miti.group.dto.GroupListDto
-import com.gcc.miti.group.dto.GroupPartiesDto
-import com.gcc.miti.group.dto.GroupRes
-import com.gcc.miti.group.dto.PartyMembersDto
-import com.gcc.miti.group.dto.UpdateGroupReq
+import com.gcc.miti.group.dto.*
 import com.gcc.miti.group.entity.Party
 import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.group.repository.PartyRepository
@@ -48,7 +43,7 @@ class GroupService(
             groupRepository.save(CreateGroupReq.toGroup(createGroupReq, leader))
         val users = userRepository.findAllByNicknameIn(createGroupReq.nicknames)
         val party = partyRepository.save(Party(PartyStatus.ACCEPTED).also { it.group = group })
-        party.partyMember = users.map {
+        party.partyMembers = users.map {
             it.toPartyMember(party)
         }.toMutableList()
         val systemMessages = listOf(
@@ -132,13 +127,8 @@ class GroupService(
             )
         group.acceptParty(partyId)
         val party = group.parties.find { it.id == partyId } ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
-        party.partyMember.forEach {
-            chatMessageRepository.save(
-                ChatMessage(
-                    it.user!!,
-                    "[MITI]${it.user!!.nickname}님이 미팅에 참가하셨습니다.",
-                ).also { it.group = group },
-            )
+        party.partyMembers.forEach {
+            chatMessageRepository.save(ChatMessage.createGroupJoinMessage(it.user!!, group))
         }
         notificationService.sendPartyAcceptedNotification(group, party)
         return true
@@ -180,21 +170,15 @@ class GroupService(
     }
 
     @Transactional
-    fun leaveGroup(groupId: Long, userId: String): Boolean {
+    fun leavePartyAndGroup(groupId: Long, userId: String): Boolean {
         val user = userRepository.getReferenceById(userId)
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
-        chatMessageRepository.save(
-            ChatMessage(
-                user,
-                "[MITI]${user.nickname}님이 미팅에서 나가셨습니다.",
-            ).also { it.group = group },
-        )
-        group.parties.flatMap { it.partyMember }.find { it.user?.userId == userId }?.let { partyMember ->
-            group.parties.find { it.id == partyMember.party?.id }?.partyMember?.remove(partyMember)
-            if (group.groupStatus == GroupStatus.CLOSE) {
-                group.groupStatus = GroupStatus.OPEN
-            }
-            return true
+        chatMessageRepository.save(ChatMessage.createGroupLeaveMessage(user, group))
+        val acceptedPartyMembers = group.acceptedParties.flatMap { it.partyMembers }
+        val leavingPartyMember = acceptedPartyMembers.find { it.user?.userId == userId } ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        leavingPartyMember.party?.partyMembers?.remove(leavingPartyMember)
+        if (group.groupStatus == GroupStatus.CLOSE) {
+            group.groupStatus = GroupStatus.OPEN
         }
         return false
     }

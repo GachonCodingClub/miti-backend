@@ -29,4 +29,20 @@ class ChatMessage(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "chatMessage", cascade = [CascadeType.ALL], orphanRemoval = true)
     val lastReadChatMessages: MutableList<LastReadChatMessage> = mutableListOf()
+
+    companion object {
+        fun createGroupLeaveMessage(user: User, group: Group): ChatMessage {
+            return ChatMessage(
+                user,
+                "[MITI]${user.nickname}님이 미팅에서 나가셨습니다.",
+            ).also { it.group = group }
+        }
+
+        fun createGroupJoinMessage(user: User, group: Group): ChatMessage {
+            return ChatMessage(
+                user!!,
+                "[MITI]${user.nickname}님이 미팅에 참가하셨습니다.",
+            ).also { it.group = group }
+        }
+    }
 }

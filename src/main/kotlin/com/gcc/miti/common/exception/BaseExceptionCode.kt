@@ -11,7 +11,7 @@ enum class BaseExceptionCode(val httpStatusCode: Int, val message: String) {
     NOT_UNIVERSITY_EMAIL(HttpStatus.BAD_REQUEST.value(), "지원하는 대학교 이메일이 아닙니다."),
 
     // 401 UNAUTHORIZIED
-    NOT_CERTIFIED(HttpStatus.UNAUTHORIZED.value(), "미인증 상태입니다."),
+    NOT_VERIFIED(HttpStatus.UNAUTHORIZED.value(), "미인증 상태입니다."),
 
     // 403 FORBIDDEN
     FORBIDDEN(HttpStatus.FORBIDDEN.value(), "권한이 없습니다."),

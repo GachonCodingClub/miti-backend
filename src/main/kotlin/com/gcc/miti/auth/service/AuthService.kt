@@ -34,7 +34,7 @@ class AuthService(
 ) {
     @Transactional
     fun sendEmailVerification(email: String): Boolean {
-        if (bannedUserRepository.existsByEmail(email)) throw BaseException(BaseExceptionCode.BANNED_USER)
+        checkBannedUserAndThrow(email)
         if (userRepository.existsById(email)) {
             throw BaseException(BaseExceptionCode.ALREADY_REGISTERED)
         }
@@ -59,21 +59,21 @@ class AuthService(
 
     @Transactional
     fun signUp(signUpDto: SignUpDto): Boolean {
-        if (bannedUserRepository.existsByEmail(signUpDto.userId)) throw BaseException(BaseExceptionCode.BANNED_USER)
+        checkBannedUserAndThrow(signUpDto.userId)
         if (userRepository.existsById(signUpDto.userId)) {
             throw BaseException(BaseExceptionCode.USER_ID_CONFLICT)
         }
-        val certification =
+        val emailVerification =
             emailVerificationRepository.getByEmail(signUpDto.userId)
-                ?: throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
-        if (!certification.flag || certification.modifiedDate!!.plusHours(1).isBefore(
+                ?: throw BaseException(BaseExceptionCode.NOT_VERIFIED)
+        if (!emailVerification.flag || emailVerification.modifiedDate!!.plusHours(1).isBefore(
                 LocalDateTime.now(),
             )
         ) {
-            throw BaseException(BaseExceptionCode.NOT_CERTIFIED)
+            throw BaseException(BaseExceptionCode.NOT_VERIFIED)
         }
         userRepository.save(signUpDto.toUser(passwordEncoder))
-        certification.flag = false
+        emailVerification.flag = false
         return true
     }
 
@@ -114,13 +114,17 @@ class AuthService(
     }
 
     fun signIn(signInDto: SignInDto): TokenDto {
-        signInDto.apply {
+        with(signInDto) {
             val credential = UsernamePasswordAuthenticationToken(userId, password)
             val authentication = authenticationManagerBuilder.`object`.authenticate(credential)
             val token = tokenProvider.createToken(authentication)
 //            refreshTokenRepository.save(RefreshToken(userId, token.refreshToken))
             return token
         }
+    }
+
+    private fun checkBannedUserAndThrow(email: String) {
+        if (bannedUserRepository.existsByEmail(email)) throw BaseException(BaseExceptionCode.BANNED_USER)
     }
 
 //    fun refresh(tokenDto: TokenDto): TokenDto {

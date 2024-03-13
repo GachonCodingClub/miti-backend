@@ -3,6 +3,7 @@ package com.gcc.miti.common.exception
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcc.miti.common.discord.DiscordWebhookRequest
 import com.gcc.miti.common.discord.Embed
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestClient
 class GlobalExceptionHandler(
     private val objectMapper: ObjectMapper
 ) {
+    private val logger = LoggerFactory.getLogger(this.javaClass)
     private val restClient = RestClient.create()
 
     @Value("\${DISCORD_WEBHOOK_URL}")
@@ -33,6 +35,7 @@ class GlobalExceptionHandler(
 
     @ExceptionHandler(Exception::class)
     fun exceptionHandler(e: Exception): ResponseEntity<ExceptionResponse> {
+        logger.error(e.stackTraceToString())
         if (e.message != null) {
             sendDiscordMessage(e)
         }

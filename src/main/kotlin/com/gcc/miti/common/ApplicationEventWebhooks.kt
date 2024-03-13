@@ -45,7 +45,8 @@ class ApplicationEventWebhooks {
         )
     }
 
-    @Scheduled(timeUnit = TimeUnit.MINUTES, fixedDelay = 30, initialDelay = 30)
+    // every 30 minutes
+    @Scheduled(cron = "0 0/30 * * * *")
     fun sendHealthy() {
         if (isLocal()) return
         sendDiscordWebhook(

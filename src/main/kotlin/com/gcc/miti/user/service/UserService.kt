@@ -8,8 +8,8 @@ import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.user.dto.BlockedUserOutput
 import com.gcc.miti.user.dto.GetBlockedUsersResponse
-import com.gcc.miti.user.dto.ProfileRes
-import com.gcc.miti.user.dto.UpdateProfileReq
+import com.gcc.miti.user.dto.ProfileResponse
+import com.gcc.miti.user.dto.UpdateProfileRequest
 import com.gcc.miti.user.entity.UserBlockList
 import com.gcc.miti.user.repository.UserBlockListRepository
 import com.gcc.miti.user.repository.UserRepository
@@ -25,20 +25,22 @@ class UserService(
     private val userBlockListRepository: UserBlockListRepository,
 ) {
     @Transactional(readOnly = true)
-    fun getMyProfile(): ProfileRes {
+    fun getMyProfile(): ProfileResponse {
         val userId = SecurityUtils.getUserIdFromJwt()
         val user = userRepository.findByIdOrNull(userId) ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
-        return ProfileRes.userToProfileRes(user)
+        return ProfileResponse.toProfileResponse(user)
     }
 
     @Transactional
-    fun updateProfile(updateProfileReq: UpdateProfileReq): Boolean {
+    fun updateProfile(updateProfileRequest: UpdateProfileRequest): Boolean {
         val userId = SecurityUtils.getUserIdFromJwt()
         val user = userRepository.getReferenceById(userId)
-        user.description = updateProfileReq.description
-        user.nickname = updateProfileReq.nickname
-        user.height = updateProfileReq.height
-        user.weight = updateProfileReq.weight
+        with(updateProfileRequest){
+            user.description = description
+            user.nickname = nickname
+            user.height = height
+            user.weight = weight
+        }
         return true
     }
 

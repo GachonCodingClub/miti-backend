@@ -1,7 +1,7 @@
 package com.gcc.miti.group.controller
 
 import com.gcc.miti.group.dto.GroupPartiesDto
-import com.gcc.miti.group.dto.GroupRes
+import com.gcc.miti.group.dto.GroupResponse
 import com.gcc.miti.group.dto.CreateGroupReq
 import com.gcc.miti.group.dto.UpdateGroupReq
 import com.gcc.miti.auth.security.GetIdFromToken
@@ -94,7 +94,7 @@ class GroupController(
 
     @Operation(summary = "그룹 Id로 하나의 그룹 조회하기")
     @GetMapping("/{groupId}")
-    fun getParty(@PathVariable groupId: Long): GroupRes {
+    fun getParty(@PathVariable groupId: Long): GroupResponse {
         return groupService.getGroup(groupId)
     }
 

@@ -3,7 +3,7 @@ package com.gcc.miti.user.dto
 import com.gcc.miti.user.constants.Gender
 import com.gcc.miti.user.entity.User
 
-class ProfileRes(
+class ProfileResponse(
     val nickname: String,
     val gender: Gender,
     val height: String?,
@@ -12,9 +12,9 @@ class ProfileRes(
     val description: String?,
 ) {
     companion object {
-        fun userToProfileRes(user: User): ProfileRes {
+        fun toProfileResponse(user: User): ProfileResponse {
             with(user) {
-                return ProfileRes(
+                return ProfileResponse(
                     nickname,
                     gender,
                     height = height.toMinMaxString(),

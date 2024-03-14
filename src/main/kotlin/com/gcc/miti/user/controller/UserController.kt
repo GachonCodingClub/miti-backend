@@ -1,7 +1,7 @@
 package com.gcc.miti.user.controller
 
-import com.gcc.miti.user.dto.ProfileRes
-import com.gcc.miti.user.dto.UpdateProfileReq
+import com.gcc.miti.user.dto.ProfileResponse
+import com.gcc.miti.user.dto.UpdateProfileRequest
 import com.gcc.miti.auth.security.GetIdFromToken
 import com.gcc.miti.user.dto.GetBlockedUsersResponse
 import com.gcc.miti.user.service.UserService
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*
 class UserController(private val userService: UserService) {
     @GetMapping("/me/profile")
     @Operation(summary = "내 프로필")
-    fun getMyProfile(): ProfileRes {
+    fun getMyProfile(): ProfileResponse {
         return userService.getMyProfile()
     }
 
     @PatchMapping("/me/profile")
     @Operation(summary = "내 프로필 수정")
-    fun updateProfile(@RequestBody updateProfileReq: UpdateProfileReq): Map<String, Boolean> {
-        return mapOf("success" to userService.updateProfile(updateProfileReq))
+    fun updateProfile(@RequestBody updateProfileRequest: UpdateProfileRequest): Map<String, Boolean> {
+        return mapOf("success" to userService.updateProfile(updateProfileRequest))
     }
 
     @DeleteMapping("/me")

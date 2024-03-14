@@ -10,6 +10,7 @@ import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.group.constants.GroupStatus
 import com.gcc.miti.group.constants.PartyStatus
 import com.gcc.miti.group.dto.*
+import com.gcc.miti.group.entity.Group
 import com.gcc.miti.group.entity.Party
 import com.gcc.miti.group.repository.GroupRepository
 import com.gcc.miti.group.repository.PartyRepository
@@ -43,9 +44,7 @@ class GroupService(
             groupRepository.save(CreateGroupReq.toGroup(createGroupReq, leader))
         val users = userRepository.findAllByNicknameIn(createGroupReq.nicknames)
         val party = partyRepository.save(Party(PartyStatus.ACCEPTED).also { it.group = group })
-        party.partyMembers = users.map {
-            it.toPartyMember(party)
-        }.toMutableList()
+        party.partyMembers.addAll(users.map { it.toPartyMember(party) })
         val systemMessages = listOf(
             "[MITI]방장 ${leader.nickname} 님이 채팅방을 시작하였습니다.",
             "[MITI]미팅날짜가 3일 지난 미팅과 채팅방은 자동으로 삭제됩니다.",
@@ -81,16 +80,10 @@ class GroupService(
     @Transactional(readOnly = true)
     fun getRequestedParties(groupId: Long, userId: String): GroupPartiesDto {
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
-        var waitingParties = emptyList<PartyMembersDto>()
-        if (group.leader.userId == userId) {
-            waitingParties = group.waitingParties.map {
-                PartyMembersDto.partyToPartyMembersDto(it)
-            }
-        }
         return GroupPartiesDto(
-            waitingParties,
+            getWaitingPartiesIfLeader(group, userId),
             group.acceptedParties.map {
-                PartyMembersDto.partyToPartyMembersDto(it)
+                PartyMembersDto.toPartyMembersDto(it)
             },
             UserSummaryDto.toDto(group.leader),
         )
@@ -145,17 +138,9 @@ class GroupService(
     }
 
     @Transactional(readOnly = true)
-    fun getGroup(groupId: Long): GroupRes {
+    fun getGroup(groupId: Long): GroupResponse {
         val group = groupRepository.getReferenceById(groupId)
-        return GroupRes(
-            description = group.description,
-            title = group.title,
-            maxUsers = group.maxUsers,
-            meetDate = group.meetDate,
-            meetPlace = group.meetPlace,
-            leaderUserSummaryDto = UserSummaryDto.toDto(group.leader),
-            groupStatus = group.groupStatus,
-        )
+        return GroupResponse.toGroupResponse(group)
     }
 
     @Transactional
@@ -175,7 +160,8 @@ class GroupService(
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         chatMessageRepository.save(ChatMessage.createGroupLeaveMessage(user, group))
         val acceptedPartyMembers = group.acceptedParties.flatMap { it.partyMembers }
-        val leavingPartyMember = acceptedPartyMembers.find { it.user?.userId == userId } ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
+        val leavingPartyMember =
+            acceptedPartyMembers.find { it.user?.userId == userId } ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         leavingPartyMember.party?.partyMembers?.remove(leavingPartyMember)
         if (group.groupStatus == GroupStatus.CLOSE) {
             group.groupStatus = GroupStatus.OPEN
@@ -190,5 +176,15 @@ class GroupService(
         val deletedGroups = groups.map { DeletedGroup.toDeletedGroup(it) }
         groupRepository.deleteAll(groups)
         deletedGroupRepository.saveAll(deletedGroups)
+    }
+
+    private fun getWaitingPartiesIfLeader(group: Group, userId: String): List<PartyMembersDto> {
+        return if (group.leader.userId == userId) {
+            group.waitingParties.map {
+                PartyMembersDto.toPartyMembersDto(it)
+            }
+        } else {
+            emptyList()
+        }
     }
 }

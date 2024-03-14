@@ -14,7 +14,7 @@ class PartyMembersDto(
     val users: List<UserSummaryDto>,
 ) {
     companion object {
-        fun partyToPartyMembersDto(party: Party): PartyMembersDto {
+        fun toPartyMembersDto(party: Party): PartyMembersDto {
             with(party) {
                 return PartyMembersDto(
                     id,

@@ -18,7 +18,7 @@ package com.gcc.miti
 //    @Autowired
 //    lateinit var passwordEncoder: PasswordEncoder
 //
-//    val user = SignUpDto(
+//    val user = SignUpRequest(
 //        "test@gachon.ac.kr",
 //        "testpassword1",
 //        "description",
@@ -55,7 +55,7 @@ package com.gcc.miti
 //    fun signIn() {
 //        println(userRepository.getReferenceById(user.userId).password)
 //        val signInResult = authService.signIn(
-//            SignInDto(
+//            SignInRequest(
 //                user.userId,
 //                user.password,
 //            ),

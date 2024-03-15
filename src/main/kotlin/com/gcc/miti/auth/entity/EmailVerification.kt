@@ -16,7 +16,7 @@ class EmailVerification(
     val email: String,
 ) : BaseTimeEntity() {
 
-    @Column(name = "is_verified")
+    @Column(name = "is_verified", nullable = false)
     var isVerified: Boolean = false
 
     fun isVerifiedInOneHour(): Boolean {

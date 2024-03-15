@@ -1,6 +1,6 @@
 package com.gcc.miti.auth.security
 
-import com.gcc.miti.auth.dto.TokenDto
+import com.gcc.miti.auth.dto.TokenResponse
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
@@ -35,7 +35,7 @@ class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey))
     }
 
-    fun createToken(authentication: Authentication): TokenDto {
+    fun createToken(authentication: Authentication): TokenResponse {
         val accessTokenRefreshTime = when (activeProfile) {
             "develop" -> tokenExpireTimeDev
             else -> accessTokenExpireTime
@@ -59,7 +59,7 @@ class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
 //            .setExpiration(Date(now.time + refreshTokenRefreshTime))
 //            .signWith(key, SignatureAlgorithm.HS256)
 //            .compact()
-        return TokenDto(accessToken)
+        return TokenResponse(accessToken)
     }
 
     fun getAuthentication(token: String): Authentication {

@@ -7,7 +7,7 @@ import com.gcc.miti.user.entity.User
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDate
 
-data class SignUpDto(
+data class SignUpRequest(
     val userId: String,
     var password: String,
     val description: String?,

@@ -3,7 +3,7 @@ package com.gcc.miti.common.dummy.data
 import com.gcc.miti.user.constants.Gender
 import com.gcc.miti.user.constants.Height
 import com.gcc.miti.user.constants.Weight
-import com.gcc.miti.auth.dto.SignUpDto
+import com.gcc.miti.auth.dto.SignUpRequest
 import com.gcc.miti.group.dto.CreateGroupReq
 import com.gcc.miti.user.repository.UserRepository
 import com.gcc.miti.group.service.GroupService
@@ -53,7 +53,7 @@ class DummyDataIInserter(
     }
 
     private fun addDummyUsers() {
-        val user1 = SignUpDto(
+        val user1 = SignUpRequest(
             USER_ID_1,
             "testpassword",
             "description",
@@ -64,7 +64,7 @@ class DummyDataIInserter(
             weight = Weight.A,
         )
 
-        val user2 = SignUpDto(
+        val user2 = SignUpRequest(
             USER_ID_2,
             "testpassword",
             "description",
@@ -75,7 +75,7 @@ class DummyDataIInserter(
             weight = Weight.A,
         )
 
-        val user3 = SignUpDto(
+        val user3 = SignUpRequest(
             USER_ID_3,
             "testpassword",
             "description",
@@ -86,7 +86,7 @@ class DummyDataIInserter(
             weight = Weight.A,
         )
 
-        val user4 = SignUpDto(
+        val user4 = SignUpRequest(
             USER_ID_4,
             "testpassword",
             "description",

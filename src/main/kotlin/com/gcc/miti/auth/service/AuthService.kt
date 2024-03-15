@@ -1,14 +1,14 @@
 package com.gcc.miti.auth.service
 
 import com.gcc.miti.auth.dto.ChangePasswordRequest
-import com.gcc.miti.auth.dto.SignInDto
-import com.gcc.miti.auth.dto.SignUpDto
-import com.gcc.miti.auth.dto.TokenDto
+import com.gcc.miti.auth.dto.SignInRequest
+import com.gcc.miti.auth.dto.SignUpRequest
+import com.gcc.miti.auth.dto.TokenResponse
 import com.gcc.miti.auth.entity.EmailVerification
 import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
 import com.gcc.miti.auth.security.JwtTokenProvider
-import com.gcc.miti.auth.helper.AuthHelper
+import com.gcc.miti.auth.utils.EmailUtils
 import com.gcc.miti.auth.repository.EmailVerificationRepository
 import com.gcc.miti.user.repository.BannedUserRepository
 import com.gcc.miti.user.repository.UserRepository
@@ -28,7 +28,6 @@ class AuthService(
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val authHelper: AuthHelper,
     private val bannedUserRepository: BannedUserRepository
 ) {
     @Transactional
@@ -37,7 +36,7 @@ class AuthService(
         if (userRepository.existsById(email)) {
             throw BaseException(BaseExceptionCode.ALREADY_REGISTERED)
         }
-        authHelper.isUniversityEmail(email)
+        EmailUtils.isUniversityEmail(email)
         val randomNumber: String = mailService.randomNumber()
         mailService.sendMail(email, randomNumber)
         emailVerificationRepository.save(EmailVerification(randomNumber, email))
@@ -49,7 +48,7 @@ class AuthService(
         if (!userRepository.existsById(email)) {
             throw BaseException(BaseExceptionCode.NOT_FOUND)
         }
-        authHelper.isUniversityEmail(email)
+        EmailUtils.isUniversityEmail(email)
         val randomNumber: String = mailService.randomNumber()
         mailService.sendMail(email, randomNumber)
         emailVerificationRepository.save(EmailVerification(randomNumber, email))
@@ -57,20 +56,20 @@ class AuthService(
     }
 
     @Transactional
-    fun signUp(signUpDto: SignUpDto): Boolean {
-        checkBannedUserAndThrow(signUpDto.userId)
-        if (userRepository.existsById(signUpDto.userId)) {
+    fun signUp(signUpRequest: SignUpRequest): Boolean {
+        checkBannedUserAndThrow(signUpRequest.userId)
+        if (userRepository.existsById(signUpRequest.userId)) {
             throw BaseException(BaseExceptionCode.USER_ID_CONFLICT)
         }
         val emailVerification =
-            emailVerificationRepository.getByEmail(signUpDto.userId)
+            emailVerificationRepository.getByEmail(signUpRequest.userId)
                 ?: throw BaseException(BaseExceptionCode.NOT_VERIFIED)
 
         if (!emailVerification.isVerifiedInOneHour()) {
             throw BaseException(BaseExceptionCode.NOT_VERIFIED)
         }
 
-        userRepository.save(signUpDto.toUser(passwordEncoder))
+        userRepository.save(signUpRequest.toUser(passwordEncoder))
         emailVerification.isVerified = false
         return true
     }
@@ -111,8 +110,8 @@ class AuthService(
         return false
     }
 
-    fun signIn(signInDto: SignInDto): TokenDto {
-        with(signInDto) {
+    fun signIn(signInRequest: SignInRequest): TokenResponse {
+        with(signInRequest) {
             val credential = UsernamePasswordAuthenticationToken(userId, password)
             val authentication = authenticationManagerBuilder.`object`.authenticate(credential)
             val token = tokenProvider.createToken(authentication)
@@ -125,13 +124,13 @@ class AuthService(
         if (bannedUserRepository.existsByEmail(email)) throw BaseException(BaseExceptionCode.BANNED_USER)
     }
 
-//    fun refresh(tokenDto: TokenDto): TokenDto {
+//    fun refresh(tokenDto: TokenResponse): TokenResponse {
 //        val userId = tokenProvider.getUserPk(tokenDto.accessToken)
 //        val savedRefreshToken = refreshTokenRepository.findByIdOrNull(userId)
 //        if (tokenDto.refreshToken == savedRefreshToken?.refreshToken) {
 //            val authentication = tokenProvider.getAuthentication(tokenDto.accessToken)
 //            val token = tokenProvider.createToken(authentication)
-//            return TokenDto(token.accessToken, token.refreshToken).also {
+//            return TokenResponse(token.accessToken, token.refreshToken).also {
 //                refreshTokenRepository.save(RefreshToken(userId, token.refreshToken))
 //            }
 //        } else {

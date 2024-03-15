@@ -1,6 +1,6 @@
 package com.gcc.miti.auth.dto
 
-data class TokenDto(
+data class TokenResponse(
     val accessToken: String,
 //    val refreshToken: String,
 )

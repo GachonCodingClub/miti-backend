@@ -4,6 +4,7 @@ import com.gcc.miti.common.entity.BaseTimeEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "email_verification")
@@ -13,5 +14,15 @@ class EmailVerification(
     @Id
     val email: String,
 ) : BaseTimeEntity() {
-    var flag: Boolean = false
+    var isVerified: Boolean = false
+
+    fun isVerifiedInOneHour(): Boolean {
+        return (this.isVerified && this.modifiedDate!!.plusHours(1).isAfter(
+            LocalDateTime.now()
+        ))
+    }
+
+    fun isVerificationSentIn15Minutes(): Boolean {
+        return this.modifiedDate!!.plusMinutes(15).isAfter(LocalDateTime.now())
+    }
 }

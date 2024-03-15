@@ -18,7 +18,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 
 @Service
 class AuthService(
@@ -66,14 +65,13 @@ class AuthService(
         val emailVerification =
             emailVerificationRepository.getByEmail(signUpDto.userId)
                 ?: throw BaseException(BaseExceptionCode.NOT_VERIFIED)
-        if (!emailVerification.flag || emailVerification.modifiedDate!!.plusHours(1).isBefore(
-                LocalDateTime.now(),
-            )
-        ) {
+
+        if (!emailVerification.isVerifiedInOneHour()) {
             throw BaseException(BaseExceptionCode.NOT_VERIFIED)
         }
+
         userRepository.save(signUpDto.toUser(passwordEncoder))
-        emailVerification.flag = false
+        emailVerification.isVerified = false
         return true
     }
 
@@ -81,9 +79,9 @@ class AuthService(
     fun verifyVerificationNumber(email: String, verificationNumber: String): Boolean {
         val emailVerification = emailVerificationRepository.getByEmail(email)
         if (emailVerification != null) {
-            if (emailVerification.modifiedDate!!.plusMinutes(3).isAfter(LocalDateTime.now())) {
+            if (emailVerification.isVerificationSentIn15Minutes()) {
                 return if (verificationNumber == emailVerification.randomNumber) {
-                    emailVerification.flag = true
+                    emailVerification.isVerified = true
                     true
                 } else {
                     false

@@ -22,14 +22,10 @@ class ChatMessageService(
     private val lastReadChatMessageRepository: LastReadChatMessageRepository,
     private val userRepository: UserRepository,
 ) {
-    val logger = LoggerFactory.getLogger(this.javaClass)
     @Transactional
     fun getAllMessages(groupId: Long, userId: String): List<ChatMessageDto> {
         val group = groupRepository.getReferenceById(groupId)
-        if (group.leader.userId != userId && !group.acceptedParties.flatMap { it.partyMembers }
-                .any { it.user?.userId == userId }) {
-            return listOf()
-        }
+        if(!group.isGroupMember(userId)) return emptyList()
         return chatMessageRepository.findAllByGroup_IdOrderByCreatedAt(groupId).map {
             ChatMessageDto.chatMessageToDto(it)
         }
@@ -39,12 +35,8 @@ class ChatMessageService(
     @Cacheable("chatMessages", key = "#groupId", condition = "#pageable.pageSize == 1")
     fun getAllMessagesPageable(groupId: Long, userId: String, pageable: Pageable): List<ChatMessageDto> {
         val group = groupRepository.getReferenceById(groupId)
-        if (group.leader.userId != userId && !group.acceptedParties.flatMap { it.partyMembers }
-                .any { it.user?.userId == userId }) {
-            return listOf()
-        }
+        if(!group.isGroupMember(userId)) return emptyList()
         val chatMessages = chatMessageRepository.findAllByGroup_IdOrderByCreatedAtDesc(groupId, pageable)
-
         return chatMessages.map {
             ChatMessageDto.chatMessageToDto(it)
         }
@@ -52,8 +44,7 @@ class ChatMessageService(
 
     @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
     @CacheEvict("chatMessages", allEntries = true)
-    fun removeSize1ChatMessageCaches() {
-    }
+    fun removeSize1ChatMessageCaches() {}
 
     @Transactional
     fun refreshLastReadChatMessage(groupId: Long, userId: String){

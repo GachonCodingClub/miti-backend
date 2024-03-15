@@ -80,6 +80,10 @@ class Group(
         party.partyStatus = PartyStatus.REJECTED
     }
 
+    fun isGroupMember(userId: String): Boolean {
+        return this.leader.userId == userId || acceptedParties.flatMap { it.partyMembers }.any { it.user?.userId == userId }
+    }
+
     val countMembers: Int
         get() {
             var count = 0

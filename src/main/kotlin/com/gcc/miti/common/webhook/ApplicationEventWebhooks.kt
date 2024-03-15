@@ -16,7 +16,6 @@ class ApplicationEventWebhooks(
     @Value("\${spring.profiles.active}")
     private lateinit var activeProfile: String
 
-    val restClient = RestClient.create()
 
     fun isLocal(): Boolean {
         return activeProfile == "local"

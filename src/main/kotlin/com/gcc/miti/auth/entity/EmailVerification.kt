@@ -1,6 +1,7 @@
 package com.gcc.miti.auth.entity
 
 import com.gcc.miti.common.entity.BaseTimeEntity
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
@@ -14,6 +15,8 @@ class EmailVerification(
     @Id
     val email: String,
 ) : BaseTimeEntity() {
+
+    @Column(name = "is_verified")
     var isVerified: Boolean = false
 
     fun isVerifiedInOneHour(): Boolean {

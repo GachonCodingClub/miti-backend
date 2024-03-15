@@ -9,7 +9,6 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "chat_message")
 class ChatMessage(
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user: User,

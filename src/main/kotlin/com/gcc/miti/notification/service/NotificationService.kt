@@ -49,15 +49,18 @@ class NotificationService(
     fun sendNewChatNotification(chatMessage: ChatMessage) {
         val sender = chatMessage.user
         val receivers =
-            chatMessage.group!!.acceptedParties.flatMap { it.partyMembers }.map { it.user!! }.toMutableList()
-        receivers.add(chatMessage.group!!.leader)
-        receivers.removeIf { it.userId == sender.userId }
+            chatMessage.group!!.acceptedUsers.toMutableList()
+        // add group leader
+        chatMessage.group?.leader?.let { receivers.add(it) }
+        // remove sender from receivers
+        receivers.remove(receivers.find { it.userId == sender.userId })
+
         val notification = Notification.builder()
             .setTitle(sender.nickname)
             .setBody(chatMessage.content.removePrefix("[MITI]"))
             .build()
         val messages = receivers.mapNotNull {
-            val userNotification = userNotificationRepository.findByIdOrNull(it.userId)
+            val userNotification = it.userNotification
             if (userNotification?.isAgreed == true) {
                 Message.builder()
                     .setNotification(notification)
@@ -69,7 +72,7 @@ class NotificationService(
             }
         }
         if (messages.isEmpty()) return
-        firebaseMessaging.sendAllAsync(messages)
+        firebaseMessaging.sendEachAsync(messages)
     }
 
     fun sendPartyAcceptedNotification(group: Group, party: Party) {
@@ -85,7 +88,7 @@ class NotificationService(
                 .build()
         }
         if (messages.isEmpty()) return
-        firebaseMessaging.sendAllAsync(messages)
+        firebaseMessaging.sendEachAsync(messages)
 
     }
 
@@ -98,6 +101,6 @@ class NotificationService(
             .setNotification(notification)
             .setToken(request.token)
             .build()
-        firebaseMessaging.send(message)
+        firebaseMessaging.sendAsync(message)
     }
 }

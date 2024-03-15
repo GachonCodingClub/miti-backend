@@ -62,6 +62,7 @@ class NotificationService(
                 Message.builder()
                     .setNotification(notification)
                     .setToken(userNotification.token)
+                    .putData("groupId", chatMessage.group!!.id.toString())
                     .build()
             } else {
                 null

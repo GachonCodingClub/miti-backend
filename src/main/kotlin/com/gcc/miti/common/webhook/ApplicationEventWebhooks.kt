@@ -1,25 +1,20 @@
-package com.gcc.miti.common
+package com.gcc.miti.common.webhook
 
-import com.gcc.miti.common.discord.DiscordWebhookRequest
-import com.gcc.miti.common.discord.Embed
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
-import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.concurrent.TimeUnit
 
 @Component
-class ApplicationEventWebhooks {
+class ApplicationEventWebhooks(
+    private val discordWebhook: DiscordWebhook
+) {
     @Value("\${spring.profiles.active}")
     private lateinit var activeProfile: String
-
-    @Value("\${DISCORD_WEBHOOK_URL}")
-    lateinit var discordWebhookUrl: String
 
     val restClient = RestClient.create()
 
@@ -30,7 +25,7 @@ class ApplicationEventWebhooks {
     @EventListener(ApplicationReadyEvent::class)
     fun applicationReady() {
         if (isLocal()) return
-        sendDiscordWebhook(
+        discordWebhook.sendDiscordWebhook(
             DiscordWebhookRequest(
                 "배포 완료",
                 embeds = listOf(
@@ -49,7 +44,7 @@ class ApplicationEventWebhooks {
     @Scheduled(cron = "0 0/30 * * * *")
     fun sendHealthy() {
         if (isLocal()) return
-        sendDiscordWebhook(
+        discordWebhook.sendDiscordWebhook(
             DiscordWebhookRequest(
                 "미티 서버 HealthCheck",
                 embeds = listOf(
@@ -64,9 +59,5 @@ class ApplicationEventWebhooks {
         )
     }
 
-    fun sendDiscordWebhook(request: DiscordWebhookRequest) {
-        restClient.post().uri(discordWebhookUrl).body(request)
-            .contentType(MediaType.APPLICATION_JSON)
-            .retrieve()
-    }
+
 }

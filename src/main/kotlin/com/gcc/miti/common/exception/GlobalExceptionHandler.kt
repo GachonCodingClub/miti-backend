@@ -1,8 +1,8 @@
 package com.gcc.miti.common.exception
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.gcc.miti.common.discord.DiscordWebhookRequest
-import com.gcc.miti.common.discord.Embed
+import com.gcc.miti.common.webhook.DiscordWebhookRequest
+import com.gcc.miti.common.webhook.Embed
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders

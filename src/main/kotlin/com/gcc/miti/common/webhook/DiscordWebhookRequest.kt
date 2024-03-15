@@ -1,4 +1,4 @@
-package com.gcc.miti.common.discord
+package com.gcc.miti.common.webhook
 
 class DiscordWebhookRequest(
     val content: String,

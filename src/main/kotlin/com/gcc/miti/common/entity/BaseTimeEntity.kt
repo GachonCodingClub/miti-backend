@@ -11,7 +11,7 @@ import jakarta.persistence.MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseTimeEntity(
     @CreatedDate
-    var createdDate: LocalDateTime? = null,
+    var createdAt: LocalDateTime? = null,
     @LastModifiedDate
-    var modifiedDate: LocalDateTime? = null,
+    var updatedAt: LocalDateTime? = null,
 )

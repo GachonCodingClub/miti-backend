@@ -61,7 +61,7 @@ class UserService(
         try {
             userBlockListRepository.save(UserBlockList(blockTargetUser, user))
         } catch (e: Exception) {
-            if (e.message?.contains(BLOCK_INDEX_NAME) == true) {
+            if (e.message?.contains(BLOCK_UNIQUE_INDEX_NAME) == true) {
                 throw BaseException(BaseExceptionCode.ALREADY_BLOCKED)
             }
             throw e
@@ -84,12 +84,12 @@ class UserService(
             BlockedUserOutput(
                 it.blockedTargetUser.nickname,
                 it.blockedTargetUser.userId,
-                it.createdDate
+                it.createdAt
             )
         })
     }
 
     companion object {
-        const val BLOCK_INDEX_NAME = "user_block_list_user_id_block_target_user_id_idx"
+        const val BLOCK_UNIQUE_INDEX_NAME = "user_block_list_user_id_block_target_user_id_uindex"
     }
 }

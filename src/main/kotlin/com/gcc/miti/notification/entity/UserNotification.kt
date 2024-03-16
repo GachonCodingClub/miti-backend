@@ -12,6 +12,7 @@ class UserNotification(
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     val user: User,
 
     @Column(name = "is_agreed")

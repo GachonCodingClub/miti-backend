@@ -14,20 +14,29 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "my_group")
 class Group(
+    @Column(name = "description")
     var description: String,
+
+    @Column(name = "title")
     var title: String,
+
+    @Column(name = "max_users")
     val maxUsers: Int,
 
+    @Column(name = "group_status")
     @Enumerated(EnumType.STRING)
     var groupStatus: GroupStatus,
 
     ) : BaseTimeEntity() {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
+    @Column(name = "meet_date")
     var meetDate: LocalDateTime? = null
 
+    @Column(name = "meet_place")
     var meetPlace: String? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -84,7 +93,8 @@ class Group(
     }
 
     fun isGroupMember(userId: String): Boolean {
-        return this.leader.userId == userId || acceptedParties.flatMap { it.partyMembers }.any { it.user?.userId == userId }
+        return this.leader.userId == userId || acceptedParties.flatMap { it.partyMembers }
+            .any { it.user?.userId == userId }
     }
 
     val countMembers: Int

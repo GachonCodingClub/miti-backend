@@ -20,12 +20,12 @@ class EmailVerification(
     var isVerified: Boolean = false
 
     fun isVerifiedInOneHour(): Boolean {
-        return (this.isVerified && this.modifiedDate!!.plusHours(1).isAfter(
+        return (this.isVerified && this.updatedAt!!.plusHours(1).isAfter(
             LocalDateTime.now()
         ))
     }
 
     fun isVerificationSentIn15Minutes(): Boolean {
-        return this.modifiedDate!!.plusMinutes(15).isAfter(LocalDateTime.now())
+        return this.updatedAt!!.plusMinutes(15).isAfter(LocalDateTime.now())
     }
 }

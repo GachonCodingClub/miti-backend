@@ -24,7 +24,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
@@ -33,6 +33,11 @@ spring:
     database: postgresql
   profiles:
     active: ${PROFILE}
+  flyway:
+    enabled: true
+    url: ${DB_URL}
+    user: postgres
+    password: ${DB_PASSWORD}
 
 server:
   port: 8080

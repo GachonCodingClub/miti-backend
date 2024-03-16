@@ -28,6 +28,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("com.google.firebase:firebase-admin:9.2.0")
+    implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("io.jsonwebtoken", "jjwt-api", "0.11.2")

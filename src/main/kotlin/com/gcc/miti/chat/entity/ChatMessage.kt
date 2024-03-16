@@ -3,7 +3,6 @@ package com.gcc.miti.chat.entity
 import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.group.entity.Group
 import com.gcc.miti.user.entity.User
-import java.time.LocalDateTime
 import jakarta.persistence.*
 
 @Entity
@@ -16,8 +15,6 @@ class ChatMessage(
     @Column(nullable = false)
     var content: String,
 
-    @Column(nullable = false)
-    var createdAt: LocalDateTime = LocalDateTime.now(),
 ) : BaseTimeEntity() {
     @ManyToOne(fetch = FetchType.LAZY)
     var group: Group? = null

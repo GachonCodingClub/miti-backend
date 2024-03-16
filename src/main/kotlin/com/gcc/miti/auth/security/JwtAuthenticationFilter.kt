@@ -24,9 +24,9 @@ class JwtAuthenticationFilter(private val jwtTokenProvider: JwtTokenProvider) : 
                 response.contentType = MediaType.APPLICATION_JSON_VALUE
                 return
             }
-            chain.doFilter(request, response)
-
             SecurityContextHolder.getContext().authentication = authentication
+            chain.doFilter(request, response)
+            return
         }
         chain.doFilter(request, response)
     }

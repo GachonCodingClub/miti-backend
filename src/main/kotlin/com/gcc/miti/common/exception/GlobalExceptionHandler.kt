@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.client.RestClient
@@ -31,6 +32,11 @@ class GlobalExceptionHandler(
                     e.baseExceptionCode.message
                 )
             )
+    }
+
+    @ExceptionHandler(BadCredentialsException::class)
+    fun badCredentialsExceptionHandler(E: BadCredentialsException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionResponse(HttpStatus.UNAUTHORIZED.value(), "아이디 혹은 비밀번호가 잘못됐습니다."))
     }
 
     @ExceptionHandler(Exception::class)

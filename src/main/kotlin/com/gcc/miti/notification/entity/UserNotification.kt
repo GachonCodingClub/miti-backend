@@ -10,8 +10,8 @@ class UserNotification(
     @Id
     val id: String,
 
-    @MapsId
     @OneToOne(fetch = FetchType.LAZY)
+    @MapsId("id")
     @JoinColumn(name = "user_id")
     val user: User,
 

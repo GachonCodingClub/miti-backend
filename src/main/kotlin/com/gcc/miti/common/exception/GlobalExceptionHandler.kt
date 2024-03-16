@@ -17,6 +17,12 @@ import org.springframework.web.client.RestClient
 class GlobalExceptionHandler(
     private val objectMapper: ObjectMapper
 ) {
+    @Value("\${spring.profiles.active}")
+    lateinit var profile: String
+
+    fun isLocal(): Boolean {
+        return profile == "local"
+    }
     private val logger = LoggerFactory.getLogger(this.javaClass)
     private val restClient = RestClient.create()
 
@@ -35,14 +41,14 @@ class GlobalExceptionHandler(
     }
 
     @ExceptionHandler(BadCredentialsException::class)
-    fun badCredentialsExceptionHandler(E: BadCredentialsException): ResponseEntity<ExceptionResponse> {
+    fun badCredentialsExceptionHandler(e: BadCredentialsException): ResponseEntity<ExceptionResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionResponse(HttpStatus.UNAUTHORIZED.value(), "아이디 혹은 비밀번호가 잘못됐습니다."))
     }
 
     @ExceptionHandler(Exception::class)
     fun exceptionHandler(e: Exception): ResponseEntity<ExceptionResponse> {
         logger.error(e.stackTraceToString())
-        if (e.message != null) {
+        if (e.message != null && !isLocal()) {
             sendDiscordMessage(e)
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(

@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "email_verification")
 class EmailVerification(
+    @Column(name = "random_number")
     var randomNumber: String? = null,
 
     @Id

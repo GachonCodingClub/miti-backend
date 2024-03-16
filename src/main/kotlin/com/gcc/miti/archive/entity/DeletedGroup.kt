@@ -18,6 +18,7 @@ class DeletedGroup(
     @Column(name = "max_users")
     val maxUsers: Int,
 
+    @Column(name = "group_status")
     @Enumerated(EnumType.STRING)
     var groupStatus: GroupStatus,
 

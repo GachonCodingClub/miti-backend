@@ -1,6 +1,8 @@
 package com.gcc.miti.auth.security
 
 import com.gcc.miti.auth.dto.TokenResponse
+import com.gcc.miti.common.exception.BaseException
+import com.gcc.miti.common.exception.BaseExceptionCode
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
@@ -18,9 +20,9 @@ import jakarta.servlet.http.HttpServletRequest
 @Component
 class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
     companion object {
-        private const val accessTokenExpireTime = 30 * 60 * 1000L
-        private const val refreshTokenExpireTime = 60 * 60 * 1000L * 3
-        private const val tokenExpireTimeDev = 60 * 60 * 1000L * 1000000
+        private const val ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L
+        private const val REFRESH_TOKEN_EXPIRE_TIME = 60 * 60 * 1000L * 3
+        private const val ACCESS_TOKEN_EXPIRE_TIME_DEV = 60 * 60 * 1000L * 1000000
     }
 
     @Value("\${JWT-SECRET}")
@@ -37,8 +39,8 @@ class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
 
     fun createToken(authentication: Authentication): TokenResponse {
         val accessTokenRefreshTime = when (activeProfile) {
-            "develop" -> tokenExpireTimeDev
-            else -> accessTokenExpireTime
+            "develop" -> ACCESS_TOKEN_EXPIRE_TIME_DEV
+            else -> ACCESS_TOKEN_EXPIRE_TIME
         }
 //        val refreshTokenRefreshTime = when (activeProfile) {
 //            "develop" -> tokenExpireTimeDev
@@ -68,7 +70,8 @@ class JwtTokenProvider(private val userDetailsService: UserDetailsService) {
     }
 
     fun getUserPk(token: String): String {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token.removePrefix("Bearer ")).body.subject
+        return Jwts.parserBuilder().setSigningKey(key).build()
+            .parseClaimsJws(token.removePrefix("Bearer ")).body.subject
     }
 
     fun resolveToken(request: HttpServletRequest): String? {

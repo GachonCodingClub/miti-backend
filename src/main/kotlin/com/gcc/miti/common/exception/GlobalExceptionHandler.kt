@@ -1,6 +1,6 @@
 package com.gcc.miti.common.exception
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.gcc.miti.common.webhook.DiscordWebhook
 import com.gcc.miti.common.webhook.DiscordWebhookRequest
 import com.gcc.miti.common.webhook.Embed
 import jakarta.persistence.EntityNotFoundException
@@ -16,7 +16,7 @@ import org.springframework.web.client.RestClient
 
 @RestControllerAdvice
 class GlobalExceptionHandler(
-    private val objectMapper: ObjectMapper
+    private val discordWebhook: DiscordWebhook
 ) {
     @Value("\${spring.profiles.active}")
     lateinit var profile: String
@@ -25,7 +25,6 @@ class GlobalExceptionHandler(
         return profile == "local"
     }
     private val logger = LoggerFactory.getLogger(this.javaClass)
-    private val restClient = RestClient.create()
 
     @Value("\${DISCORD_WEBHOOK_URL}")
     lateinit var discordWebhookUrl: String
@@ -54,7 +53,7 @@ class GlobalExceptionHandler(
     @ExceptionHandler(Exception::class)
     fun exceptionHandler(e: Exception): ResponseEntity<ExceptionResponse> {
         logger.error(e.stackTraceToString())
-        if (e.message != null && !isLocal()) {
+        if (!isLocal()) {
             sendDiscordMessage(e)
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -66,14 +65,10 @@ class GlobalExceptionHandler(
     }
 
     private fun sendDiscordMessage(e: Exception) {
-        val discordWebHookRequest = objectMapper.writeValueAsString(
-            DiscordWebhookRequest(
-                e.message ?: "Internal Server Error",
-                embeds = listOf(Embed("stacktrace", e.getSlimStackTrace()))
-            )
-        )
-        restClient.post().uri(discordWebhookUrl).body(discordWebHookRequest).header(HttpHeaders.CONTENT_TYPE, "application/json")
-            .retrieve()
+        discordWebhook.sendDiscordWebhook(DiscordWebhookRequest(
+            e.message ?: "Internal Server Error",
+            embeds = listOf(Embed("stacktrace", e.getSlimStackTrace()))
+        ))
     }
 
     fun Throwable.getSlimStackTrace() = this.javaClass.name + "\n" + this.message + "\n" + this.stackTrace.map { it.toString() }

@@ -3,6 +3,7 @@ package com.gcc.miti.common.exception
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.gcc.miti.common.webhook.DiscordWebhookRequest
 import com.gcc.miti.common.webhook.Embed
+import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
@@ -43,6 +44,11 @@ class GlobalExceptionHandler(
     @ExceptionHandler(BadCredentialsException::class)
     fun badCredentialsExceptionHandler(e: BadCredentialsException): ResponseEntity<ExceptionResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionResponse(HttpStatus.UNAUTHORIZED.value(), "아이디 혹은 비밀번호가 잘못됐습니다."))
+    }
+
+    @ExceptionHandler(EntityNotFoundException::class)
+    fun entityNotFoundExceptionHandler(e: EntityNotFoundException): ResponseEntity<ExceptionResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ExceptionResponse(HttpStatus.NOT_FOUND.value(), "요청하신 정보가 존재하지 않습니다."))
     }
 
     @ExceptionHandler(Exception::class)

@@ -25,7 +25,7 @@ class ChatMessageService(
     @Transactional
     fun getAllMessages(groupId: Long, userId: String): List<ChatMessageDto> {
         val group = groupRepository.getReferenceById(groupId)
-        if(!group.isGroupMember(userId)) return emptyList()
+        if (!group.isGroupMember(userId)) return emptyList()
         return chatMessageRepository.findAllByGroup_IdOrderByCreatedAt(groupId).map {
             ChatMessageDto.chatMessageToDto(it)
         }
@@ -35,7 +35,7 @@ class ChatMessageService(
     @Cacheable("chatMessages", key = "#groupId", condition = "#pageable.pageSize == 1")
     fun getAllMessagesPageable(groupId: Long, userId: String, pageable: Pageable): List<ChatMessageDto> {
         val group = groupRepository.getReferenceById(groupId)
-        if(!group.isGroupMember(userId)) return emptyList()
+        if (!group.isGroupMember(userId)) return emptyList()
         val chatMessages = chatMessageRepository.findAllByGroup_IdOrderByCreatedAtDesc(groupId, pageable)
         return chatMessages.map {
             ChatMessageDto.chatMessageToDto(it)
@@ -44,22 +44,32 @@ class ChatMessageService(
 
     @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
     @CacheEvict("chatMessages", allEntries = true)
-    fun removeSize1ChatMessageCaches() {}
+    fun removeSize1ChatMessageCaches() {
+    }
 
     @Transactional
-    fun refreshLastReadChatMessage(groupId: Long, userId: String){
-        val group = groupRepository.getReferenceById(groupId)
-        val user = userRepository.getReferenceById(userId)
-        val lastChatMessage = chatMessageRepository.findFirstByGroup_IdOrderByCreatedAtDesc(groupId) ?: return
-        val lastReadChatMessage = lastReadChatMessageRepository.findByGroupAndUser(group, user)
-        if(lastReadChatMessage == null){
-            lastReadChatMessageRepository.save(LastReadChatMessage(
-                user,
-                group,
-                lastChatMessage
-            ))
-        }else{
-            lastReadChatMessage.chatMessage = lastChatMessage
+    fun refreshLastReadChatMessage(groupId: Long, userId: String) {
+        try {
+            val group = groupRepository.getReferenceById(groupId)
+            val user = userRepository.getReferenceById(userId)
+            val lastChatMessage = chatMessageRepository.findFirstByGroup_IdOrderByCreatedAtDesc(groupId) ?: return
+            val lastReadChatMessage = lastReadChatMessageRepository.findByGroupAndUser(group, user)
+            if (lastReadChatMessage == null) {
+                lastReadChatMessageRepository.save(
+                    LastReadChatMessage(
+                        user,
+                        group,
+                        lastChatMessage
+                    )
+                )
+            } else {
+                lastReadChatMessage.chatMessage = lastChatMessage
+            }
+        } catch (e: Exception) {
+            if (e.message?.contains(LastReadChatMessage.LAST_READ_CHAT_MESSAGE_UNIQUE_INDEX_NAME) == true) {
+                return
+            }
+            throw e
         }
     }
 }

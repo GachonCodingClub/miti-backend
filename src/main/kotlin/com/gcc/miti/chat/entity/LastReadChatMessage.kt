@@ -22,4 +22,8 @@ class LastReadChatMessage(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
+
+    companion object{
+        const val LAST_READ_CHAT_MESSAGE_UNIQUE_INDEX_NAME = "last_read_chat_message_user_id_group_id_uindex"
+    }
 }

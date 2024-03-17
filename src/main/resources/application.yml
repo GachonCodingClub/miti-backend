@@ -7,6 +7,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  web:
+    resources:
+      add-mappings: false
 
   mail:
     host: smtp.gmail.com

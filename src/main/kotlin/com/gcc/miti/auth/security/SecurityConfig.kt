@@ -33,7 +33,7 @@ class SecurityConfig(
             }
             .cors {}
             .authorizeHttpRequests {
-                it.requestMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/", "/health", "/ws/**").permitAll()
+                it.requestMatchers("/api/**", "/swagger-ui/**", "/v3/api-docs/**", "/health", "/ws/**").permitAll()
                 it.requestMatchers("/**").authenticated()
             }
             .addFilterBefore(

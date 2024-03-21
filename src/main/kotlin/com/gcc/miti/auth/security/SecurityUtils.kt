@@ -8,7 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails
 object SecurityUtils {
     fun getUserIdFromJwt(): String {
         val auth =
-            SecurityContextHolder.getContext().authentication.principal as? UserDetails ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
+            SecurityContextHolder.getContext().authentication.principal as? UserDetails
+        if(auth?.username == null) {
+            throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
+        }
         return auth.username
     }
 }

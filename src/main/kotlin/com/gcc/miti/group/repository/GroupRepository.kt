@@ -22,4 +22,11 @@ interface GroupRepository : JpaRepository<Group, Long> {
     fun findAllByMeetDateIsBefore(localDateTime: LocalDateTime): List<Group>
 
     fun findAllByMeetDateIsAfter(localDateTime: LocalDateTime, pageable: Pageable): Page<Group>
+
+    @Query("""
+        select g from Group g
+        join fetch g.parties p
+        where g.id = :groupId
+    """)
+    fun findByIdAndFetchParties(groupId: Long): Group
 }

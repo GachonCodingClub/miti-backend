@@ -3,7 +3,7 @@ package com.gcc.miti.common.dummy.data
 import com.gcc.miti.user.constants.Gender
 import com.gcc.miti.user.constants.Height
 import com.gcc.miti.user.constants.Weight
-import com.gcc.miti.auth.dto.SignUpDto
+import com.gcc.miti.auth.dto.SignUpRequest
 import com.gcc.miti.group.dto.CreateGroupReq
 import com.gcc.miti.user.repository.UserRepository
 import com.gcc.miti.group.service.GroupService
@@ -25,14 +25,14 @@ class DummyDataIInserter(
     private val passwordEncoder: PasswordEncoder,
 ) {
     companion object {
-        const val userId1 = "test1@gachon.ac.kr"
-        const val userId2 = "test2@gachon.ac.kr"
-        const val userId3 = "test3@gachon.ac.kr"
-        const val userId4 = "test4@gachon.ac.kr"
-        const val nickname1 = "테스트닉네임1"
-        const val nickname2 = "테스트닉네임2"
-        const val nickname3 = "테스트닉네임3"
-        const val nickname4 = "테스트닉네임4"
+        const val USER_ID_1 = "test1@gachon.ac.kr"
+        const val USER_ID_2 = "test2@gachon.ac.kr"
+        const val USER_ID_3 = "test3@gachon.ac.kr"
+        const val USER_ID_4 = "test4@gachon.ac.kr"
+        const val NICKNAME_1 = "테스트닉네임1"
+        const val NICKNAME_2 = "테스트닉네임2"
+        const val NICKNAME_3 = "테스트닉네임3"
+        const val NICKNAME_4 = "테스트닉네임4"
     }
 
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -53,50 +53,46 @@ class DummyDataIInserter(
     }
 
     private fun addDummyUsers() {
-        val user1 = SignUpDto(
-            userId1,
+        val user1 = SignUpRequest(
+            USER_ID_1,
             "testpassword",
             "description",
             gender = Gender.MALE,
             birthDate = LocalDate.of(2000, 1, 26),
-            userName = "테스트1",
-            nickname = nickname1,
+            nickname = NICKNAME_1,
             height = Height.A,
             weight = Weight.A,
         )
 
-        val user2 = SignUpDto(
-            userId2,
+        val user2 = SignUpRequest(
+            USER_ID_2,
             "testpassword",
             "description",
             gender = Gender.MALE,
             birthDate = LocalDate.of(1997, 5, 29),
-            userName = "테스트2",
-            nickname = nickname2,
+            nickname = NICKNAME_2,
             height = Height.A,
             weight = Weight.A,
         )
 
-        val user3 = SignUpDto(
-            userId3,
+        val user3 = SignUpRequest(
+            USER_ID_3,
             "testpassword",
             "description",
             gender = Gender.FEMALE,
             birthDate = LocalDate.of(2005, 8, 22),
-            userName = "테스트3",
-            nickname = nickname3,
+            nickname = NICKNAME_3,
             height = Height.A,
             weight = Weight.A,
         )
 
-        val user4 = SignUpDto(
-            userId4,
+        val user4 = SignUpRequest(
+            USER_ID_4,
             "testpassword",
             "description",
             gender = Gender.FEMALE,
             birthDate = LocalDate.of(1998, 3, 2),
-            userName = "테스트4",
-            nickname = nickname4,
+            nickname = NICKNAME_4,
             height = Height.A,
             weight = Weight.A,
         )
@@ -116,7 +112,7 @@ class DummyDataIInserter(
                 "만날 장소",
                 emptyList()
             ),
-            userId = userId1,
+            userId = USER_ID_1,
         )
 
         groupService.createGroup(
@@ -128,7 +124,7 @@ class DummyDataIInserter(
                 "만날 장소",
                 emptyList()
             ),
-            userId = userId2,
+            userId = USER_ID_2,
         )
     }
 

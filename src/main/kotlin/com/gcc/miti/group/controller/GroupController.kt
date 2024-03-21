@@ -1,7 +1,7 @@
 package com.gcc.miti.group.controller
 
 import com.gcc.miti.group.dto.GroupPartiesDto
-import com.gcc.miti.group.dto.GroupRes
+import com.gcc.miti.group.dto.GroupResponse
 import com.gcc.miti.group.dto.CreateGroupReq
 import com.gcc.miti.group.dto.UpdateGroupReq
 import com.gcc.miti.auth.security.GetIdFromToken
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/api/groups")
 class GroupController(
     private val groupService: GroupService,
 ) {
@@ -94,7 +94,7 @@ class GroupController(
 
     @Operation(summary = "그룹 Id로 하나의 그룹 조회하기")
     @GetMapping("/{groupId}")
-    fun getParty(@PathVariable groupId: Long): GroupRes {
+    fun getParty(@PathVariable groupId: Long): GroupResponse {
         return groupService.getGroup(groupId)
     }
 
@@ -113,6 +113,6 @@ class GroupController(
         @PathVariable groupId: Long,
         @Parameter(hidden = true) @GetIdFromToken userId: String,
     ): Boolean {
-        return groupService.leaveGroup(groupId, userId)
+        return groupService.leavePartyAndGroup(groupId, userId)
     }
 }

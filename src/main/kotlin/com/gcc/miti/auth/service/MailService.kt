@@ -5,9 +5,9 @@ import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.security.SecureRandom
-import javax.mail.Message
-import javax.mail.internet.InternetAddress
-import javax.mail.internet.MimeMessage
+import jakarta.mail.Message
+import jakarta.mail.internet.InternetAddress
+import jakarta.mail.internet.MimeMessage
 
 @Service
 class MailService(
@@ -20,7 +20,7 @@ class MailService(
         if(profile == "test"){
             return
         }
-        val message = getMailMessage(email, randomNum)
+        val message: MimeMessage = getMailMessage(email, randomNum)
         javaMailSender.send(message)
     }
 

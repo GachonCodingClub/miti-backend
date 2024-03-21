@@ -4,7 +4,7 @@ import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.group.constants.GroupStatus
 import com.gcc.miti.group.entity.Group
 import java.time.LocalDateTime
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "deleted_group")
@@ -18,6 +18,7 @@ class DeletedGroup(
     @Column(name = "max_users")
     val maxUsers: Int,
 
+    @Column(name = "group_status")
     @Enumerated(EnumType.STRING)
     var groupStatus: GroupStatus,
 
@@ -45,7 +46,7 @@ class DeletedGroup(
                     groupStatus,
                     meetDate,
                     meetPlace,
-                    1 + acceptedParties.flatMap { it.partyMember }.size
+                    1 + acceptedParties.flatMap { it.partyMembers }.size
                 )
             }
         }

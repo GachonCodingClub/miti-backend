@@ -1,10 +1,6 @@
 package com.gcc.miti.report.entity
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "report")
@@ -19,6 +15,6 @@ class Report(
     val reportTargetUserId: String
 ) {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 }

@@ -10,22 +10,24 @@ import com.gcc.miti.notification.entity.UserNotification
 import com.gcc.miti.user.constants.Gender
 import com.gcc.miti.user.constants.Height
 import com.gcc.miti.user.constants.Weight
+import jakarta.persistence.*
 import java.time.LocalDate
-import javax.persistence.*
 
 @Entity
 @Table(name = "users")
 class User(
     @Column(nullable = false)
     var password: String,
-    @Column(nullable = false)
-    val userName: String,
+
     @Column(nullable = true)
     var description: String?,
+
     @Enumerated(value = EnumType.STRING)
     val gender: Gender,
+
     @Enumerated(value = EnumType.STRING)
     var height: Height,
+
     @Enumerated(value = EnumType.STRING)
     var weight: Weight,
 
@@ -34,7 +36,7 @@ class User(
 
     val birthDate: LocalDate,
 
-    ) : BaseTimeEntity() {
+) : BaseTimeEntity() {
     @Id
     var userId: String = ""
     fun toPartyMember(party: Party): PartyMember {
@@ -59,6 +61,12 @@ class User(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val lastReadChatMessages: MutableList<LastReadChatMessage> = mutableListOf()
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val userNotification: UserNotification? = null
+
+    @OneToMany(mappedBy = "blockedTargetUser" , cascade = [CascadeType.ALL], orphanRemoval = true)
+    val blockListTargets: MutableList<UserBlockList> = mutableListOf()
+
+    @OneToMany(mappedBy = "user" , cascade = [CascadeType.ALL], orphanRemoval = true)
+    val blockLists: MutableList<UserBlockList> = mutableListOf()
 }

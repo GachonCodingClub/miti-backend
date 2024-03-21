@@ -1,6 +1,6 @@
 package com.gcc.miti.chat.controller
 
-import com.gcc.miti.chat.dto.MessageDto
+import com.gcc.miti.chat.dto.MessageRequest
 import com.gcc.miti.chat.entity.ChatMessage
 import com.gcc.miti.chat.repository.ChatMessageRepository
 import com.gcc.miti.group.repository.GroupRepository
@@ -9,7 +9,7 @@ import com.gcc.miti.user.repository.UserRepository
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
-import javax.transaction.Transactional
+import jakarta.transaction.Transactional
 
 @Controller
 class SocketController(
@@ -21,19 +21,18 @@ class SocketController(
 ) {
     @MessageMapping("/send")
     @Transactional
-    fun send(message: MessageDto) {
-        val group = groupRepository.getReferenceById(message.groupId.toLong())
-        if (group.leader.userId != message.sender && !group.acceptedParties.flatMap { it.partyMember }
-                .any { it.user?.userId == message.sender }) {
+    fun send(message: MessageRequest) {
+        val group = groupRepository.findByIdAndFetchParties(message.groupId.toLong())
+        if (!group.isGroupMember(message.sender)) {
             return
         }
         val user = userRepository.getReferenceById(message.sender)
         val chatMessage = chatMessageRepository.save(
-            ChatMessage(userRepository.getReferenceById(message.sender), message.message).also {
+            ChatMessage(user, message.message).also {
                 it.group = group
             },
         )
         notificationService.sendNewChatNotification(chatMessage)
-        simpMessagingTemplate.convertAndSend("/sub/${message.groupId}", message.toDto(user))
+        simpMessagingTemplate.convertAndSend("/sub/${message.groupId}", message.toChatMessageDto(user))
     }
 }

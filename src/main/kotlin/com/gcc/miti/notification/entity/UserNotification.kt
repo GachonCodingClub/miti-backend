@@ -2,7 +2,7 @@ package com.gcc.miti.notification.entity
 
 import com.gcc.miti.common.entity.BaseTimeEntity
 import com.gcc.miti.user.entity.User
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "user_notification")
@@ -10,8 +10,9 @@ class UserNotification(
     @Id
     val id: String,
 
-    @MapsId
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId("id")
+    @JoinColumn(name = "user_id")
     val user: User,
 
     @Column(name = "is_agreed")

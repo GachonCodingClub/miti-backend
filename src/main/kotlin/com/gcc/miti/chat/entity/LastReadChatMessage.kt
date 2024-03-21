@@ -2,7 +2,7 @@ package com.gcc.miti.chat.entity
 
 import com.gcc.miti.group.entity.Group
 import com.gcc.miti.user.entity.User
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "last_read_chat_message")
@@ -22,4 +22,8 @@ class LastReadChatMessage(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
+
+    companion object{
+        const val LAST_READ_CHAT_MESSAGE_UNIQUE_INDEX_NAME = "last_read_chat_message_user_id_group_id_uindex"
+    }
 }

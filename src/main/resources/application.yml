@@ -7,7 +7,10 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  
+  web:
+    resources:
+      add-mappings: false
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -22,21 +25,24 @@ spring:
             enable: true
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     open-in-view: false
-    show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
-        format-sql: true
+        format_sql: true
         default_batch_fetch_size: 300
+        show_sql: false
+    database: postgresql
   profiles:
     active: ${PROFILE}
+  flyway:
+    enabled: true
+    url: ${DB_URL}
+    user: postgres
+    password: ${DB_PASSWORD}
 
 server:
   port: 8080
   error:
     include-message: always
-
-JWT-SECRET: ${JWT_SECRET}

@@ -16,7 +16,7 @@ data class ChatMessageDto(
                     user.userId,
                     user.nickname,
                     content,
-                    createdAt
+                    createdAt ?: LocalDateTime.now()
                 )
             }
         }

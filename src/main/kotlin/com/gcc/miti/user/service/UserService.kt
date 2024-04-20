@@ -6,6 +6,7 @@ import com.gcc.miti.auth.repository.EmailVerificationRepository
 import com.gcc.miti.auth.security.SecurityUtils
 import com.gcc.miti.common.exception.BaseException
 import com.gcc.miti.common.exception.BaseExceptionCode
+import com.gcc.miti.common.findByIdOrThrowNotFound
 import com.gcc.miti.user.dto.BlockedUserOutput
 import com.gcc.miti.user.dto.GetBlockedUsersResponse
 import com.gcc.miti.user.dto.ProfileResponse
@@ -13,7 +14,6 @@ import com.gcc.miti.user.dto.UpdateProfileRequest
 import com.gcc.miti.user.entity.UserBlockList
 import com.gcc.miti.user.repository.UserBlockListRepository
 import com.gcc.miti.user.repository.UserRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,7 +27,7 @@ class UserService(
     @Transactional(readOnly = true)
     fun getMyProfile(): ProfileResponse {
         val userId = SecurityUtils.getUserIdFromJwt()
-        val user = userRepository.findByIdOrNull(userId) ?: throw BaseException(BaseExceptionCode.USER_NOT_FOUND)
+        val user = userRepository.findByIdOrThrowNotFound(userId)
         return ProfileResponse.toProfileResponse(user)
     }
 

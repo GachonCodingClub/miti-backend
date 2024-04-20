@@ -159,7 +159,7 @@ class GroupService(
         val user = userRepository.getReferenceById(userId)
         val group = groupRepository.findByIdOrNull(groupId) ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         chatMessageRepository.save(ChatMessage.createGroupLeaveMessage(user, group))
-        val acceptedPartyMembers = group.acceptedParties.flatMap { it.partyMembers }
+        val acceptedPartyMembers = group.acceptedPartyMembers
         val leavingPartyMember =
             acceptedPartyMembers.find { it.user?.userId == userId } ?: throw BaseException(BaseExceptionCode.NOT_FOUND)
         leavingPartyMember.party?.partyMembers?.remove(leavingPartyMember)

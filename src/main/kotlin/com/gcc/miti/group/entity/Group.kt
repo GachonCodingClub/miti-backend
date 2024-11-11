@@ -57,6 +57,11 @@ class Group(
             return parties.filter { it.partyStatus == PartyStatus.ACCEPTED }
         }
 
+    val acceptedPartyMembers: List<PartyMember>
+        get() {
+            return acceptedParties.flatMap { it.partyMembers }
+        }
+
     val acceptedUsers: List<User>
         get() = acceptedParties.flatMap { it.partyMembers }.mapNotNull { it.user }
 

@@ -2,5 +2,13 @@ spring:
   config:
     activate:
       on-profile: develop
+
+
 server:
-  port: 5000
+  port: 443
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: ${KEYSTORE_PASSWORD}
+    key-store-type: PKCS12
+

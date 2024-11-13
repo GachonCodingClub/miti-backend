@@ -35,8 +35,6 @@ spring:
         default_batch_fetch_size: 300
         show_sql: false
     database: postgresql
-  profiles:
-    active: ${PROFILE}
   flyway:
     enabled: true
     url: ${DB_URL}

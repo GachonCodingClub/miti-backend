@@ -5,6 +5,7 @@ import com.gcc.miti.auth.dto.SignInRequest
 import com.gcc.miti.auth.dto.SignUpRequest
 import com.gcc.miti.auth.dto.TokenResponse
 import com.gcc.miti.auth.service.AuthService
+import com.gcc.miti.common.aop.NoLogging
 import com.gcc.miti.common.dto.ResponseDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -32,6 +33,7 @@ class AuthController(private val authService: AuthService) {
         return authService.sendEmailVerificationForChangingPassword(email)
     }
 
+    @NoLogging
     @PatchMapping("/password")
     @Operation(summary = "비밀번호 변경")
     fun changePassword(
@@ -40,6 +42,7 @@ class AuthController(private val authService: AuthService) {
         return authService.changePassword(request)
     }
 
+    @NoLogging
     @PostMapping("/sign-up")
     @Operation(
         summary = "회원가입",
@@ -59,6 +62,7 @@ class AuthController(private val authService: AuthService) {
         return authService.verifyVerificationNumber(email, verificationNumber)
     }
 
+    @NoLogging
     @PostMapping("/sign-in")
     @Operation(summary = "로그인")
     fun signIn(@RequestBody signInRequest: SignInRequest): TokenResponse {
